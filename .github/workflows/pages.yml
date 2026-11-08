@@ -44,6 +44,8 @@ jobs:
           rm -f site/tiles-tag.txt
           sed -i "s#__TILES_DIR__#$DIR/#" site/index.html
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.pmtiles" --dir "site/$DIR"
+          # Satelite de invierno (opcional, release aparte que se regenera con otra fecha)
+          gh release download sat-winter --repo "$GITHUB_REPOSITORY" --dir "site/$DIR" || echo "Sin satelite de invierno"
           sudo apt-get install -y -qq imagemagick > /dev/null
           for s in 180 192 512; do
             convert -size ${s}x${s} xc:'#1e3a5f' -fill white \
