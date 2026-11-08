@@ -1,0 +1,56 @@
+name: Pages
+
+# Publica el visor (carpeta web/, sincronizada desde el repo privado skimo)
+# junto con los .pmtiles del release indicado en web/tiles-tag.txt.
+# Despliegue por artefacto: sin el limite de 100 MB por fichero de git.
+
+on:
+  push:
+    branches: [main]
+    paths: ["web/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Montar el sitio
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="$(tr -d '[:space:]' < web/tiles-tag.txt)"
+          echo "Teselas: $TAG"
+          mkdir -p site/tiles
+          cp -r web/. site/
+          rm -f site/tiles-tag.txt
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.pmtiles" --dir site/tiles
+          sudo apt-get install -y -qq imagemagick > /dev/null
+          for s in 180 192 512; do
+            convert -size ${s}x${s} xc:'#1e3a5f' -fill white \
+              -draw "polygon $((s*18/100)),$((s*76/100)) $((s*42/100)),$((s*34/100)) $((s*82/100)),$((s*76/100))" \
+              -fill '#8fb6e8' -draw "polygon $((s*42/100)),$((s*34/100)) $((s*50/100)),$((s*48/100)) $((s*35/100)),$((s*47/100))" \
+              site/icon-$s.png
+          done
+          du -sh site; ls -lh site/tiles
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
