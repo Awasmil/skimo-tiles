@@ -48,6 +48,8 @@
   .legend.on { display: block; }
   .legend span { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -2px; margin-right: 4px; }
   .legend div { padding: 1px 0; }
+  .legend .ramp { height: 10px; border-radius: 3px; margin: 4px 0 2px; }
+  .legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
   .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
 </style>
 </head>
@@ -67,11 +69,9 @@
   <label><input type="checkbox" id="hillshade" checked> Sombreado</label>
   <label><input type="checkbox" id="slope" checked> Pendiente</label>
   <div class="legend on" id="legend-slope">
-    <div><span style="background:#ffeb3b"></span>25–30°</div>
-    <div><span style="background:#ff9800"></span>30–35°</div>
-    <div><span style="background:#e53935"></span>35–40°</div>
-    <div><span style="background:#8e24aa"></span>40–45°</div>
-    <div><span style="background:#212121"></span>&gt;45°</div>
+    <div class="ramp" style="background:linear-gradient(90deg,#2ea043 0%,#a5d74a 20%,#ffe628 40%,#ff9600 60%,#e63228 80%,#9a1466 100%)"></div>
+    <div class="ramp-ticks"><span>0°</span><span>20°</span><span>27°</span><span>32°</span><span>37°</span><span>45°+</span></div>
+    <div style="color:var(--muted)">Sobre MDT a 10 m: suaviza resaltes muy cortos.</div>
   </div>
   <label><input type="checkbox" id="aspect"> Orientación</label>
   <div class="legend" id="legend-aspect">
@@ -143,9 +143,9 @@
         { id: "pnoa", type: "raster", source: "pnoa", layout: { visibility: "none" } },
         { id: "hillshade", type: "hillshade", source: "terrain",
           paint: { "hillshade-exaggeration": 0.5, "hillshade-shadow-color": "#2b2b2b" } },
-        { id: "slope", type: "raster", source: "slope", paint: { "raster-opacity": 0.75, "raster-resampling": "nearest" } },
+        { id: "slope", type: "raster", source: "slope", paint: { "raster-opacity": 0.8, "raster-resampling": "linear", "raster-fade-duration": 0 } },
         { id: "aspect", type: "raster", source: "aspect", layout: { visibility: "none" },
-          paint: { "raster-opacity": 0.7, "raster-resampling": "nearest" } },
+          paint: { "raster-opacity": 0.75, "raster-resampling": "linear", "raster-fade-duration": 0 } },
         // tipufoto ICGC: 1 = canal (circulacio preferent), 2 = ladera (dificil individualitzacio), 3 = susceptible
         { id: "avalanche", type: "fill", source: "avalanche", "source-layer": "aludes", layout: { visibility: "none" },
           paint: {
