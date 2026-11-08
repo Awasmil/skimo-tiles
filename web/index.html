@@ -68,6 +68,14 @@
     <div><span style="background:transparent;outline:1px dashed #9aa4b2"></span><b>Sin color</b>: no cartografiado, no significa seguro</div>
     <div style="color:var(--muted)">Mapa histórico del ICGC. No indica el peligro de hoy.</div>
   </div>
+  <label><input type="checkbox" id="contours" checked> Curvas de nivel</label>
+  <label><input type="checkbox" id="labels" checked> Nombres y refugios</label>
+  <div class="legend on" id="legend-labels">
+    <div><span style="background:#c0392b;border-radius:50%"></span>Refugio guardado</div>
+    <div><span style="background:#e67e22;border-radius:50%"></span>Refugio libre</div>
+    <div><span style="background:#8d6e63;border-radius:50%"></span>Cabaña / abrigo</div>
+    <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente</div>
+  </div>
   <label><input type="checkbox" id="terrain3d"> Relieve 3D</label>
   <div class="note"><b>Esta app no evalúa el peligro de aludes ni marca rutas seguras.</b> La pendiente se calcula del MDT 2 m. Consulta siempre el boletín del día (Lauegi en Aran).</div>
 </div>
@@ -92,7 +100,11 @@
     attributionControl: { compact: true },
     style: {
       version: 8,
+      glyphs: new URL("fonts/", location.href).href + "{fontstack}/{range}.pbf",
       sources: {
+        contours: { type: "vector", url: pm("aran-contours.pmtiles") },
+        osmlabels: { type: "vector", url: pm("aran-osm.pmtiles"),
+          attribution: "Nombres © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> (ODbL)" },
         osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 19,
           attribution: "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>" },
         pnoa: { type: "raster", tileSize: 256, maxzoom: 19,
@@ -127,7 +139,72 @@
           } },
         { id: "avalanche-line-dash", type: "line", source: "avalanche", "source-layer": "aludes", layout: { visibility: "none" },
           filter: ["==", ["get", "tipufoto"], 2],
-          paint: { "line-color": "#b07d10", "line-width": 0.9, "line-dasharray": [3, 2] } }
+          paint: { "line-color": "#b07d10", "line-width": 0.9, "line-dasharray": [3, 2] } },
+
+        // Curvas de nivel (cada 20 m; maestras cada 100 m)
+        { id: "contours-minor", type: "line", source: "contours", "source-layer": "contours", minzoom: 13,
+          filter: ["==", ["get", "major"], 0],
+          paint: { "line-color": "rgba(120,72,30,0.45)", "line-width": 0.5 } },
+        { id: "contours-major", type: "line", source: "contours", "source-layer": "contours",
+          filter: ["==", ["get", "major"], 1],
+          paint: { "line-color": "rgba(120,72,30,0.7)", "line-width": ["interpolate", ["linear"], ["zoom"], 11, 0.5, 15, 1.2] } },
+        { id: "contours-label", type: "symbol", source: "contours", "source-layer": "contours", minzoom: 13,
+          filter: ["==", ["get", "major"], 1],
+          layout: { "symbol-placement": "line", "text-field": ["concat", ["to-string", ["get", "ele"]], " m"],
+            "text-font": ["Noto Sans Regular"], "text-size": 10, "symbol-spacing": 350 },
+          paint: { "text-color": "#6b3f16", "text-halo-color": "rgba(255,255,255,0.85)", "text-halo-width": 1.2 } },
+
+        // Nombres de OpenStreetMap
+        { id: "osm-river", type: "symbol", source: "osmlabels", "source-layer": "osm", minzoom: 11,
+          filter: ["==", ["get", "kind"], "river"],
+          layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-font": ["Noto Sans Italic"],
+            "text-size": 13, "symbol-spacing": 400 },
+          paint: { "text-color": "#1f5f9e", "text-halo-color": "rgba(255,255,255,0.9)", "text-halo-width": 1.3 } },
+        { id: "osm-stream", type: "symbol", source: "osmlabels", "source-layer": "osm", minzoom: 14,
+          filter: ["==", ["get", "kind"], "stream"],
+          layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-font": ["Noto Sans Italic"],
+            "text-size": 11, "symbol-spacing": 400 },
+          paint: { "text-color": "#1f5f9e", "text-halo-color": "rgba(255,255,255,0.9)", "text-halo-width": 1.3 } },
+        { id: "osm-spring", type: "circle", source: "osmlabels", "source-layer": "osm", minzoom: 13,
+          filter: ["==", ["get", "kind"], "spring"],
+          paint: { "circle-radius": 3.5, "circle-color": "#2b8cbe", "circle-stroke-color": "#fff", "circle-stroke-width": 1 } },
+        { id: "osm-hut", type: "circle", source: "osmlabels", "source-layer": "osm", minzoom: 10,
+          filter: ["match", ["get", "kind"], ["hut", "unguarded_hut", "shelter"], true, false],
+          paint: { "circle-radius": ["match", ["get", "kind"], "hut", 6, "unguarded_hut", 4.5, 3.5],
+            "circle-color": ["match", ["get", "kind"], "hut", "#c0392b", "unguarded_hut", "#e67e22", "#8d6e63"],
+            "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } },
+        { id: "osm-peak-dot", type: "circle", source: "osmlabels", "source-layer": "osm", minzoom: 11,
+          filter: ["==", ["get", "kind"], "peak"],
+          paint: { "circle-radius": 2.5, "circle-color": "#3b2a1a" } },
+        ...[
+          ["osm-label-detail", 13, ["spring", "saddle", "shelter"]],
+          ["osm-label-lake", 12, ["lake", "unguarded_hut"]],
+          ["osm-label-peak", 11, ["peak"]],
+          ["osm-label-hut", 10, ["hut"]]
+        ].map(([id, minzoom, kinds]) => ({
+          id, type: "symbol", source: "osmlabels", "source-layer": "osm", minzoom,
+          filter: ["all", ["match", ["get", "kind"], kinds, true, false], ["!=", ["get", "name"], ""]],
+          layout: {
+            "text-field": ["case",
+              ["all", ["==", ["get", "kind"], "peak"], ["has", "ele"]],
+              ["format", ["get", "name"], {}, "\n", {}, ["concat", ["to-string", ["get", "ele"]], " m"], { "font-scale": 0.85 }],
+              ["get", "name"]],
+            "text-font": ["match", ["get", "kind"],
+              ["lake", "saddle", "spring"], ["literal", ["Noto Sans Italic"]],
+              ["hut", "peak"], ["literal", ["Noto Sans Medium"]],
+              ["literal", ["Noto Sans Regular"]]],
+            "text-size": ["match", ["get", "kind"], ["peak", "hut", "lake"], 12, 11],
+            "text-anchor": ["match", ["get", "kind"], "lake", "center", "top"],
+            "text-offset": ["match", ["get", "kind"], "lake", ["literal", [0, 0]], ["literal", [0, 0.6]]],
+            "text-max-width": 9,
+            "symbol-sort-key": ["-", 10000, ["coalesce", ["get", "ele"], 0]]
+          },
+          paint: {
+            "text-color": ["match", ["get", "kind"], ["lake", "spring"], "#1f5f9e", "hut", "#8e1b10",
+              "unguarded_hut", "#a0520f", "saddle", "#5a4a3a", "#2b1d10"],
+            "text-halo-color": "rgba(255,255,255,0.9)", "text-halo-width": 1.4
+          }
+        }))
       ]
     }
   });
@@ -141,10 +218,16 @@
     setVis("osm", r.value === "osm");
     setVis("pnoa", r.value === "pnoa");
   }));
-  for (const id of ["hillshade", "slope", "aspect", "avalanche"]) {
+  const groups = {
+    hillshade: ["hillshade"], slope: ["slope"], aspect: ["aspect"],
+    avalanche: ["avalanche", "avalanche-line", "avalanche-line-dash"],
+    contours: ["contours-minor", "contours-major", "contours-label"],
+    labels: ["osm-river", "osm-stream", "osm-spring", "osm-hut", "osm-peak-dot",
+      "osm-label-detail", "osm-label-lake", "osm-label-peak", "osm-label-hut"]
+  };
+  for (const [id, layers] of Object.entries(groups)) {
     document.getElementById(id).addEventListener("change", e => {
-      setVis(id, e.target.checked);
-      if (id === "avalanche") { setVis("avalanche-line", e.target.checked); setVis("avalanche-line-dash", e.target.checked); }
+      layers.forEach(l => setVis(l, e.target.checked));
       document.getElementById("legend-" + id)?.classList.toggle("on", e.target.checked);
     });
   }
