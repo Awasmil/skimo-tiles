@@ -65,9 +65,9 @@
   </div>
   <label><input type="checkbox" id="avalanche"> Zonas de aludes (ICGC)</label>
   <div class="legend" id="legend-avalanche">
-    <div><span style="background:#ffc285"></span><b>Canal de alud</b>: han bajado, por un corredor definido</div>
-    <div><span style="background:#ffe0c2;outline:1px solid #e0b48a"></span><b>Ladera de aludes</b>: han bajado, sin canal fijo</div>
-    <div><span style="background:#f1b87f"></span><b>Susceptible</b>: podrían bajar, sin registro</div>
+    <div><span style="background:rgba(227,26,28,.6);outline:1px solid #a50f15"></span><b>Canal de alud</b>: han bajado, por un corredor definido</div>
+    <div><span style="background:rgba(240,180,41,.5);outline:1px dashed #b07d10"></span><b>Ladera de aludes</b>: han bajado, sin canal fijo</div>
+    <div><span style="background:rgba(128,115,172,.3);outline:1px solid #54278f"></span><b>Susceptible</b>: podrían bajar, sin registro</div>
     <div><span style="background:transparent;outline:1px dashed #9aa4b2"></span><b>Sin color</b>: no cartografiado, no significa seguro</div>
     <div style="color:var(--muted)">Mapa histórico del ICGC. No indica el peligro de hoy.</div>
   </div>
@@ -101,8 +101,7 @@
           attribution: "PNOA © IGN" },
         terrain: { type: "raster-dem", url: pm("aran-terrain.pmtiles"), encoding: "mapbox", tileSize: 256,
           attribution: "MDT02 © <a href='https://www.ign.es'>IGN CNIG</a> (CC BY 4.0) · Copernicus DEM GLO-30 © DLR e.V., Airbus D&amp;S, UE/ESA" },
-        avalanche: { type: "raster", tileSize: 256, minzoom: 10,
-          tiles: ["https://geoserveis.icgc.cat/geoserver/nivoallaus/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=zonesallaus_color&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/png&TRANSPARENT=true"],
+        avalanche: { type: "vector", url: pm("aran-aludes.pmtiles"),
           attribution: "Zones d'allaus © <a href='https://www.icgc.cat'>ICGC</a>" },
         slope: { type: "raster", url: pm("aran-slope.pmtiles"), tileSize: 256 },
         aspect: { type: "raster", url: pm("aran-aspect.pmtiles"), tileSize: 256 }
@@ -115,8 +114,18 @@
         { id: "slope", type: "raster", source: "slope", paint: { "raster-opacity": 0.75, "raster-resampling": "nearest" } },
         { id: "aspect", type: "raster", source: "aspect", layout: { visibility: "none" },
           paint: { "raster-opacity": 0.7, "raster-resampling": "nearest" } },
-        { id: "avalanche", type: "raster", source: "avalanche", layout: { visibility: "none" },
-          paint: { "raster-opacity": 0.9, "raster-saturation": 0.6, "raster-contrast": 0.25 } }
+        // tipufoto ICGC: 1 = canal (circulacio preferent), 2 = ladera (dificil individualitzacio), 3 = susceptible
+        { id: "avalanche", type: "fill", source: "avalanche", "source-layer": "aludes", layout: { visibility: "none" },
+          paint: {
+            "fill-color": ["match", ["get", "tipufoto"], 1, "#e31a1c", 2, "#f0b429", 3, "#8073ac", "#999999"],
+            "fill-opacity": ["match", ["get", "tipufoto"], 1, 0.5, 2, 0.35, 0.15]
+          } },
+        { id: "avalanche-line", type: "line", source: "avalanche", "source-layer": "aludes", layout: { visibility: "none" },
+          paint: {
+            "line-color": ["match", ["get", "tipufoto"], 1, "#a50f15", 2, "#b07d10", 3, "#54278f", "#666666"],
+            "line-width": ["match", ["get", "tipufoto"], 1, 1.2, 0.8],
+            "line-dasharray": ["match", ["get", "tipufoto"], 2, ["literal", [3, 2]], ["literal", [1, 0]]]
+          } }
       ]
     }
   });
@@ -133,6 +142,7 @@
   for (const id of ["hillshade", "slope", "aspect", "avalanche"]) {
     document.getElementById(id).addEventListener("change", e => {
       setVis(id, e.target.checked);
+      if (id === "avalanche") setVis("avalanche-line", e.target.checked);
       document.getElementById("legend-" + id)?.classList.toggle("on", e.target.checked);
     });
   }
