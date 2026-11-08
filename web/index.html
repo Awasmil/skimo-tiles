@@ -19,26 +19,47 @@
   @media (prefers-color-scheme: dark) { :root { --bg: rgba(24,28,34,.94); --fg: #e8ecf1; --muted: #9aa4b2; --accent: #8fb6e8; } }
   html, body { margin: 0; height: 100%; background: #1e3a5f; font: 14px/1.35 system-ui, -apple-system, sans-serif; color: var(--fg); }
   #map { position: absolute; inset: 0; }
-  .panel { position: absolute; left: max(10px, env(safe-area-inset-left)); top: max(10px, env(safe-area-inset-top));
-    background: var(--bg); border-radius: 12px; padding: 10px 12px; box-shadow: 0 2px 10px rgba(0,0,0,.25); max-width: 230px; }
-  .panel h1 { font-size: 15px; margin: 0 0 6px; }
+  .search { position: absolute; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left));
+    right: 56px; max-width: 420px; z-index: 3; }
+  .search input { box-sizing: border-box; width: 100%; height: 44px; border: 0; border-radius: 12px; padding: 0 14px;
+    font: 16px system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--fg); box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+  .results { list-style: none; margin: 6px 0 0; padding: 4px 0; background: var(--bg); border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.25); max-height: 50vh; overflow: auto; }
+  .results:empty { display: none; }
+  .results li { padding: 9px 14px; cursor: pointer; display: flex; gap: 10px; align-items: baseline; }
+  .results li:hover, .results li.sel { background: rgba(127,127,127,.15); }
+  .results .k { font-size: 12px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+  .panel { position: absolute; left: max(10px, env(safe-area-inset-left)); top: calc(max(10px, env(safe-area-inset-top)) + 54px);
+    background: var(--bg); border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.25); width: 240px; z-index: 2;
+    max-height: calc(100% - 150px); overflow: auto; }
+  .panel .head { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 44px;
+    border: 0; background: none; color: var(--fg); font: 600 15px system-ui, -apple-system, sans-serif; padding: 0 14px; cursor: pointer; }
+  .panel .head .chev { transition: transform .2s; color: var(--muted); }
+  .panel.min { width: auto; }
+  .panel.min .body { display: none; }
+  .panel.min .head .chev { transform: rotate(-90deg); }
+  .panel .body { padding: 0 12px 10px; }
   .panel h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 8px 0 4px; }
+  .maplibregl-ctrl button.btn-3d { font: 700 13px system-ui, -apple-system, sans-serif; }
+  .maplibregl-ctrl button.btn-3d.on { background: #1e3a5f; color: #fff; }
   .panel label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
   .panel input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
   .legend { display: none; margin: 2px 0 4px 26px; font-size: 12px; }
   .legend.on { display: block; }
   .legend span { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -2px; margin-right: 4px; }
   .legend div { padding: 1px 0; }
-  .toggle { position: absolute; right: 0; top: 0; border: 0; background: none; color: var(--muted); font-size: 18px; padding: 8px 10px; cursor: pointer; }
-  .panel.min > :not(.toggle):not(h1) { display: none; }
   .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
 </style>
 </head>
 <body>
 <div id="map"></div>
+<div class="search">
+  <input id="q" type="search" placeholder="Buscar pico, refugio, lago, pueblo…" autocomplete="off" enterkeyhint="search" aria-label="Buscar lugar">
+  <ul class="results" id="results"></ul>
+</div>
 <div class="panel" id="panel">
-  <button class="toggle" id="toggle" aria-label="Plegar panel">–</button>
-  <h1>Skimo · Aran</h1>
+  <button class="head" id="toggle" aria-expanded="true"><span>Capas</span><span class="chev">▾</span></button>
+  <div class="body">
   <h2>Base</h2>
   <label><input type="radio" name="base" value="osm" checked> Mapa (OSM)</label>
   <label><input type="radio" name="base" value="pnoa"> Ortofoto (PNOA)</label>
@@ -76,8 +97,8 @@
     <div><span style="background:#8d6e63;border-radius:50%"></span>Cabaña / abrigo</div>
     <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente</div>
   </div>
-  <label><input type="checkbox" id="terrain3d"> Relieve 3D</label>
   <div class="note"><b>Esta app no evalúa el peligro de aludes ni marca rutas seguras.</b> La pendiente se calcula del MDT 2 m. Consulta siempre el boletín del día (Lauegi en Aran).</div>
+  </div>
 </div>
 <script>
 (async () => {
@@ -210,6 +231,22 @@
   });
 
   map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
+  map.addControl({
+    onAdd(m) {
+      const div = document.createElement("div");
+      div.className = "maplibregl-ctrl maplibregl-ctrl-group";
+      const b = document.createElement("button");
+      b.className = "btn-3d"; b.type = "button"; b.textContent = "3D"; b.title = "Relieve 3D";
+      b.onclick = () => {
+        const on = !b.classList.contains("on");
+        b.classList.toggle("on", on);
+        if (on) { m.setTerrain({ source: "terrain", exaggeration: 1.2 }); m.easeTo({ pitch: 60 }); }
+        else { m.setTerrain(null); m.easeTo({ pitch: 0 }); }
+      };
+      div.appendChild(b); return div;
+    },
+    onRemove() {}
+  }, "top-right");
   map.addControl(new maplibregl.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: true }), "top-right");
   map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
 
@@ -231,15 +268,54 @@
       document.getElementById("legend-" + id)?.classList.toggle("on", e.target.checked);
     });
   }
-  document.getElementById("terrain3d").addEventListener("change", e => {
-    if (e.target.checked) { map.setTerrain({ source: "terrain", exaggeration: 1.2 }); map.easeTo({ pitch: 60 }); }
-    else { map.setTerrain(null); map.easeTo({ pitch: 0 }); }
+  const panel = document.getElementById("panel"), toggle = document.getElementById("toggle");
+  const setPanel = open => { panel.classList.toggle("min", !open); toggle.setAttribute("aria-expanded", open); };
+  toggle.addEventListener("click", () => setPanel(panel.classList.contains("min")));
+  if (window.innerWidth < 600) setPanel(false);
+
+  // Buscador sobre el indice local (search.json: [nombre, tipo, altitud, lon, lat])
+  const KIND = { peak: "Pico", saddle: "Collado", spring: "Fuente", hut: "Refugio", unguarded_hut: "Refugio libre",
+    shelter: "Cabaña", lake: "Lago", river: "Río", stream: "Arroyo", place: "Lugar" };
+  const RANK = { hut: 0, unguarded_hut: 1, peak: 2, place: 3, lake: 4, saddle: 5, river: 6, shelter: 7, spring: 8, stream: 9 };
+  const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  let index = null, marker = null, sel = -1, hits = [];
+  const q = document.getElementById("q"), list = document.getElementById("results");
+  const loadIndex = async () => index ??= (await (await fetch(tilesBase + "search.json")).json()).map(r => [norm(r[0]), r]);
+  const go = r => {
+    const [name, kind, ele, lon, lat] = r;
+    list.innerHTML = ""; q.value = name; q.blur();
+    marker?.remove();
+    marker = new maplibregl.Marker({ color: "#e31a1c" }).setLngLat([lon, lat])
+      .setPopup(new maplibregl.Popup({ offset: 25 }).setText(name + (ele ? ` · ${ele} m` : ""))).addTo(map);
+    marker.togglePopup();
+    map.flyTo({ center: [lon, lat], zoom: Math.max(map.getZoom(), 14), essential: true });
+    if (window.innerWidth < 600) setPanel(false);
+  };
+  const render = () => {
+    list.innerHTML = "";
+    hits.forEach((r, i) => {
+      const li = document.createElement("li"); if (i === sel) li.className = "sel";
+      const n = document.createElement("span"); n.textContent = r[0];
+      const k = document.createElement("span"); k.className = "k";
+      k.textContent = (KIND[r[1]] || r[1]) + (r[2] ? ` · ${r[2]} m` : "");
+      li.append(n, k); li.onclick = () => go(r); list.appendChild(li);
+    });
+  };
+  q.addEventListener("input", async () => {
+    const t = norm(q.value.trim()); sel = -1;
+    if (t.length < 2) { hits = []; render(); return; }
+    await loadIndex();
+    hits = index.filter(([n]) => n.includes(t)).map(([n, r]) => [n.startsWith(t) ? 0 : 1, RANK[r[1]] ?? 9, -(r[2] || 0), r])
+      .sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2]).slice(0, 12).map(x => x[3]);
+    render();
   });
-  document.getElementById("toggle").addEventListener("click", e => {
-    const p = document.getElementById("panel");
-    p.classList.toggle("min");
-    e.target.textContent = p.classList.contains("min") ? "+" : "–";
+  q.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown") { sel = Math.min(sel + 1, hits.length - 1); render(); e.preventDefault(); }
+    else if (e.key === "ArrowUp") { sel = Math.max(sel - 1, 0); render(); e.preventDefault(); }
+    else if (e.key === "Enter" && hits.length) go(hits[Math.max(sel, 0)]);
+    else if (e.key === "Escape") { hits = []; render(); }
   });
+  map.on("click", () => { hits = []; render(); });
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 })();
