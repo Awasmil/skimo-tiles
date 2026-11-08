@@ -81,6 +81,7 @@
   <div class="m-btns">
     <button id="m-undo" disabled>Deshacer</button>
     <button id="m-clear" disabled>Borrar</button>
+    <button id="m-gpx" disabled>GPX</button>
     <button id="m-close">Cerrar</button>
   </div>
 </div>
@@ -382,6 +383,7 @@
       ? `${mPoints.length} punto${mPoints.length > 1 ? "s" : ""}. Toca el mapa para seguir añadiendo.`
       : "Toca el mapa para añadir puntos.";
     document.getElementById("m-undo").disabled = document.getElementById("m-clear").disabled = !mPoints.length;
+    document.getElementById("m-gpx").disabled = mPoints.length < 2;
     // Grafico del perfil
     const svg = document.getElementById("m-profile"), hs = prof.filter(p => p.h != null);
     if (hs.length < 2 || dist === 0) { svg.innerHTML = ""; return; }
@@ -411,6 +413,26 @@
   document.getElementById("m-undo").onclick = () => { mPoints.pop(); mSegs.pop(); renderMeasure(); };
   document.getElementById("m-clear").onclick = () => { mPoints = []; mSegs = []; renderMeasure(); };
   document.getElementById("m-close").onclick = () => { setMeasuring(false); mPoints = []; mSegs = []; renderMeasure(); };
+  // Exportar GPX (ruta/course): en el movil abre el menu de compartir (Garmin Connect, Archivos, WhatsApp...)
+  document.getElementById("m-gpx").onclick = async () => {
+    const stamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "");
+    const name = `Skimo ${new Date().toLocaleDateString("es-ES")}`;
+    const pts = mPoints.map(p => `   <trkpt lat="${p.c[1].toFixed(6)}" lon="${p.c[0].toFixed(6)}">${p.h != null ? `<ele>${p.h.toFixed(1)}</ele>` : ""}</trkpt>`).join("\n");
+    const gpx = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Skimo Pirineo" xmlns="http://www.topografix.com/GPX/1/1">
+ <metadata><name>${name}</name></metadata>
+ <trk><name>${name}</name><trkseg>
+${pts}
+ </trkseg></trk>
+</gpx>`;
+    const file = new File([gpx], `skimo-${stamp}.gpx`, { type: "application/gpx+xml" });
+    if (navigator.canShare?.({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: name }); return; } catch (e) { if (e.name === "AbortError") return; }
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(file); a.download = file.name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  };
   map.on("click", e => { if (measuring) addPoint([e.lngLat.lng, e.lngLat.lat]); });
   map.on("load", () => {
     map.addSource("measure", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
