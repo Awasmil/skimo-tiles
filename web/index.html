@@ -301,7 +301,8 @@
     setVis("satwinter", r.value === "winter");
   }));
   fetch(tilesBase + "sat-winter.json").then(r => r.ok ? r.json() : null).then(j => {
-    if (j?.date) document.getElementById("sat-date").textContent = "(" + new Date(j.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" }) + ")";
+    if (j?.date) document.getElementById("sat-date").textContent = "(" + new Date(j.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })
+      + (j.cloud_pct != null ? `, ${String(j.cloud_pct).replace(".", ",")} % nubes` : "") + ")";
   }).catch(() => {});
   const groups = {
     hillshade: ["hillshade"], slope: ["slope"], slopeaval: ["slopeaval"], aspect: ["aspect"],
