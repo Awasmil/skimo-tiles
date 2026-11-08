@@ -41,7 +41,20 @@
   .panel .body { padding: 0 12px 10px; }
   .panel h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 8px 0 4px; }
   .maplibregl-ctrl button.btn-3d { font: 700 13px system-ui, -apple-system, sans-serif; }
-  .maplibregl-ctrl button.btn-3d.on { background: #1e3a5f; color: #fff; }
+  .maplibregl-ctrl button.btn-3d.on, .maplibregl-ctrl button.btn-measure.on { background: #1e3a5f; color: #fff; }
+  .maplibregl-ctrl button.btn-measure svg { width: 18px; height: 18px; display: block; margin: auto; }
+  .measure { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(34px, calc(env(safe-area-inset-bottom) + 24px));
+    width: min(440px, calc(100% - 20px)); box-sizing: border-box; background: var(--bg); border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.3); padding: 10px 12px; z-index: 4; display: none; }
+  .measure.on { display: block; }
+  .measure .m-stats { font-size: 17px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .measure .m-stats span { color: var(--muted); font-size: 12px; display: block; }
+  .measure .m-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .measure svg.profile { width: 100%; height: 56px; display: block; margin-top: 6px; }
+  .measure .m-btns { display: flex; gap: 8px; margin-top: 8px; }
+  .measure .m-btns button { flex: 1; min-height: 40px; border: 0; border-radius: 10px; font: 600 14px system-ui, -apple-system, sans-serif;
+    background: rgba(127,127,127,.18); color: var(--fg); cursor: pointer; }
+  .measure .m-btns button:disabled { opacity: .4; }
   .panel label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
   .panel input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
   .legend { display: none; margin: 2px 0 4px 26px; font-size: 12px; }
@@ -55,6 +68,22 @@
 </head>
 <body>
 <div id="map"></div>
+<div class="measure" id="measure" aria-live="polite">
+  <div class="m-stats">
+    <div><span>Distancia</span><b id="m-dist">0 m</b></div>
+    <div><span>Desnivel +</span><b id="m-up">0 m</b></div>
+    <div><span>Desnivel −</span><b id="m-down">0 m</b></div>
+    <div><span>Altitud</span><b id="m-ele">–</b></div>
+  </div>
+  <div class="m-sub" id="m-sub">Toca el mapa para añadir puntos.</div>
+  <svg class="profile" id="m-profile" viewBox="0 0 300 56" preserveAspectRatio="none"></svg>
+  <div class="m-sub">Desnivel estimado con el modelo de terreno (~15 m), no medido.</div>
+  <div class="m-btns">
+    <button id="m-undo" disabled>Deshacer</button>
+    <button id="m-clear" disabled>Borrar</button>
+    <button id="m-close">Cerrar</button>
+  </div>
+</div>
 <div class="search">
   <input id="q" type="search" placeholder="Buscar pico, refugio, lago, pueblo…" autocomplete="off" enterkeyhint="search" aria-label="Buscar lugar">
   <ul class="results" id="results"></ul>
@@ -243,6 +272,7 @@
     }
   });
 
+  window.skimoMap = map;  // para depurar desde la consola
   map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
   map.addControl({
     onAdd(m) {
@@ -285,6 +315,123 @@
       document.getElementById("legend-" + id)?.classList.toggle("on", e.target.checked);
     });
   }
+  // ---------- Medidor de distancia y desnivel ----------
+  // Altitud leida de las teselas de relieve (terrain-RGB, z13 ~ 14 m); estimacion, no medida.
+  const TZ = 13;
+  const terrainFile = new pmtiles.PMTiles(tilesBase + "aran-terrain.pmtiles");
+  const tileCache = new Map();
+  const tileData = (x, y) => {
+    const k = x + "/" + y;
+    if (!tileCache.has(k)) tileCache.set(k, (async () => {
+      const r = await terrainFile.getZxy(TZ, x, y); if (!r) return null;
+      const bmp = await createImageBitmap(new Blob([r.data]));
+      const c = new OffscreenCanvas(bmp.width, bmp.height), g = c.getContext("2d", { willReadFrequently: true });
+      g.drawImage(bmp, 0, 0);
+      return { w: bmp.width, d: g.getImageData(0, 0, bmp.width, bmp.height).data };
+    })());
+    return tileCache.get(k);
+  };
+  const elevation = async ([lon, lat]) => {
+    const n = 2 ** TZ, s = Math.sin(lat * Math.PI / 180);
+    const fx = (lon + 180) / 360 * n, fy = (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n;
+    const x = Math.floor(fx), y = Math.floor(fy), t = await tileData(x, y);
+    if (!t) return null;
+    const px = Math.min(t.w - 1, Math.floor((fx - x) * t.w)), py = Math.min(t.w - 1, Math.floor((fy - y) * t.w));
+    const i = (py * t.w + px) * 4;
+    return -10000 + (t.d[i] * 65536 + t.d[i + 1] * 256 + t.d[i + 2]) * 0.1;
+  };
+  const haversine = (a, b) => {
+    const r = Math.PI / 180, dLat = (b[1] - a[1]) * r, dLon = (b[0] - a[0]) * r;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(a[1] * r) * Math.cos(b[1] * r) * Math.sin(dLon / 2) ** 2;
+    return 2 * 6371008.8 * Math.asin(Math.sqrt(h));
+  };
+  const fmtDist = m => m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toLocaleString("es-ES", { maximumFractionDigits: 2 })} km`;
+  const fmtM = m => `${Math.round(m).toLocaleString("es-ES")} m`;
+
+  const mPanel = document.getElementById("measure");
+  let measuring = false, mPoints = [], mSegs = [];   // mSegs[i] = muestras [{d, h}] del tramo i
+  const SAMPLE = 25;
+
+  const segmentSamples = async (a, b) => {
+    const len = haversine(a, b), steps = Math.max(1, Math.ceil(len / SAMPLE)), out = [];
+    for (let i = 1; i <= steps; i++) {
+      const f = i / steps;
+      out.push({ d: len * f, h: await elevation([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]) });
+    }
+    return out;
+  };
+
+  const renderMeasure = () => {
+    const src = map.getSource("measure");
+    src?.setData({ type: "FeatureCollection", features: [
+      ...(mPoints.length > 1 ? [{ type: "Feature", geometry: { type: "LineString", coordinates: mPoints.map(p => p.c) } }] : []),
+      ...mPoints.map((p, i) => ({ type: "Feature", properties: { i }, geometry: { type: "Point", coordinates: p.c } }))
+    ] });
+    // Perfil acumulado
+    const prof = []; let dist = 0;
+    if (mPoints.length) prof.push({ d: 0, h: mPoints[0].h });
+    mSegs.forEach(seg => { seg.forEach(s => prof.push({ d: dist + s.d, h: s.h })); dist += seg.at(-1)?.d ?? 0; });
+    let up = 0, down = 0, prev = null;
+    for (const p of prof) { if (p.h == null) continue; if (prev != null) { const dh = p.h - prev; if (dh > 0) up += dh; else down -= dh; } prev = p.h; }
+    document.getElementById("m-dist").textContent = fmtDist(dist);
+    document.getElementById("m-up").textContent = fmtM(up);
+    document.getElementById("m-down").textContent = fmtM(down);
+    const last = mPoints.at(-1)?.h;
+    document.getElementById("m-ele").textContent = last != null ? fmtM(last) : "–";
+    document.getElementById("m-sub").textContent = mPoints.length
+      ? `${mPoints.length} punto${mPoints.length > 1 ? "s" : ""}. Toca el mapa para seguir añadiendo.`
+      : "Toca el mapa para añadir puntos.";
+    document.getElementById("m-undo").disabled = document.getElementById("m-clear").disabled = !mPoints.length;
+    // Grafico del perfil
+    const svg = document.getElementById("m-profile"), hs = prof.filter(p => p.h != null);
+    if (hs.length < 2 || dist === 0) { svg.innerHTML = ""; return; }
+    const hMin = Math.min(...hs.map(p => p.h)), hMax = Math.max(...hs.map(p => p.h)), span = Math.max(hMax - hMin, 20);
+    const X = d => (d / dist) * 300, Y = h => 52 - ((h - hMin) / span) * 46;
+    const line = hs.map(p => `${X(p.d).toFixed(1)},${Y(p.h).toFixed(1)}`).join(" ");
+    svg.innerHTML = `<polygon points="0,56 ${line} 300,56" fill="rgba(227,26,28,.18)"/>
+      <polyline points="${line}" fill="none" stroke="#e31a1c" stroke-width="2" vector-effect="non-scaling-stroke"/>
+      <text x="2" y="10" font-size="9" fill="currentColor" opacity=".7">${Math.round(hMax)} m</text>
+      <text x="2" y="54" font-size="9" fill="currentColor" opacity=".7">${Math.round(hMin)} m</text>`;
+  };
+
+  const addPoint = async c => {
+    const h = await elevation(c);
+    if (mPoints.length) mSegs.push(await segmentSamples(mPoints.at(-1).c, c));
+    mPoints.push({ c, h });
+    renderMeasure();
+  };
+  const setMeasuring = on => {
+    measuring = on;
+    mPanel.classList.toggle("on", on);
+    document.querySelector(".btn-measure")?.classList.toggle("on", on);
+    map.getCanvas().style.cursor = on ? "crosshair" : "";
+    map.doubleClickZoom[on ? "disable" : "enable"]();
+    if (on && window.innerWidth < 600) setPanel(false);
+  };
+  document.getElementById("m-undo").onclick = () => { mPoints.pop(); mSegs.pop(); renderMeasure(); };
+  document.getElementById("m-clear").onclick = () => { mPoints = []; mSegs = []; renderMeasure(); };
+  document.getElementById("m-close").onclick = () => { setMeasuring(false); mPoints = []; mSegs = []; renderMeasure(); };
+  map.on("click", e => { if (measuring) addPoint([e.lngLat.lng, e.lngLat.lat]); });
+  map.on("load", () => {
+    map.addSource("measure", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addLayer({ id: "measure-line", type: "line", source: "measure", filter: ["==", ["geometry-type"], "LineString"],
+      paint: { "line-color": "#e31a1c", "line-width": 3, "line-dasharray": [2, 1] } });
+    map.addLayer({ id: "measure-pts", type: "circle", source: "measure", filter: ["==", ["geometry-type"], "Point"],
+      paint: { "circle-radius": 5, "circle-color": "#fff", "circle-stroke-color": "#e31a1c", "circle-stroke-width": 2.5 } });
+  });
+  map.addControl({
+    onAdd() {
+      const div = document.createElement("div");
+      div.className = "maplibregl-ctrl maplibregl-ctrl-group";
+      const b = document.createElement("button");
+      b.className = "btn-measure"; b.type = "button"; b.title = "Medir distancia y desnivel";
+      b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="8" width="20" height="8" rx="1.5" transform="rotate(-35 12 12)"/><path d="M8.2 9.6l1.2 1.7M11 7.6l1.6 2.3M13.8 5.6l1.2 1.7" transform="rotate(0)"/></svg>';
+      b.onclick = () => setMeasuring(!measuring);
+      div.appendChild(b); return div;
+    },
+    onRemove() {}
+  }, "top-right");
+
   const panel = document.getElementById("panel"), toggle = document.getElementById("toggle");
   const setPanel = open => { panel.classList.toggle("min", !open); toggle.setAttribute("aria-expanded", open); };
   toggle.addEventListener("click", () => setPanel(panel.classList.contains("min")));
