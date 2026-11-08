@@ -121,11 +121,14 @@
             "fill-opacity": ["match", ["get", "tipufoto"], 1, 0.5, 2, 0.35, 0.15]
           } },
         { id: "avalanche-line", type: "line", source: "avalanche", "source-layer": "aludes", layout: { visibility: "none" },
+          filter: ["!=", ["get", "tipufoto"], 2],
           paint: {
-            "line-color": ["match", ["get", "tipufoto"], 1, "#a50f15", 2, "#b07d10", 3, "#54278f", "#666666"],
-            "line-width": ["match", ["get", "tipufoto"], 1, 1.2, 0.8],
-            "line-dasharray": ["match", ["get", "tipufoto"], 2, ["literal", [3, 2]], ["literal", [1, 0]]]
-          } }
+            "line-color": ["match", ["get", "tipufoto"], 1, "#a50f15", "#54278f"],
+            "line-width": ["match", ["get", "tipufoto"], 1, 1.2, 0.8]
+          } },
+        { id: "avalanche-line-dash", type: "line", source: "avalanche", "source-layer": "aludes", layout: { visibility: "none" },
+          filter: ["==", ["get", "tipufoto"], 2],
+          paint: { "line-color": "#b07d10", "line-width": 0.9, "line-dasharray": [3, 2] } }
       ]
     }
   });
@@ -142,7 +145,7 @@
   for (const id of ["hillshade", "slope", "aspect", "avalanche"]) {
     document.getElementById(id).addEventListener("change", e => {
       setVis(id, e.target.checked);
-      if (id === "avalanche") setVis("avalanche-line", e.target.checked);
+      if (id === "avalanche") { setVis("avalanche-line", e.target.checked); setVis("avalanche-line-dash", e.target.checked); }
       document.getElementById("legend-" + id)?.classList.toggle("on", e.target.checked);
     });
   }
