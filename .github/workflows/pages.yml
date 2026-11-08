@@ -64,6 +64,22 @@ jobs:
           ogr2ogr -f PMTiles -nln aludes -dsco MINZOOM=9 -dsco MAXZOOM=15             "site/$TILES_DIR/aran-aludes.pmtiles" aludes.geojson
           ls -lh "site/$TILES_DIR/aran-aludes.pmtiles"
 
+      - name: Nombres de OpenStreetMap (picos, collados, fuentes, refugios, lagos, rios)
+        continue-on-error: true
+        run: |
+          python3 scripts/osm_labels.py "42.50,0.40,42.92,1.40" osm.geojson
+          ogr2ogr -f PMTiles -nln osm -dsco MINZOOM=9 -dsco MAXZOOM=15             "site/$TILES_DIR/aran-osm.pmtiles" osm.geojson
+          ls -lh "site/$TILES_DIR/aran-osm.pmtiles"
+
+      - name: Tipografias para las etiquetas (alojadas aqui para que funcionen sin depender de terceros)
+        run: |
+          for f in "Noto Sans Regular" "Noto Sans Medium" "Noto Sans Italic"; do
+            mkdir -p "site/fonts/$f"
+            for r in 0-255 256-511 8192-8447; do
+              curl -fsS --retry 3 -o "site/fonts/$f/$r.pbf"                 "https://protomaps.github.io/basemaps-assets/fonts/${f// /%20}/$r.pbf" || echo "sin $f $r"
+            done
+          done
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
