@@ -48,6 +48,17 @@ jobs:
           done
           du -sh site; ls -lh site/tiles
 
+      - name: Zonas de aludes ICGC a teselas vectoriales
+        continue-on-error: true
+        run: |
+          # Poligonos del Mapa de Zones d'Allaus (WFS ICGC) para la caja de Aran en EPSG:25831.
+          # tipufoto: 1 = zona de circulacio preferent (canal), 2 = dificil individualitzacio (ladera), 3 = susceptibilitat
+          curl -fsS --retry 3 -o aludes.geojson             "https://geoserveis.icgc.cat/geoserver/nivoallaus/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=nivoallaus:zonesallaus&outputFormat=application/json&srsName=EPSG:4326&propertyName=the_geom,tipufoto&BBOX=285000,4710000,370000,4752000,urn:ogc:def:crs:EPSG::25831"
+          sudo apt-get install -y -qq gdal-bin > /dev/null
+          gdalinfo --version
+          ogr2ogr -f PMTiles -nln aludes -dsco MINZOOM=9 -dsco MAXZOOM=15             site/tiles/aran-aludes.pmtiles aludes.geojson
+          ls -lh site/tiles/aran-aludes.pmtiles
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
