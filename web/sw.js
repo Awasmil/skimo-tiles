@@ -1,0 +1,32 @@
+// Cachea solo la "carcasa" de la app. Las teselas (peticiones por rangos) aun no se guardan offline.
+const CACHE = "skimo-shell-v1";
+const SHELL = [
+  "./", "index.html", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png",
+  "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css",
+  "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js",
+  "https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"
+];
+
+self.addEventListener("install", e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener("activate", e => {
+  e.waitUntil(caches.keys()
+    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(() => self.clients.claim()));
+});
+
+self.addEventListener("fetch", e => {
+  const req = e.request;
+  if (req.method !== "GET" || req.headers.has("range")) return;
+  const url = new URL(req.url);
+  const isShell = SHELL.some(s => new URL(s, self.location).href === url.href);
+  if (!isShell) return;
+  // Red primero (para ver cambios al momento), cache si no hay conexion
+  e.respondWith(fetch(req).then(res => {
+    const copy = res.clone();
+    caches.open(CACHE).then(c => c.put(req, copy));
+    return res;
+  }).catch(() => caches.match(req)));
+});

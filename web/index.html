@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Skimo Pirineo</title>
+<meta name="theme-color" content="#1e3a5f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Skimo">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"></script>
+<style>
+  :root { --bg: rgba(255,255,255,.94); --fg: #1b2430; --muted: #5b6573; --accent: #1e3a5f; }
+  @media (prefers-color-scheme: dark) { :root { --bg: rgba(24,28,34,.94); --fg: #e8ecf1; --muted: #9aa4b2; --accent: #8fb6e8; } }
+  html, body { margin: 0; height: 100%; background: #1e3a5f; font: 14px/1.35 system-ui, -apple-system, sans-serif; color: var(--fg); }
+  #map { position: absolute; inset: 0; }
+  .panel { position: absolute; left: max(10px, env(safe-area-inset-left)); top: max(10px, env(safe-area-inset-top));
+    background: var(--bg); border-radius: 12px; padding: 10px 12px; box-shadow: 0 2px 10px rgba(0,0,0,.25); max-width: 230px; }
+  .panel h1 { font-size: 15px; margin: 0 0 6px; }
+  .panel h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 8px 0 4px; }
+  .panel label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
+  .panel input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+  .legend { display: none; margin: 2px 0 4px 26px; font-size: 12px; }
+  .legend.on { display: block; }
+  .legend span { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -2px; margin-right: 4px; }
+  .legend div { padding: 1px 0; }
+  .toggle { position: absolute; right: 0; top: 0; border: 0; background: none; color: var(--muted); font-size: 18px; padding: 8px 10px; cursor: pointer; }
+  .panel.min > :not(.toggle):not(h1) { display: none; }
+  .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel" id="panel">
+  <button class="toggle" id="toggle" aria-label="Plegar panel">–</button>
+  <h1>Skimo · Aran</h1>
+  <h2>Base</h2>
+  <label><input type="radio" name="base" value="osm" checked> Mapa (OSM)</label>
+  <label><input type="radio" name="base" value="pnoa"> Ortofoto (PNOA)</label>
+  <h2>Capas</h2>
+  <label><input type="checkbox" id="hillshade" checked> Sombreado</label>
+  <label><input type="checkbox" id="slope" checked> Pendiente</label>
+  <div class="legend on" id="legend-slope">
+    <div><span style="background:#ffeb3b"></span>25–30°</div>
+    <div><span style="background:#ff9800"></span>30–35°</div>
+    <div><span style="background:#e53935"></span>35–40°</div>
+    <div><span style="background:#8e24aa"></span>40–45°</div>
+    <div><span style="background:#212121"></span>&gt;45°</div>
+  </div>
+  <label><input type="checkbox" id="aspect"> Orientación</label>
+  <div class="legend" id="legend-aspect">
+    <div><span style="background:#1e5ac8"></span>N</div>
+    <div><span style="background:#00aac8"></span>NE</div>
+    <div><span style="background:#50be50"></span>E</div>
+    <div><span style="background:#c8dc3c"></span>SE</div>
+    <div><span style="background:#ffa000"></span>S</div>
+    <div><span style="background:#e64632"></span>SO</div>
+    <div><span style="background:#b43ca0"></span>O</div>
+    <div><span style="background:#6446be"></span>NO</div>
+  </div>
+  <label><input type="checkbox" id="avalanche"> Zonas de aludes (ICGC)</label>
+  <div class="legend" id="legend-avalanche">
+    <div>Zonas cartografiadas por fotointerpretación y campo. No indican el peligro de hoy.</div>
+  </div>
+  <label><input type="checkbox" id="terrain3d"> Relieve 3D</label>
+  <div class="note"><b>Esta app no evalúa el peligro de aludes ni marca rutas seguras.</b> La pendiente se calcula del MDT 2 m. Consulta siempre el boletín del día (Lauegi en Aran).</div>
+</div>
+<script>
+(async () => {
+  const protocol = new pmtiles.Protocol();
+  maplibregl.addProtocol("pmtiles", protocol.tile);
+  const tilesBase = new URL("tiles/", location.href).href;
+  const pm = name => "pmtiles://" + tilesBase + name;
+
+  const slopeFile = new pmtiles.PMTiles(tilesBase + "aran-slope.pmtiles");
+  protocol.add(slopeFile);
+  const h = await slopeFile.getHeader();
+  const bounds = [[h.minLon, h.minLat], [h.maxLon, h.maxLat]];
+
+  const map = new maplibregl.Map({
+    container: "map",
+    bounds, fitBoundsOptions: { padding: 20 },
+    maxPitch: 75,
+    attributionControl: { compact: true },
+    style: {
+      version: 8,
+      sources: {
+        osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 19,
+          attribution: "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>" },
+        pnoa: { type: "raster", tileSize: 256, maxzoom: 19,
+          tiles: ["https://www.ign.es/wms-inspire/pnoa-ma?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=OI.OrthoimageCoverage&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/jpeg"],
+          attribution: "PNOA © IGN" },
+        terrain: { type: "raster-dem", url: pm("aran-terrain.pmtiles"), encoding: "mapbox", tileSize: 256,
+          attribution: "MDT02 © <a href='https://www.ign.es'>IGN CNIG</a> (CC BY 4.0)" },
+        avalanche: { type: "raster", tileSize: 256, minzoom: 10,
+          tiles: ["https://geoserveis.icgc.cat/geoserver/nivoallaus/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=zonesallaus&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/png&TRANSPARENT=true"],
+          attribution: "Zones d'allaus © <a href='https://www.icgc.cat'>ICGC</a>" },
+        slope: { type: "raster", url: pm("aran-slope.pmtiles"), tileSize: 256 },
+        aspect: { type: "raster", url: pm("aran-aspect.pmtiles"), tileSize: 256 }
+      },
+      layers: [
+        { id: "osm", type: "raster", source: "osm" },
+        { id: "pnoa", type: "raster", source: "pnoa", layout: { visibility: "none" } },
+        { id: "hillshade", type: "hillshade", source: "terrain",
+          paint: { "hillshade-exaggeration": 0.5, "hillshade-shadow-color": "#2b2b2b" } },
+        { id: "slope", type: "raster", source: "slope", paint: { "raster-opacity": 0.75, "raster-resampling": "nearest" } },
+        { id: "aspect", type: "raster", source: "aspect", layout: { visibility: "none" },
+          paint: { "raster-opacity": 0.7, "raster-resampling": "nearest" } },
+        { id: "avalanche", type: "raster", source: "avalanche", layout: { visibility: "none" },
+          paint: { "raster-opacity": 0.65 } }
+      ]
+    }
+  });
+
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
+  map.addControl(new maplibregl.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: true }), "top-right");
+  map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
+
+  const setVis = (id, on) => map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
+  document.querySelectorAll("input[name=base]").forEach(r => r.addEventListener("change", () => {
+    setVis("osm", r.value === "osm");
+    setVis("pnoa", r.value === "pnoa");
+  }));
+  for (const id of ["hillshade", "slope", "aspect", "avalanche"]) {
+    document.getElementById(id).addEventListener("change", e => {
+      setVis(id, e.target.checked);
+      document.getElementById("legend-" + id)?.classList.toggle("on", e.target.checked);
+    });
+  }
+  document.getElementById("terrain3d").addEventListener("change", e => {
+    if (e.target.checked) { map.setTerrain({ source: "terrain", exaggeration: 1.2 }); map.easeTo({ pitch: 60 }); }
+    else { map.setTerrain(null); map.easeTo({ pitch: 0 }); }
+  });
+  document.getElementById("toggle").addEventListener("click", e => {
+    const p = document.getElementById("panel");
+    p.classList.toggle("min");
+    e.target.textContent = p.classList.contains("min") ? "+" : "–";
+  });
+
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+})();
+</script>
+</body>
+</html>
