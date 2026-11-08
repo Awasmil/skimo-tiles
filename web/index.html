@@ -65,10 +65,16 @@
   <h2>Base</h2>
   <label><input type="radio" name="base" value="osm" checked> Mapa (OSM)</label>
   <label><input type="radio" name="base" value="pnoa"> Ortofoto (PNOA)</label>
+  <label><input type="radio" name="base" value="winter"> Invierno</label>
   <h2>Capas</h2>
   <label><input type="checkbox" id="hillshade" checked> Sombreado</label>
-  <label><input type="checkbox" id="slope" checked> Pendiente</label>
-  <div class="legend on" id="legend-slope">
+  <label><input type="checkbox" id="slopeaval" checked> Pendiente de aludes (≥25°)</label>
+  <div class="legend on" id="legend-slopeaval">
+    <div class="ramp" style="background:linear-gradient(90deg,#fff096 0%,#ffcd5a 25%,#ff8c28 50%,#e63c28 75%,#b41446 100%)"></div>
+    <div class="ramp-ticks"><span>25°</span><span>30°</span><span>35°</span><span>40°</span><span>45°+</span></div>
+  </div>
+  <label><input type="checkbox" id="slope"> Pendiente (toda)</label>
+  <div class="legend" id="legend-slope">
     <div class="ramp" style="background:linear-gradient(90deg,#2ea043 0%,#a5d74a 20%,#ffe628 40%,#ff9600 60%,#e63228 80%,#9a1466 100%)"></div>
     <div class="ramp-ticks"><span>0°</span><span>20°</span><span>27°</span><span>32°</span><span>37°</span><span>45°+</span></div>
     <div style="color:var(--muted)">Sobre MDT a 10 m: suaviza resaltes muy cortos.</div>
@@ -136,14 +142,19 @@
         avalanche: { type: "vector", url: pm("aran-aludes.pmtiles"),
           attribution: "Zones d'allaus © <a href='https://www.icgc.cat'>ICGC</a>" },
         slope: { type: "raster", url: pm("aran-slope.pmtiles"), tileSize: 256 },
+        slopeaval: { type: "raster", url: pm("aran-slope-aval.pmtiles"), tileSize: 256 },
         aspect: { type: "raster", url: pm("aran-aspect.pmtiles"), tileSize: 256 }
       },
       layers: [
+        { id: "winter-bg", type: "background", layout: { visibility: "none" }, paint: { "background-color": "#f3f5f8" } },
         { id: "osm", type: "raster", source: "osm" },
         { id: "pnoa", type: "raster", source: "pnoa", layout: { visibility: "none" } },
         { id: "hillshade", type: "hillshade", source: "terrain",
           paint: { "hillshade-exaggeration": 0.5, "hillshade-shadow-color": "#2b2b2b" } },
-        { id: "slope", type: "raster", source: "slope", paint: { "raster-opacity": 0.8, "raster-resampling": "linear", "raster-fade-duration": 0 } },
+        { id: "slope", type: "raster", source: "slope", layout: { visibility: "none" },
+          paint: { "raster-opacity": 0.8, "raster-resampling": "linear", "raster-fade-duration": 0 } },
+        { id: "slopeaval", type: "raster", source: "slopeaval",
+          paint: { "raster-opacity": 0.85, "raster-resampling": "linear", "raster-fade-duration": 0 } },
         { id: "aspect", type: "raster", source: "aspect", layout: { visibility: "none" },
           paint: { "raster-opacity": 0.75, "raster-resampling": "linear", "raster-fade-duration": 0 } },
         // tipufoto ICGC: 1 = canal (circulacio preferent), 2 = ladera (dificil individualitzacio), 3 = susceptible
@@ -254,9 +265,17 @@
   document.querySelectorAll("input[name=base]").forEach(r => r.addEventListener("change", () => {
     setVis("osm", r.value === "osm");
     setVis("pnoa", r.value === "pnoa");
+    setVis("winter-bg", r.value === "winter");
+    // Invierno: terreno blanco con sombras gris azuladas, como nevado
+    const w = r.value === "winter";
+    map.setPaintProperty("hillshade", "hillshade-exaggeration", w ? 0.85 : 0.5);
+    map.setPaintProperty("hillshade", "hillshade-shadow-color", w ? "#4f5f75" : "#2b2b2b");
+    map.setPaintProperty("hillshade", "hillshade-highlight-color", w ? "#ffffff" : "#ffffff");
+    map.setPaintProperty("hillshade", "hillshade-accent-color", w ? "#8090a8" : "#000000");
+    if (w && !document.getElementById("hillshade").checked) document.getElementById("hillshade").click();
   }));
   const groups = {
-    hillshade: ["hillshade"], slope: ["slope"], aspect: ["aspect"],
+    hillshade: ["hillshade"], slope: ["slope"], slopeaval: ["slopeaval"], aspect: ["aspect"],
     avalanche: ["avalanche", "avalanche-line", "avalanche-line-dash"],
     contours: ["contours-minor", "contours-major", "contours-label"],
     labels: ["osm-river", "osm-stream", "osm-spring", "osm-hut", "osm-peak-dot",
