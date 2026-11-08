@@ -75,7 +75,9 @@
 (async () => {
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol("pmtiles", protocol.tile);
-  const tilesBase = new URL("tiles/", location.href).href;
+  // __TILES_DIR__ lo sustituye el despliegue por una carpeta unica (evita mezclar cache entre versiones)
+  const tilesDir = "__TILES_DIR__";
+  const tilesBase = new URL(tilesDir.startsWith("__") ? "tiles/" : tilesDir, location.href).href;
   const pm = name => "pmtiles://" + tilesBase + name;
 
   const slopeFile = new pmtiles.PMTiles(tilesBase + "aran-slope.pmtiles");
