@@ -35,10 +35,15 @@ jobs:
         run: |
           TAG="$(tr -d '[:space:]' < web/tiles-tag.txt)"
           echo "Teselas: $TAG"
-          mkdir -p site/tiles
+          # Carpeta unica por despliegue: si se reutiliza el nombre, el movil mezcla la cache
+          # (cabecera vieja + bytes nuevos) y el mapa sale con cuadros y paredes.
+          DIR="tiles/${TAG}-r${GITHUB_RUN_NUMBER}"
+          echo "TILES_DIR=$DIR" >> "$GITHUB_ENV"
+          mkdir -p "site/$DIR"
           cp -r web/. site/
           rm -f site/tiles-tag.txt
-          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.pmtiles" --dir site/tiles
+          sed -i "s#__TILES_DIR__#$DIR/#" site/index.html
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.pmtiles" --dir "site/$DIR"
           sudo apt-get install -y -qq imagemagick > /dev/null
           for s in 180 192 512; do
             convert -size ${s}x${s} xc:'#1e3a5f' -fill white \
@@ -46,7 +51,7 @@ jobs:
               -fill '#8fb6e8' -draw "polygon $((s*42/100)),$((s*34/100)) $((s*50/100)),$((s*48/100)) $((s*35/100)),$((s*47/100))" \
               site/icon-$s.png
           done
-          du -sh site; ls -lh site/tiles
+          du -sh site; ls -lh "site/$DIR"
 
       - name: Zonas de aludes ICGC a teselas vectoriales
         continue-on-error: true
@@ -56,8 +61,8 @@ jobs:
           curl -fsS --retry 3 -o aludes.geojson             "https://geoserveis.icgc.cat/geoserver/nivoallaus/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=nivoallaus:zonesallaus&outputFormat=application/json&srsName=EPSG:4326&propertyName=the_geom,tipufoto&BBOX=285000,4710000,370000,4752000,urn:ogc:def:crs:EPSG::25831"
           sudo apt-get install -y -qq gdal-bin > /dev/null
           gdalinfo --version
-          ogr2ogr -f PMTiles -nln aludes -dsco MINZOOM=9 -dsco MAXZOOM=15             site/tiles/aran-aludes.pmtiles aludes.geojson
-          ls -lh site/tiles/aran-aludes.pmtiles
+          ogr2ogr -f PMTiles -nln aludes -dsco MINZOOM=9 -dsco MAXZOOM=15             "site/$TILES_DIR/aran-aludes.pmtiles" aludes.geojson
+          ls -lh "site/$TILES_DIR/aran-aludes.pmtiles"
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
