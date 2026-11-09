@@ -1,0 +1,118 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las acumulaciones de nieve venteada más recientes pueden desencadenarse fácilmente de manera accidental o, aisladamente, de manera natural en cotas medias y altas. Especialmente en las laderas muy inclinadas así como en las zonas umbrías y protegidas del viento son probables purgas de nieve seca. Los aludes son de tamaño en general pequeño. <br/> <br/> Las acumulaciones de nieve venteada más antiguas pueden desencadenarse accidentalmente especialmente en laderas umbrías inclinadas en cotas altas. Estos últimos en algunos casos son de tamaño mediano en particular cerca de los cordales. <br/> <br/> Es importante una elección cuidadosa del itinerario. Los lugares peligrosos son resultan difíciles de reconocer con poca visibilidad.",
+    "highlights": "Nieve reciente y nieve venteada en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "S",
+      "E",
+      "SW",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "S",
+      "E",
+      "SW",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "189edbce-66e9-4c32-a582-b21d2ea77f1e",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-11-26"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada. A partir de ahora, el boletín de peligro de aludes se publicará cada día a las 17:00.",
+   "lang": "es",
+   "publicationTime": "2025-11-25T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En las últimas horas se han acumulado en una zona extensa de 15 a 20 cm de nieve. Hasta la mañana caerán 15 cm de nieve, localmente más. El viento soplará, cerca de los cordales, de fuerte a muy fuerte especialmente en los límites sur y este del Arán. <br/> En las laderas umbrías en cotas altas: La parte inferior del manto se ha facetado. <br/> Sobre todo en altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Con la atenuación de las precipitaciones, ligero descenso del peligro de aludes.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-11-27T16:00:00+00:00",
+      "startTime": "2025-11-26T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-11-26T16:00:00+00:00",
+    "startTime": "2025-11-25T16:00:00+00:00"
+   }
+  }
+ ]
+}

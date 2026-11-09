@@ -1,0 +1,123 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las nuevas acumulaciones de nieve venteada y las menos recientes pueden desencadenarse muy fácilmente de manera accidental en todas las orientaciones por encima de los 2200 m aproximadamente. Los lugares peligrosos se encuentran especialmente en cubetas, canales y detrás de los cambios abruptos de pendiente y cerca de las cumbres. Los aludes aquí son a menudo de tamaño mediano. <br/> Especialmente en las laderas con poca nieve umbrías en cotas altas: De manera aislada, los aludes pueden desprenderse por la nieve antigua y alcanzar tamaños peligrosamente grandes. <br/> <br/> En las laderas inclinadas solanas: A consecuencia del aumento de la temperatura diurna y la radiación solar, son probables cada vez más numerosas avalanchas de nieve húmeda, incluso de tamaño mediano. Además son posibles aludes de deslizamiento basal en cualquier momento. <br/> <br/>",
+    "highlights": "Las placas de viento deberían ser evaluadas con cautela por encima de los 2200 m aproximadamente. En el transcurso de la jornada claro aumento del peligro de aludes de nieve húmeda."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SW",
+      "SE",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "upperBound": "2200"
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "a61449d9-5760-46dc-9e7a-6dc68488822e",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-18"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2200"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-02-17T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El tiempo será bastante soleado. En muchos lugares la nieve venteada descansa encima de capas blandas. En la parte basal del manto de nieve hay capas débiles de cristales facetados especialmente en las laderas umbrías. <br/> <br/> En el transcurso de la jornada la radiación solar causará por debajo de los 2200 m aproximadamente una clara humidificación del manto de nieve en las laderas solanas inclinadas. En cotas medias están presentes de 150 a 220 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: A consecuencia de la nieve reciente y el viento fuerte, rápido aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2026-02-19T16:00:00+00:00",
+      "startTime": "2026-02-18T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-02-18T16:00:00+00:00",
+    "startTime": "2026-02-17T16:00:00+00:00"
+   }
+  }
+ ]
+}

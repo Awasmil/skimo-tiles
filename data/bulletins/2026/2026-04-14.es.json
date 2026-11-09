@@ -1,0 +1,117 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las acumulaciones de nieve venteada son fácilmente identificables y propensas al desencadenamiento. Estas se encuentran en particular cerca de collados y cordales. Los aludes de nieve seca son de tamaño en general pequeño. <br/> <br/> A consecuencia del aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada son probables purgas y avalanchas de nieve húmeda. Además hay un peligro latente de aludes de deslizamiento basal. <br/> <br/> Las excursiones por la montaña requieren una elección atenta del itinerario.",
+    "highlights": "Nieve venteada en altitud. Avalanchas y aludes de nieve húmeda en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "baa1c864-a811-45e2-a4fd-689a177806cc",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-14"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-04-13T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta la mañana caerá un poco de nieve en una zona amplia. El viento del norte transportará la nieve reciente. Las placas de viento aumentarán de tamaño ligeramente en algunos lugares. El tiempo será soleado. <br/> <br/> La nieve antigua es húmeda, con una costra de rehielo gruesa portante en superficie. En cotas medias y altas aún hay mucha nieve. En cotas altas los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Miércoles: Claro descenso del peligro de aludes de nieve seca.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-04-15T15:00:00+00:00",
+      "startTime": "2026-04-14T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-14T15:00:00+00:00",
+    "startTime": "2026-04-13T15:00:00+00:00"
+   }
+  }
+ ]
+}

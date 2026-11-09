@@ -1,0 +1,173 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las nuevas acumulaciones de nieve venteada y las menos recientes pueden desencadenarse muy fácilmente de manera accidental en todas las orientaciones y por encima del límite del bosque. Los lugares peligrosos se encuentran especialmente en cubetas, canales y detrás de los cambios abruptos de pendiente y cerca de las cumbres. Los aludes son en parte de tamaño mediano. De manera aislada, los aludes pueden alcanzar tamaños grandes. <br/> <br/> Mediodía y tarde: A partir del mediodía la probabilidad de desencadenamiento de aludes de nieve húmeda o muy húmeda aumentará rápidamente en las laderas solanas inclinadas por debajo de los 2400 m aproximadamente. Son son probables aludes naturales de tamaño pequeño y mediano. Además son posibles aludes de deslizamiento basal. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren mucha experiencia en la evaluación del peligro de aludes y una cuidadosa elección del itinerario.",
+    "highlights": "Las abundantes placas de viento de los últimos días deben ser evaluadas con cautela en todas las orientaciones. A partir del mediodía son son probables avalanchas de nieve muy húmeda."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "upperBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "upperBound": "2400"
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SW",
+      "SE",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "008fdcf2-50a2-47d8-abb0-b5386cf28add",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-21"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "treeline"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "later"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-02-20T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El tiempo será soleado. En una zona amplia desde el jueves se han acumulado de 15 a 20 cm de nieve por encima de los 1500 m aproximadamente, localmente más. <br/> La nieve reciente y en particular las placas de viento a veces gruesas se encuentran encima de una superficie desfavorable del manto de nieve antigua. En la parte basal del manto de nieve hay capas débiles de cristales facetados especialmente en las laderas umbrías. <br/> A partir de mediodía el sol y el calor causarán por debajo de los 2400 m aproximadamente una progresiva humidificación del manto de nieve especialmente en las laderas solanas inclinadas. <br/> <br/> Hay más nieve de lo habitual. En cotas medias están presentes de 150 a 220 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Domingo: A consecuencia del aumento de la temperatura diurna y la radiación solar, adicional aumento del peligro de aludes de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-02-22T16:00:00+00:00",
+      "startTime": "2026-02-21T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-02-21T16:00:00+00:00",
+    "startTime": "2026-02-20T16:00:00+00:00"
+   }
+  }
+ ]
+}

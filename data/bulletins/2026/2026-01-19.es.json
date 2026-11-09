@@ -1,0 +1,137 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente poco fría y en particular las placas de viento numerosas y a veces grandes deben ser evaluadas con cautela en todas las orientaciones en cotas medias y altas. Estos pueden ser desencadenadas fácilmente y alcanzar un tamaño mediano. Los aludes de nieve seca pueden desencadenarse también en el manto débil de nieve antigua. Estos son a veces de tamaño peligrosamente grande. Son especialmente peligrosas las laderas umbrías, donde hay capas débiles persistentes en el manto de nieve antigua. En el límite con la Ribagorça y el Pallars, los lugares peligrosos son más frecuentes y el peligro es ligeramente mayor. <br/> <br/> Los lugares peligrosos son frecuentes y resultan difíciles de reconocer con poca visibilidad. Las excursiones de montaña y las actividades fuera pista requieren mucha experiencia i y la máxima prudencia.",
+    "highlights": "Nieve reciente y nieve venteada en todas las orientaciones. Capas débiles persistentes en las laderas umbrías."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "091d265e-06d6-4c42-b736-92b56937f895",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-19"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las condiciones de aludes permanecen peligrosas.",
+   "lang": "es",
+   "publicationTime": "2026-01-18T16:00:27+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Desde el viernes se han acumulado de 30 a 50 cm de nieve por encima de los 1500 m aproximadamente, localmente más. En particular por encima del límite del bosque: El viento con rachas fuertes ha transportado intensamente la nieve reciente. La nieve reciente y la nieve venteada se mantienen en parte inestables sobre todo en laderas umbrías inclinadas y poco frecuentadas. En el manto de nieve antigua hay capas débiles pronunciadas especialmente en las laderas con poco espesor de nieve orientadas a oeste, norte y este. <br/> <br/> En cotas medias están presentes de 80 a 120 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Martes: Caerá un poco de nieve. El peligro de aludes de nieve seca no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-01-20T16:00:00+00:00",
+      "startTime": "2026-01-19T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-01-19T16:00:00+00:00",
+    "startTime": "2026-01-18T16:00:00+00:00"
+   }
+  }
+ ]
+}

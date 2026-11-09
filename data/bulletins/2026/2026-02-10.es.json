@@ -1,0 +1,142 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la subida de la cota de nieve, en el transcurso de la jornada el peligro de aludes de nieve muy húmeda y de deslizamiento basal aumentará progresivamente al grado 3 (notable). Con la penetración de la humedad son probables purgas y avalanchas de nieve húmeda de tamaño mediano por debajo de los 2500 m aproximadamente. En particular en las laderas muy inclinadas umbrías en las zonas de manto delgado: Estos pueden, en algunos casos, desencadenarse por la nieve antigua y alcanzar tamaños peligrosamente grandes. En todos los sectores hacia última hora de la tarde el número de los lugares peligrosos aumentará. Además son de esperar aludes de deslizamiento basal en cualquier momento. <br/> <br/> Especialmente en cotas altas: En el transcurso de la jornada , con la nieve reciente y el viento del oeste , se formarán placas de viento delicadas en particular cerca de los cordales, en canales y cubetas así como en altitud. Además son posibles avalanchas y aludes de nieve seca de tamaño pequeño y mediano. Estas pueden ser desencadenadas al paso de un montañero o de forma natural. <br/> <br/> La actual situación de aludes requiere mucha experiencia en la evaluación del peligro de aludes.",
+    "highlights": "Caerá lluvia hasta los 2500 m en una zona amplia. Nieve venteada en altitud. Hacia última hora de la tarde se alcanzará posiblemente el grado de peligro 4 (fuerte)."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "upperBound": "2500"
+     },
+     "frequency": "many",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2100"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2500"
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "7f9528b6-7e4d-4f99-81bd-bff74f9b4653",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-10"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-02-10T07:07:37+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El martes será muy nublado. A partir de la mañana la lluvia causará en un área extensa por debajo de los 2500 m aproximadamente una progresiva humidificación del manto de nieve. En cotas altas: Hasta la tarde caerán de 15 a 25 cm de nieve, localmente más. El viento moderado transportará la nieve reciente. <br/> <br/> En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas umbrías. En cotas medias están presentes de 120 a 200 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Hasta la mañana caerá un poco de lluvia. Con el enfriamiento, progresivo descenso del peligro de aludes de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-02-11T16:00:00+00:00",
+      "startTime": "2026-02-10T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-02-10T16:00:00+00:00",
+    "startTime": "2026-02-09T16:00:00+00:00"
+   }
+  }
+ ]
+}

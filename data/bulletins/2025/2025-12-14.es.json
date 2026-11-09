@@ -1,0 +1,108 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con el aumento de la temperatura diurna y la radiación solar, la probabilidad de desencadenamiento de purgas de nieve húmeda durante el día aumentará ligeramente en las laderas solanas muy inclinadas. Estas pueden ser desencadenadas al paso de un montañero, pero en su mayoría ser de dimensiones pequeñas. <br/> <br/> La última semana han caído numerosas aludes de deslizamiento basal de tamaño pequeño y mediano. Con el enfriamiento, el peligro de aludes de deslizamiento basal disminuirá progresivamente. Sin embargo no se descartan de manera aislada aludes de tamaño pequeño y, localmente, mediano. Los lugares peligrosos se encuentran especialmente en laderas solanas y en las laderas umbrías por debajo de los 2400 m aproximadamente. <br/> <br/> En zonas de alta montaña: Las acumulaciones de nieve venteada antiguas son en su mayoría pequeñas y pueden desencadenarse solo de manera aislada. <br/> <br/> En el transcurso de la jornada: Evitar las zonas con grietas de deslizamiento basal. Debido a la superficie dura del manto de nieve hay el peligro de resbalar y caer en las laderas inclinadas.",
+    "highlights": "Aún son posibles de manera aislada purgas de nieve húmeda durante el día y avalanchas de deslizamiento basal."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "SW",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "SW",
+      "NW",
+      "N",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "a8ce887c-7792-4ac5-9f3b-0c6191881671",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-14"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-13T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Domingo: El tiempo será bastante soleado. <br/> <br/> En las laderas solanas: La superficie del manto de nieve se volverá a helar para formar una costra portante y se ablandará durante el día. <br/> En cotas medias y altas en las laderas umbrías: La parte superficial del manto es en algunos casos débil, con una superficie trasformada en cristales facetados. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Con la penetración de la humedad, progresivo aumento del peligro de aludes de deslizamiento basal y purgas de nieve húmeda. En cotas altas: A consecuencia de la nieve reciente y el viento, ligero aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2025-12-15T16:00:00+00:00",
+      "startTime": "2025-12-14T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-14T16:00:00+00:00",
+    "startTime": "2025-12-13T16:00:00+00:00"
+   }
+  }
+ ]
+}

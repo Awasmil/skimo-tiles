@@ -1,0 +1,135 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las placas de viento a veces gruesas pueden desencadenarse fácilmente en todas las orientaciones y en cotas medias y altas. Los lugares peligrosos se encuentran especialmente en cubetas, canales y detrás de los cambios abruptos de pendiente. En las laderas inclinadas umbrías, en las zonas protegidas del viento: Los aludes de nieve seca pueden, de manera aislada, desencadenarse por la nieve antigua y alcanzar tamaños bastante grandes. <br/> <br/> Sobre todo en las laderas solanas: A consecuencia del aumento de la temperatura diurna y la radiación solar, a partir de la mañana son probables cada vez más numerosas purgas y avalanchas de nieve húmeda, incluso de tamaño mediano. <br/> <br/> <br/> Las condiciones son delicadas para las excursiones con esquís y raquetas de nieve, así como las actividades fuera pista.",
+    "highlights": "La nieve venteada y la nieve húmeda deben evaluarse con atención."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N",
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1400"
+     },
+     "frequency": "many",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "73cf0bc4-3894-41ec-a5d7-50cba3c922c0",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-03"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "En este primer día de sol se recomienda prudencia.",
+   "lang": "es",
+   "publicationTime": "2026-04-02T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Desde el martes se han acumulado de 40 a 50 cm de nieve por encima de los 1400 m aproximadamente. El viento del norte ha transportado intensamente la nieve reciente. Hasta la madrugada caerá un poco de nieve. <br/> <br/> Las nuevas acumulaciones de nieve venteada y las menos recientes descansan encima de capas blandas. <br/> En el transcurso de la jornada la radiación solar causará una progresiva humidificación del manto de nieve. <br/> <br/> En cotas medias están presentes de 120 a 240 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Sábado: Ligero descenso del peligro de aludes de nieve seca. A consecuencia del aumento de la temperatura diurna y la radiación solar, claro aumento del peligro de aludes de nieve húmeda.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2026-04-04T15:00:00+00:00",
+      "startTime": "2026-04-03T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-03T15:00:00+00:00",
+    "startTime": "2026-04-02T15:00:00+00:00"
+   }
+  }
+ ]
+}

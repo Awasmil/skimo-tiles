@@ -1,0 +1,146 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En el transcurso de la noche , con la nieve reciente y el viento con rachas fuertes del norte , se formarán placas de viento en algunos casos gruesas cerca de los cordales de todas las orientaciones. En el transcurso de la jornada estas aumentarán de tamaño en todas las orientaciones. Los aludes son a veces de tamaño mediano y fácilmente pueden ser desencadenados por un solo montañero. En los límites sur y este del Arán estos lugares peligrosos son más numerosos. <br/> Los aludes de nieve seca pueden desencadenarse en las capas más profundas del manto de nieve en particular en las laderas poco frecuentadas y con poco espesor de nieve umbrías. Los aludes aquí son a veces de tamaño mediano. <br/> <br/> En todas las orientaciones y en cotas bajas y medias: A consecuencia del aumento de la temperatura, a partir de mediodía son posibles avalanchas de nieve seca y húmeda, pero en su mayoría pequeñas. <br/> <br/> Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren experiencia i y la máxima prudencia.",
+    "highlights": "Las placas de viento representan la principal fuente de peligro. Las capas débiles en la nieve antigua requieren una elección conservadora de la ruta."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "9651b8e8-8171-4419-8419-ff3ea083e10c",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-08"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "treeline"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-01-07T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta la mañana caerán en una zona extensa de 15 a 20 cm de nieve por encima de los 1500 m aproximadamente, localmente menos. El viento del norte transportará intensamente la nieve reciente. <br/> <br/> En las laderas umbrías, en las zonas de manto delgado: En el manto de nieve hay capas débiles de cristales facetados. <br/> <br/> En cotas medias están presentes de 60 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Viernes: A consecuencia de la nieve reciente y el viento muy fuerte, progresivo aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2026-01-09T16:00:00+00:00",
+      "startTime": "2026-01-08T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-08T16:00:00+00:00",
+    "startTime": "2026-01-07T16:00:00+00:00"
+   }
+  }
+ ]
+}

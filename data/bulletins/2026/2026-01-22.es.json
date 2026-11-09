@@ -1,0 +1,140 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Miércoles: El viento del sur ha transportado intensamente la nieve reciente. En particular cerca de los cordales, en canales y cubetas se han formado placas de viento en algunos casos de tamaño grande. Jueves: En el transcurso de la jornada , con la nieve reciente y el viento moderado del cuadrante norte , se formarán placas de viento adicionales. Las placas de viento pueden ser desencadenadas al paso de una persona o de forma natural. <br/> <br/> En la parte basal del manto de nieve hay capas débiles de cristales facetados en las laderas umbrías. Especialmente en zonas de transición de manto delgado a grueso: Las capas débiles en la nieve antigua pueden ser desencadenadas muy fácilmente. Los aludes son a veces de tamaño peligrosamente grande. <br/> <br/> La nieve reciente puede fácilmente desencadenarse de manera natural o accidental en todas las orientaciones. En el transcurso de la jornada son probables de forma aislada avalanchas y aludes de nieve seca, incluso de tamaño mediano. <br/> A consecuencia de la radiación solar, durante la tarde son posibles purgas de nieve húmeda. Además son posibles algunos aludes de deslizamiento basal. <br/> <br/> En el límite con la Ribagorça y el Pallars, los lugares peligrosos son más frecuentes y el peligro es ligeramente mayor. Las excursiones de montaña y las actividades fuera pista requieren mucha experiencia i y la máxima prudencia.",
+    "highlights": "Nieve reciente y nieve venteada. Capas débiles persistentes en las laderas umbrías."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "daa94c00-b9d4-4871-b722-7cafcf45e108",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-22"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las condiciones de aludes permanecen peligrosas. Especialmente en el límite sur del Arán, los lugares peligrosos son más frecuentes y el peligro es mayor.",
+   "lang": "es",
+   "publicationTime": "2026-01-21T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "A consecuencia de la nieve reciente y el viento fuerte se han desencadenado numerosas avalanchas de nieve seca de tamaño mediano y grande. En la parte basal del manto de nieve antigua hay capas débiles pronunciadas especialmente en las laderas con poco espesor de nieve orientadas a oeste, norte y este. <br/> <br/> Jueves: Hasta la tarde caerán de 10 a 15 cm de nieve, localmente más. El viento del norte transportará la nieve reciente. <br/> <br/> En cotas medias están presentes de 80 a 120 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Viernes: El peligro de aludes no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-01-23T16:00:00+00:00",
+      "startTime": "2026-01-22T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-22T16:00:00+00:00",
+    "startTime": "2026-01-21T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,125 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con el viento de moderado a fuerte del sud , se formarán placas de viento adicionales en particular en canales y cubetas y detrás de los cambios abruptos de pendiente. Las nuevas acumulaciones de nieve venteada y las menos recientes pueden desencadenarse fácilmente de manera accidental o, aisladamente, de manera natural en todas las orientaciones. Estas han quedado parcialmente cubiertas de nieve y, por lo tanto, son difíciles de identificar. Los aludes son a veces de tamaño mediano. Estos pueden, de manera aislada, desencadenarse por la nieve antigua y alcanzar tamaños peligrosamente grandes. En el límite con la Ribagorça y el Pallars los lugares peligrosos son más numerosos y extensos. <br/> <br/> En el transcurso de la jornada: La nieve reciente de ayer puede fácilmente desencadenarse de manera natural o accidental sobre todo en laderas solanas muy inclinadas. Estos son solo de tamaño pequeño. Además son de esperar aludes de deslizamiento basal en cualquier momento. Estos últimos son en parte de tamaño mediano. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren experiencia en la evaluación del peligro de aludes y una cuidadosa elección del itinerario.",
+    "highlights": "Las placas de viento recientes y antiguas representan la principal fuente de peligro. Además son de esperar aludes de deslizamiento basal."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "S",
+      "SW",
+      "NE",
+      "NW",
+      "W",
+      "E",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "S",
+      "SW",
+      "E",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "de045d37-36f8-487f-acc0-f5dbef8c93dc",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-04"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las condiciones de aludes permanecen hivernales a cota alta.",
+   "lang": "es",
+   "publicationTime": "2026-02-03T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En una zona amplia se han acumulado de 5 a 10 cm de nieve por encima de los 1800 m aproximadamente, localmente más. El viento del sur ha transportado la nieve reciente y, en parte, la nieve antigua. Las diversas placas de viento de los últimos días permanecen en parte inestables en todas las orientaciones y generalmente en cotas altas. En el transcurso de la jornada , con la nieve reciente y el viento de moderado a fuerte del sud , se formarán placas de viento adicionales. <br/> <br/> En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas orientadas a oeste, norte y este. Los lugares peligrosos se encuentran en las zonas de manto delgado y en terreno pendiente y escarpado. En cotas medias están presentes de 130 a 170 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: Se formarán placas de viento adicionales. Con la humidificación, adicional aumento del peligro de aludes de deslizamiento basal y purgas de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-02-05T16:00:00+00:00",
+      "startTime": "2026-02-04T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-02-04T16:00:00+00:00",
+    "startTime": "2026-02-03T16:00:00+00:00"
+   }
+  }
+ ]
+}

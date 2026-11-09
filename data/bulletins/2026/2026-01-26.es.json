@@ -1,0 +1,140 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente y la nieve venteada pueden desencadenarse fácilmente de manera natural o accidental en todas las orientaciones. Hasta la mañana las placas de viento, ya grandes, aumentarán de tamaño en todos los sectores. Especialmente en las laderas inclinadas umbrías, en las zonas de manto delgado: Los aludes de nieve seca pueden, también, desencadenarse por la nieve antigua y alcanzar tamaños muy grandes. <br/> <br/> En todas las orientaciones: Con la penetración de la humedad, en el transcurso de la jornada son probables purgas de nieve seca y húmeda, incluso grandes. Además son posibles algunos aludes de deslizamiento basal. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren mucha experiencia en la evaluación del peligro de aludes.",
+    "highlights": "Con la nieve reciente y el viento la situación de aludes es muy peligrosa."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 4,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "5badab4a-7754-4c43-89b5-972473e22e89",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-26"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "high",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Probablemente el pico de la actividad de aludes se alcanzará durante la madrugada.",
+   "lang": "es",
+   "publicationTime": "2026-01-26T07:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Segunda mitad de la noche: Se han acumulado de 20 a 30 cm de nieve. El viento del noroeste ha transportado la nieve reciente. <br/> Lunes: El tiempo será parcialmente nublado. El viento del sudoeste transportará la nieve. <br/> <br/> Con las bajas temperaturas, la nevada y el viento de moderado a fuerte, durante el fin de semana se han formado nuevas placas de viento. En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas con poco espesor de nieve orientadas a oeste, norte y este. Los desencadenamientos de aludes y los tests de estabilidad confirman una situación de aludes compleja en todos los sectores. <br/> <br/> En cotas medias están presentes de 100 a 150 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Martes: Hasta la mañana caerán de 10 a 20 cm de nieve por encima de los 2000 m aproximadamente. El peligro de aludes no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-01-27T16:00:00+00:00",
+      "startTime": "2026-01-26T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-01-26T16:00:00+00:00",
+    "startTime": "2026-01-25T16:00:00+00:00"
+   }
+  }
+ ]
+}

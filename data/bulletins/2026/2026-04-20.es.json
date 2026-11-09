@@ -1,0 +1,160 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En todas las orientaciones en zonas de alta montaña: En el transcurso de la jornada son posibles purgas y avalanchas de nieve muy húmeda, incluso de tamaño mediano. Los aludes pueden ser desencadenadas al paso de una persona o de forma natural. Con la lluvia, durante la tarde el peligro de aludes de nieve húmeda aumentará. <br/> Además hay un peligro acusado de aludes de deslizamiento basal. Estos son a veces de tamaño grande. <br/> <br/> Las excursiones de montaña deben comenzar y acabar muy temprano. Evitar las zonas con grietas de deslizamiento basal.",
+    "highlights": "En el transcurso de la jornada progresivo aumento del peligro de aludes de nieve muy húmeda y de deslizamiento basal."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "3704a167-b76e-4bad-aa78-138545dc091b",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-20"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "later"
+    }
+   ],
+   "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada del manto de nieve. Por lo tanto, debe evaluarse detenidamente el peligro de aludes local.",
+   "lang": "es",
+   "publicationTime": "2026-04-19T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El enfriamiento nocturno será reducido. La superficie del manto de nieve se volverá a helar apenas y se ablandará ya durante la mañana. Por la mañana el tiempo será bastante soleado. Durante la tarde caerá lluvia hasta los 2800 m en algunos sectores. <br/> <br/> El manto de nieve es muy húmedo en general. En las laderas inclinadas orientadas a oeste, norte y este en cotas medias y altas: En los últimos días han caído algunas aludes de deslizamiento basal de tamaño mediano y grande. <br/> <br/> En muchos lugares el espesor de nieve es superior a la media para estas fechas."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Martes: Las condiciones permanecen primaverales.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-04-21T15:00:00+00:00",
+      "startTime": "2026-04-20T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-20T15:00:00+00:00",
+    "startTime": "2026-04-19T15:00:00+00:00"
+   }
+  }
+ ]
+}

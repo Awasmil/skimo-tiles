@@ -1,0 +1,121 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente y la nieve venteada del fin de semana no se han unido bien con la nieve antigua. Los aludes de nieve seca todavía pueden ser desencadenadas fácilmente. Estos pueden desencadenarse también en las capas basales del manto de nieve. Estos últimos son a veces de tamaño grande. Los tests de estabilidad y los \"whumpfs\" y las fisuras que propagan al pasar indican esta situación. <br/> <br/> El martes , con la nieve reciente y el viento de moderado a fuerte del sudoeste , se han formado placas de viento en su mayoría de tamaño pequeño sobre todo cerca de los cordales, en canales y cubetas. Las nuevas acumulaciones de nieve venteada pueden fácilmente desencadenarse sobre todo en laderas umbrías. <br/> <br/> Además son posibles en número creciente avalanchas de deslizamiento basal de tamaño pequeño y, localmente, mediano. La actual situación de aludes requiere experiencia i y prudencia.",
+    "highlights": "El problema de capas débiles persistentes requiere atención. Nieve venteada reciente en las laderas umbrías."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "S",
+      "SW",
+      "NE",
+      "NW",
+      "W",
+      "E",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "W",
+      "E",
+      "N"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "ee4983ad-f62f-4d27-a3b4-d725d2b9ea16",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-14"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-01-13T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Con las temperaturas suaves y la alta humedad del aire, en los últimos dos días el manto de nieve se ha asentado. En el manto de nieve antigua hay capas débiles pronunciadas especialmente en las laderas poco frecuentadas y con poco espesor de nieve orientadas a oeste, norte y este. <br/> Martes: El viento del sudoeste ha transportado mucha nieve. En particular en los sectores del sur expuestos al Foehn se han formado placas de viento fácilmente desencadenables. <br/> <br/> En cotas medias están presentes de 70 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: Ligero descenso del peligro de aludes de nieve seca.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2026-01-15T16:00:00+00:00",
+      "startTime": "2026-01-14T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-14T16:00:00+00:00",
+    "startTime": "2026-01-13T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,127 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Última hora de la tarde y noche: <br/> Con la lluvia, son posibles purgas de nieve húmeda de tamaño pequeño y, localmente, mediano por debajo de los 2300 m aproximadamente. Además son de esperar aludes de deslizamiento basal. <br/> <br/> Jueves: <br/> Con la nieve reciente y el viento de fuerte a muy fuerte del noroeste , se formarán abundantes placas de viento cerca de los cordales, en canales y cubetas así como por encima del límite del bosque. Los aludes pueden ser desencadenadas al paso de una persona o de forma natural. En el transcurso de la jornada estas aumentarán de tamaño considerablemente en muchos lugares. En particular en las laderas muy inclinadas umbrías en las zonas de manto delgado: Los aludes pueden desprenderse por la nieve antigua. Los aludes en algunos casos son de tamaño grande en particular en cotas altas y zonas de alta montaña.",
+    "highlights": "Las placas de viento representan la principal fuente de peligro."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "S",
+      "SW",
+      "W",
+      "E",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "S",
+      "SW",
+      "W",
+      "E",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "upperBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "89140dc6-c556-481f-b3f9-a7b3d4481958",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-12"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "treeline"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-02-11T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Última hora de la tarde y noche: La lluvia causará en un área extensa por debajo de los 2300 m aproximadamente una progresiva humidificación del manto de nieve en todas las orientaciones. <br/> <br/> Jueves: La superficie del manto de nieve se volverá a helar para formar una costra portante y no se ablandará. El tiempo será parcialmente nublado en una zona amplia. Hasta la tarde caerán de 2 a 5 cm de nieve en todas las cotas. El viento fuerte transportará la nieve reciente y, en parte, la nieve antigua. <br/> <br/> La lluvia ha causado en cotas bajas y medias un claro asentamiento del manto de nieve. En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas umbrías. En cotas medias están presentes de 100 a 180 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Viernes: Con la nevada, ligero aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-02-13T16:00:00+00:00",
+      "startTime": "2026-02-12T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-02-12T16:00:00+00:00",
+    "startTime": "2026-02-11T16:00:00+00:00"
+   }
+  }
+ ]
+}

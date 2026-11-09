@@ -1,0 +1,131 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente y las placas de viento en su conjunto deben ser evaluadas con cautela especialmente en laderas umbrías muy inclinadas. Esta nieve cubre un manto débil de nieve antigua sobre todo en laderas umbrías con poca nieve. Las nuevas y las menos recientes acumulaciones de nieve venteada son a veces gruesas y en algunos casos propensas al desencadenamiento. Estas han quedado parcialmente cubiertas de nieve y, por lo tanto, son difíciles de identificar. Hasta el domingo , con la nieve reciente y el viento de moderado a fuerte del sudeste , se han formado placas de viento adicionales sobre todo en las laderas orientadas a norte y oeste. Estas últimas se sitúan en particular al pie de las paredes rocosas y detrás de los cambios abruptos de pendiente. Los aludes de nieve seca son a veces de tamaño mediano. <br/> <br/> A consecuencia del aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada son posibles de forma aislada avalanchas de deslizamiento basal y purgas de nieve húmeda, pero en su mayoría pequeñas. <br/> <br/> En particular en los límites sur y este del Arán, los lugares peligrosos son más frecuentes y el peligro es mayor. Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren experiencia en la evaluación del peligro de aludes y cautela.",
+    "highlights": "La nieve venteada y las capas débiles persistentes deben evaluarse con atención. Posibles avalanchas de deslizamiento basal y purgas de nieve húmeda durante el día."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "W",
+      "E",
+      "N",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "S",
+      "E",
+      "W",
+      "SE",
+      "SW"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "W",
+      "E",
+      "N",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "292cfaf7-e50c-4a6a-93be-54e22d183814",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-29"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "En particular en las laderas muy inclinadas umbrías en cotas altas: Las condiciones de aludes son engañosas.",
+   "lang": "es",
+   "publicationTime": "2025-12-28T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En los últimos días se han acumulado de 30 a 40 cm de nieve por encima de los 1500 m aproximadamente, localmente más. En las laderas inclinadas solanas: Con las temperaturas suaves y la radiación solar, el manto de nieve se ha asentado. En las laderas umbrías en cotas medias y altas: La nieve reciente y la nieve venteada no se han unido bien con la nieve antigua. Los desencadenamientos de aludes y las observaciones sobre el terreno confirman esta situación. En las laderas protegidas del viento umbrías: La parte superficial del manto se ha facetado, con escarcha de superficie. <br/> <br/> Domingo: En los límites sur y este del Arán El viento del sudeste ha transportado la nieve reciente y, en parte, la nieve antigua. <br/> <br/> En cotas medias están presentes de 50 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Martes: Con el viento moderado del cuadrante nordeste , se formarán placas de viento adicionales. El peligro de aludes de nieve seca aumentará ligeramente durante el día. El peligro de aludes de nieve húmeda disminuirá progresivamente.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-30T16:00:00+00:00",
+      "startTime": "2025-12-29T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-29T16:00:00+00:00",
+    "startTime": "2025-12-28T16:00:00+00:00"
+   }
+  }
+ ]
+}

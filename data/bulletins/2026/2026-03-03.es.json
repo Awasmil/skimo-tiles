@@ -1,0 +1,108 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En las laderas inclinadas herbosas: Ya por la mañana, son probables avalanchas de deslizamiento basal de tamaño mediano y, locamente, grande. En las laderas solanas y en cotas bajas: En el transcurso de la jornada, son posibles purgas de nieve muy húmeda de tamaño pequeño y, localmente, mediano. <br/> <br/> Las placas de viento antiguas pueden, de manera aislada, desencadenarse al paso de un solo montañero en laderas umbrías muy inclinadas en cotas altas, especialmente en los márgenes. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren una elección atenta del itinerario. Evitar las zonas con grietas de deslizamiento basal.",
+    "highlights": "Atención al problema de deslizamientos basales. Purgas de nieve muy húmeda en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "02bb0948-597c-4b11-bdaa-e0111c99652f",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-03"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-03-02T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Martes: El tiempo será parcialmente nublado. El viento del sudeste tan solo transportará poca nieve. La superficie del manto de nieve se volverá a helar para formar una costra portante y se ablandará durante el día. <br/> <br/> En las laderas umbrías en cotas medias y altas: En la parte superior del manto de nieve hay capas débiles de cristales facetados. La parte central del manto esté bien consolidada. La parte inferior del manto es débil. <br/> <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Miércoles: El peligro de aludes de deslizamiento basal y de purgas de nieve húmeda no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-04T16:00:00+00:00",
+      "startTime": "2026-03-03T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-03T16:00:00+00:00",
+    "startTime": "2026-03-02T16:00:00+00:00"
+   }
+  }
+ ]
+}

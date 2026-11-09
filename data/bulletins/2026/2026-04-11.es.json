@@ -1,0 +1,155 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En todas las orientaciones: A consecuencia de la lluvia, a partir de mediodía son probables de forma aislada avalanchas naturales de nieve muy húmeda, de manera aislada grandes. <br/> <br/> Las capas débiles en la nieve antigua pueden ser desencadenadas aún de manera muy aislada en las laderas umbrías muy inclinadas. Los lugares peligrosos se encuentran en particular en la base de las paredes rocosas y detrás de los cambios abruptos de pendiente, y cerca de los cordales, en canales y cubetas por encima de los 2400 m aproximadamente. <br/> <br/> La actual situación de aludes requiere una elección atenta del itinerario. Las excursiones de montaña deben acabar a mediodía.",
+    "highlights": "Mediodía y tarde: Atención a las avalanchas naturales de nieve muy húmeda. Capas débiles persistentes en altitud."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "fair",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "0904d92d-a81d-4441-bed9-bef7b6c27565",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-11"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "later"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-04-10T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En cotas altas en las laderas protegidas del viento umbrías: En la parte superior del manto de nieve hay capas débiles pronunciadas. Estas son identificables pero prácticamente ya no es posible desencadenarlas. <br/> <br/> Sábado: La superficie del manto de nieve se volverá a helar muy poco y se ablandará ya durante la mañana. A partir del mediodía caerá lluvia hasta en cotas altas. La lluvia causará en todas las cotas una rápida humidificación del manto de nieve en todas las orientaciones. <br/> <br/> En cotas medias y altas aún hay mucha nieve. En cotas altas los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El domingo caerá un poco de nieve. Con el enfriamiento, el peligro de aludes de nieve húmeda disminuirá progresivamente. Con la nieve reciente y el viento, el peligro de aludes de nieve seca aumentará claramente.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2026-04-12T15:00:00+00:00",
+      "startTime": "2026-04-11T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-11T15:00:00+00:00",
+    "startTime": "2026-04-10T15:00:00+00:00"
+   }
+  }
+ ]
+}

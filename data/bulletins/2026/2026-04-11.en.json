@@ -1,0 +1,155 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "All aspects: As a consequence of the rain more natural wet avalanches are to be expected from midday, even large ones in isolated cases. <br/> <br/> Weak layers in the old snowpack can still be released in very isolated cases on very steep shady slopes. The avalanche prone locations are to be found in particular at the base of rock walls and behind abrupt changes in the terrain, and adjacent to ridgelines and in gullies and bowls above approximately 2400 m. <br/> <br/> The current avalanche situation calls for meticulous route selection. Backcountry tours should be concluded by around midday.",
+    "highlights": "Midday and afternoon: Natural wet avalanches require caution. Weakly bonded old snow at elevated altitudes."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "fair",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "0904d92d-a81d-4441-bed9-bef7b6c27565",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-11"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "later"
+    }
+   ],
+   "lang": "en",
+   "publicationTime": "2026-04-10T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Southern limit of Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "South slope of Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "North and center of Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "High altitudes wind-protected shady slopes: Distinct weak layers exist in the top section of the snowpack. They are to recognise but unlikely to be released now. <br/> <br/> Saturday: The surface of the snowpack will freeze very little and will already soften in the late morning. Up to high altitudes rain will fall from midday. The rain will give rise to rapid moistening of the snowpack in all aspects in all altitude zones. <br/> <br/> At intermediate and high altitudes there is still a very large amount of snow. At high altitude snow depths vary greatly, depending on the infuence of the wind."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/en"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Some snow will fall on Sunday. As the temperature drops there will be a gradual decrease in the danger of moist avalanches. As a consequence of new snow and wind there will be a significant increase in the danger of dry avalanches.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2026-04-12T15:00:00+00:00",
+      "startTime": "2026-04-11T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-11T15:00:00+00:00",
+    "startTime": "2026-04-10T15:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,132 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las nuevas acumulaciones de nieve venteada y las menos recientes pueden desencadenarse muy fácilmente de manera accidental sobre todo en orientaciones noroeste a sudeste por el norte en cotas medias y altas. Los aludes son a menudo de tamaño pequeño. Estos pueden, de manera aislada, desprenderse por las capas más profundas y alcanzar tamaños medianos. Las fisuras que propagan al pasar, así como los aludes recientes , son señales de alarma que indican este peligro <br/> <br/> En las laderas solanas y en cotas bajas: En el transcurso de la jornada, son probables purgas y avalanchas de nieve húmeda de tamaño pequeño y, localmente, mediano. En las laderas herbosas inclinadas, son aún posibles avalanchas de deslizamiento basal de tamaño pequeño y mediano. <br/> <br/> Es necesaria una cierta experiencia en la evaluación del peligro de aludes.",
+    "highlights": "Las placas de viento deben ser evaluadas con cautela en todas las orientaciones. Purgas de nieve seca y húmeda."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N",
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "98568172-5145-44fe-8bf8-65b48f598bf9",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-13"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-03-13T06:05:41+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Ayer se han acumulado en algunos sectores hasta 5 cm de nieve por encima de los 1800 m aproximadamente, localmente hasta 10 cm. El viento del norte ha transportado la nieve reciente. El viernes será soleado. <br/> <br/> En las umbrías altas hay una costra de polvo sahariano enterrada, con capas por encima con poca cohesión y presencia de escarcha superficial. Las abundantes placas de viento descansan encima de capas desfavorables sobre todo en laderas umbrías. <br/> <br/> En particular en cotas bajas y en las laderas inclinadas solanas: La superficie del manto de nieve se volverá a helar para formar una costra portante y se ablandará ya durante la mañana. <br/> <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Sábado: Con la nieve reciente y el viento fuerte, en el transcurso de la jornada el peligro de aludes de nieve seca aumentará rápidamente.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2026-03-14T16:00:00+00:00",
+      "startTime": "2026-03-13T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-03-13T16:00:00+00:00",
+    "startTime": "2026-03-12T16:00:00+00:00"
+   }
+  }
+ ]
+}

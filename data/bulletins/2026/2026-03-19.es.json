@@ -1,0 +1,113 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las capas débiles en la parte superior del manto de nieve pueden ser desencadenadas aún en algunos lugares en las laderas umbrías inclinadas y poco frecuentadas. Precaución sobre todo en la base de las paredes rocosas y detrás de los cambios abruptos de pendiente. Los aludes son de manera aislada de tamaño peligrosamente grande. <br/> <br/> Con la penetración de la humedad, son posibles de forma aislada avalanchas de placa húmeda, sobre todo de tamaño mediano. Precaución sobre todo en las laderas umbrías muy inclinadas sobre todo en cotas medias, y en las laderas soleadas muy inclinadas en cotas medias y altas. Los aludes de nieve húmeda pueden desencadenarse de manera accidental o natural. Además son posibles aludes de deslizamiento basal. <br/> <br/> La actual situación de aludes requiere experiencia en la evaluación del peligro de aludes y cautela.",
+    "highlights": "Las capas débiles persistentes y la nieve húmeda deben evaluarse con atención."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "aa8713ba-6b13-49c8-a191-7b0010ee845c",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-19"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las condiciones de aludes permanecen en algunos casos desfavorables.",
+   "lang": "es",
+   "publicationTime": "2026-03-18T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "La nieve reciente y la nieve venteada del fin de semana en muchos lugares no se han unido bien con la nieve antigua especialmente en laderas umbrías protegidas del viento en cotas medias y altas. Los tests de estabilidad y los \"whumpfs\" y las fisuras que propagan al pasar indican la escasa estabilidad del manto de nieve en estos sectores. <br/> El jueves caerá un poco de nieve. El viento débil tan solo transportará poca nieve. A partir de la madrugada la elevada humedad del aire causará en cotas medias una clara humidificación del manto de nieve sobre todo en las laderas umbrías. <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El viernes será bastante soleado. El peligro de aludes de nieve húmeda aumentará durante el día. El peligro de aludes de nieve seca no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-20T16:00:00+00:00",
+      "startTime": "2026-03-19T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-19T16:00:00+00:00",
+    "startTime": "2026-03-18T16:00:00+00:00"
+   }
+  }
+ ]
+}

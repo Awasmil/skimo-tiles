@@ -1,0 +1,129 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En las laderas herbosas muy inclinadas, en cualquier momento son posibles avalanchas de deslizamiento basal. Estos son a veces de tamaño mediano. Los lugares peligrosos se encuentran sobre todo en laderas solanas y en las laderas umbrías por debajo de los 2300 m aproximadamente. Con la subida de la temperatura diurna y la radiación solar, son posibles purgas y avalanchas de nieve húmeda de tamaño pequeño. Estas pueden ser desencadenadas al paso de una persona o de forma natural. <br/> <br/> Especialmente en el límite sur del Arán se formarán pequeñas placas de viento. Las nuevas acumulaciones de nieve venteada en algunos casos pueden desencadenarse fácilmente. <br/> Además cerca de las cumbres las placas de viento antiguas de los últimos días pueden de manera muy aislada aún desencadenarse. <br/> <br/> Primera hora de la mañana: Debido a la superficie dura del manto de nieve hay el peligro de resbalar y caer en las laderas inclinadas. En el transcurso de la jornada: Evitar las zonas con grietas de deslizamiento basal.",
+    "highlights": "Atención a las avalanchas de deslizamiento basal y purgas de nieve húmeda durante el día. Nieve venteada reciente en el límite sur del Arán."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "1a74ec81-2eda-4dc1-b747-f53599cf6548",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-09"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-08T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En el transcurso de la jornada el sol y el calor causarán en todas las cotas una progresiva humidificación del manto de nieve en las laderas solanas. En las laderas umbrías en cotas medias y altas: La superficie del manto de nieve no se ablandará. En particular en cotas altas: El viento del sudoeste transportará la nieve antigua de débil cohesión. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Con el enfriamiento, progresivo descenso del peligro de aludes de deslizamiento basal y purgas de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-10T16:00:00+00:00",
+      "startTime": "2025-12-09T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-09T16:00:00+00:00",
+    "startTime": "2025-12-08T16:00:00+00:00"
+   }
+  }
+ ]
+}

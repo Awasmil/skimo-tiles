@@ -1,0 +1,138 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las acumulaciones de nieve venteada más recientes pueden desencadenarse al paso de un solo montañero en cotas medias y altas. Los aludes son de tamaño en general pequeño. Sin embargo no se descartan de manera aislada aludes de tamaño mediano. <br/> <br/> Especialmente en las laderas inclinadas solanas: A consecuencia del aumento de la temperatura diurna y la radiación solar, son probables purgas de nieve húmeda, pero en su mayoría pequeñas. En las laderas muy inclinadas así como en las zonas umbrías y protegidas del viento aún son posibles avalanchas y aludes de nieve seca. <br/> <br/> Las capas débiles profundas en el manto de nieve antigua pueden ser desencadenadas de manera aislada al paso de una persona en las laderas umbrías. Los aludes en algunos casos son de tamaño mediano en estas orientaciones. Los sonidos de \"whumpf\" son señales de alarma que indican este peligro <br/> <br/> Se recomienda una elección cuidadosa del itinerario.",
+    "highlights": "Nieve reciente y nieve venteada. Capas débiles persistentes en las laderas umbrías."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "SW",
+      "S",
+      "SE",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "SW",
+      "S",
+      "SE",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2100"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "fair",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "c3d06c9a-300d-4486-b475-a999a4a8771d",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-11-27"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-11-26T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En los últimos dos días se han acumulado en una zona extensa de 30 a 40 cm de nieve. En las últimas horas el viento ha soplado de moderado a fuerte especialmente en los límites sur y este del Arán. <br/> En las laderas umbrías en cotas medias y altas: La parte inferior del manto se ha facetado. <br/> <br/> El jueves será parcialmente soleado. <br/> Sobre todo en altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "A consecuencia del aumento de la temperatura, ligero aumento del peligro de aludes de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-11-28T16:00:00+00:00",
+      "startTime": "2025-11-27T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-11-27T16:00:00+00:00",
+    "startTime": "2025-11-26T16:00:00+00:00"
+   }
+  }
+ ]
+}

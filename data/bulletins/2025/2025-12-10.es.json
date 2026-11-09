@@ -1,0 +1,128 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En las laderas herbosas muy inclinadas, son posibles algunas avalanchas de deslizamiento basal. Estos son de tamaño mediano. Los lugares peligrosos se encuentran sobre todo en laderas solanas y en las laderas umbrías por debajo de los 2300 m aproximadamente. En el transcurso de la jornada, son posibles purgas de nieve húmeda de tamaño pequeño. Estas pueden ser desencadenadas al paso de una persona. <br/> <br/> Especialmente en el límite sur del Arán se han formado pequeñas placas de viento. Las nuevas acumulaciones de nieve venteada en algunos casos pueden desencadenarse fácilmente. <br/> Además cerca de las cumbres las placas de viento antiguas de las últimas semanas pueden de manera muy aislada aún desencadenarse. <br/> <br/> En el transcurso de la jornada: Evitar las zonas con grietas de deslizamiento basal. Debido a la superficie dura del manto de nieve hay el peligro de resbalar y caer en las laderas inclinadas.",
+    "highlights": "Atención a las avalanchas de deslizamiento basal y purgas de nieve húmeda. Nieve venteada reciente en el límite sur del Arán."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SW",
+      "SE",
+      "S",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "frequency": "few",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "8ac2eb2d-db51-48a8-b915-e9153921b6e9",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-10"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-09T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En particular en cotas medias y altas en las laderas umbrías: La parte superficial del manto es en algunos casos débil, con una superficie trasformada en cristales facetados. <br/> En el límite sur del Arán, El viento del sudoeste ha transportado la nieve antigua de débil cohesión. <br/> <br/> Miércoles: El tiempo será parcialmente nublado en una zona amplia. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El peligro de aludes permanecerá invariable.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-11T16:00:00+00:00",
+      "startTime": "2025-12-10T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-10T16:00:00+00:00",
+    "startTime": "2025-12-09T16:00:00+00:00"
+   }
+  }
+ ]
+}

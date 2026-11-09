@@ -1,0 +1,150 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente fría y las placas de viento en su conjunto deben ser evaluadas con cautela en todas las orientaciones. Esta nieve cubre un manto débil de nieve antigua sobre todo en laderas umbrías. Las nuevas y las menos recientes acumulaciones de nieve venteada apenas son identificables y propensas al desencadenamiento. Hasta el mediodía , con la nieve reciente y el viento de moderado a fuerte de dirección variable , se formarán placas de viento adicionales en particular en los límites sur y este del Arán. Los aludes de nieve seca son a veces de tamaño mediano. <br/> <br/> Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren mucha experiencia en la evaluación del peligro de aludes y cautela.",
+    "highlights": "La nieve reciente, la nieve venteada y las capas débiles persistentes deben evaluarse con atención."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "W",
+      "E",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1800"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "0521cb02-5b19-407c-a646-146d845626ac",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-24"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las condiciones permanecen peligrosas.",
+   "lang": "es",
+   "publicationTime": "2025-12-23T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Desde el domingo se han acumulado en una zona amplia 30 cm de nieve por encima de los 1500 m aproximadamente, localmente más. En los extremos sur y este del Arán En particular en cotas altas y en los sotaventos: El viento moderado ha transportado la nieve reciente. La nieve reciente y la nieve venteada no se han unido bien con la nieve antigua especialmente en laderas con poca nieve orientadas a oeste, norte y este y en cotas medias y altas. Los desencadenamientos de aludes y las observaciones sobre el terreno confirman esta situación. <br/> <br/> En cotas medias están presentes de 50 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Navidad: Con la nieve reciente y el viento , se formarán placas de viento adicionales. El peligro de aludes de nieve seca no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-25T16:00:00+00:00",
+      "startTime": "2025-12-24T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-24T16:00:00+00:00",
+    "startTime": "2025-12-23T16:00:00+00:00"
+   }
+  }
+ ]
+}

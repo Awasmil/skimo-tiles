@@ -1,0 +1,150 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente fría y las placas de viento en su conjunto deben ser evaluadas con cautela en todas las orientaciones. Esta nieve cubre un manto débil de nieve antigua sobre todo en laderas umbrías. Las nuevas y las menos recientes acumulaciones de nieve venteada son a veces gruesas y propensas al desencadenamiento. Hasta el día de San Esteban , con la nieve reciente y el viento moderado del sudeste , se formarán placas de viento adicionales sobre todo en las laderas orientadas a norte y oeste. Los aludes de nieve seca son a veces de tamaño mediano. En particular en los sectores más afectados por las precipitaciones, los lugares peligrosos son más frecuentes y el peligro es mayor. <br/> <br/> Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren mucha experiencia en la evaluación del peligro de aludes y cautela.",
+    "highlights": "La nieve reciente, la nieve venteada y las capas débiles persistentes deben evaluarse con atención."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "W",
+      "E",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1800"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "09d102f6-54f7-4c27-8636-d8dd1930a191",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-26"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2200"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "En particular en cotas altas: Las condiciones de aludes permanecen peligrosas.",
+   "lang": "es",
+   "publicationTime": "2025-12-25T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En los últimos días se han acumulado de 30 a 40 cm de nieve por encima de los 1500 m aproximadamente, localmente más. En las laderas solanas en cotas bajas y medias: Con las temperaturas suaves y la radiación solar, hasta el mediodía el manto de nieve se ha asentado. En las laderas umbrías en cotas medias y altas: La nieve reciente y la nieve venteada no se han unido bien con la nieve antigua. Los desencadenamientos de aludes y las observaciones sobre el terreno confirman esta situación. <br/> <br/> San Esteban: Hasta la mañana caerá un poco de nieve. El viento del sudeste transportará la nieve reciente. <br/> <br/> En cotas medias están presentes de 50 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Sábado: El peligro de aludes de nieve seca no disminuirá aún. Tras el período de mal tiempo, en este primer día de sol se recomienda prudencia.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-27T16:00:00+00:00",
+      "startTime": "2025-12-26T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-26T16:00:00+00:00",
+    "startTime": "2025-12-25T16:00:00+00:00"
+   }
+  }
+ ]
+}

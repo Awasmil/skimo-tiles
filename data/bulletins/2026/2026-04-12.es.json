@@ -1,0 +1,114 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En todas las orientaciones: Con la penetración de la humedad, en cualquier momento son probables de forma aislada avalanchas naturales de nieve muy húmeda, de manera aislada grandes. <br/> <br/> Con la nevada, hacia última hora de la tarde el peligro de aludes de nieve seca aumentará progresivamente. <br/> <br/> La actual situación de aludes requiere prudencia. Las condiciones para las excursiones permanecen desfavorables.",
+    "highlights": "Atención a las avalanchas naturales de nieve muy húmeda. Nieve reciente hacia última hora de la tarde."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "56edee86-4500-4cf8-b5da-6a86ee4acdbd",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-12"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-04-11T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En todas las orientaciones y en cotas altas: El manto de nieve es cada vez más húmedo. Última hora de la tarde y noche: Caerá lluvia hasta en cotas altas localmente. Domingo: La superficie del manto de nieve se volverá a helar muy poco. Con la penetración de la humedad, en el transcurso de la jornada el número y la extensión de los lugares peligrosos aumentará. <br/> <br/> En cotas medias y altas aún hay mucha nieve. En cotas altas los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Hasta el lunes caerá un poco de nieve. Con el enfriamiento, el peligro de aludes de nieve húmeda disminuirá progresivamente. Con la nieve reciente y el viento, el peligro de aludes de nieve seca aumentará claramente.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2026-04-13T15:00:00+00:00",
+      "startTime": "2026-04-12T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-12T15:00:00+00:00",
+    "startTime": "2026-04-11T15:00:00+00:00"
+   }
+  }
+ ]
+}

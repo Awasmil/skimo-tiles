@@ -1,0 +1,121 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las capas débiles en la parte superior del manto de nieve pueden ser desencadenadas aún en algunos lugares principalmente en las laderas inclinadas orientadas a oeste, norte y este. Estos son a veces de tamaño mediano pero en algunos casos fáciles de desencadenar. Las capas débiles muy pronunciadas profundas en el manto de nieve pueden ser desencadenadas también al paso de una persona principalmente en las zonas de manto delgado. Estos últimos son de manera aislada de tamaño grande. Los tests de estabilidad y los \"whumpfs\" y las fisuras que propagan al pasar indican esta situación. <br/> <br/> Durante los últimos dos días, con la nieve reciente y el viento de moderado a fuerte del sudoeste , se han formado placas de viento en su mayoría de tamaño pequeño sobre todo en canales y cubetas y detrás de los cambios abruptos de pendiente. Las nuevas acumulaciones de nieve venteada pueden desencadenarse sobre todo por sobrecargas fuertes. Atención especialmente en los márgenes. <br/> <br/> Además son posibles algunas avalanchas de deslizamiento basal de tamaño pequeño y, localmente, mediano. La actual situación de aludes requiere experiencia i y prudencia.",
+    "highlights": "Las capas débiles en la nieve antigua son engañosas. Nieve venteada reciente en cotas medias y altas."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "W",
+      "E",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "W",
+      "E",
+      "N"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "fair",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "2213c5ed-4f15-4d79-8310-7d0c24d046b8",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-15"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-01-14T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Con las temperaturas suaves y la alta humedad del aire, en los últimos días el manto de nieve se ha asentado. En el manto de nieve antigua hay capas débiles pronunciadas especialmente en las laderas poco frecuentadas y con poco espesor de nieve orientadas a oeste, norte y este. <br/> El viento del sudoeste ha transportado mucha nieve. En particular en los sectores del sur expuestos al Foehn se han formado placas de viento duras. <br/> <br/> En cotas medias están presentes de 70 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Viernes: Ligero descenso del peligro de aludes de nieve seca. A consecuencia de la humedad del aire, ligero aumento del peligro de aludes de deslizamiento basal.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2026-01-16T16:00:00+00:00",
+      "startTime": "2026-01-15T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-15T16:00:00+00:00",
+    "startTime": "2026-01-14T16:00:00+00:00"
+   }
+  }
+ ]
+}

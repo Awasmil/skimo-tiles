@@ -1,0 +1,111 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Adjacent to ridgelines and in gullies and bowls: The new snow and wind slabs can be released in some cases at intermediate and high altitudes. The avalanches are rather small. Especially shady places that are protected from the wind: Medium-sized avalanches are further to be expected. <br/> At the border to Ribagorça and Pallars the avalanche prone locations are more prevalent. <br/> <br/> Sunny slopes and low altitudes: As a consequence of warming during the day and solar radiation small and, in isolated cases, medium-sized moist snow slides are possible. These can be released by a single winter sport participant or triggered naturally. <br/> On steep grassy slopes more small and medium-sized gliding avalanches are possible. <br/> <br/> Experience in the assessment of avalanche danger is required.",
+    "highlights": "Wind slabs at elevated altitudes. Moist snow slides as the day progresses."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SW",
+      "SE",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "b77e425e-2501-4a9f-8d13-0b374b26ee24",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-08"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "en",
+   "publicationTime": "2026-03-07T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Southern limit of Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "South slope of Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "North and center of Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Some snow has fallen since Thursday. Especially at the southern and eastern borders of Aran 10 to 20 cm of snow, and even more in some localities, has fallen. <br/> <br/> Sunday: The weather will be sunny at times. The surface of the snowpack will only just freeze and will soften during the day. Shady slopes intermediate and high altitudes: Wind slabs are lying on soft layers. Towards its base, the snowpack is weak. <br/> <br/> At intermediate altitudes there are 150 to 200 cm of snow, and even more in some localities."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/en"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Monday: The avalanche danger will persist.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-09T16:00:00+00:00",
+      "startTime": "2026-03-08T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-08T16:00:00+00:00",
+    "startTime": "2026-03-07T16:00:00+00:00"
+   }
+  }
+ ]
+}

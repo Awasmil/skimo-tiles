@@ -1,0 +1,167 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En los límites sur y este del Arán, En las laderas umbrías y en cotas altas: Las acumulaciones de nieve venteada son fácilmente identificables y propensas al desencadenamiento. Estas se encuentran en particular cerca de collados y cordales. Los aludes de nieve seca son de tamaño en general pequeño. Sin embargo no se descartan de manera aislada aludes de tamaño mediano. <br/> <br/> En las laderas inclinadas solanas y en cotas bajas y medias: A consecuencia del aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada son probables purgas y avalanchas de nieve húmeda. Además hay un peligro latente de aludes de deslizamiento basal. <br/> <br/> Las excursiones por la montaña requieren una elección atenta del itinerario.",
+    "highlights": "Avalanchas y aludes de nieve húmeda en el transcurso de la jornada. Nieve venteada en altitud."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "3b929a96-31a1-48ab-88b3-c68556342b20",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-15"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "treeline"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "later"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-04-14T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Martes: Se han acumulado de 2 a 5 cm de nieve por encima de los 1500 m aproximadamente, localmente más. En los límites sur y este del Arán, El viento del norte ha transportado la nieve reciente. <br/> Miércoles: El tiempo será bastante soleado. La superficie del manto de nieve se volverá a helar para formar una costra portante y se ablandará durante el día. <br/> <br/> En cotas medias y altas aún hay mucha nieve. En cotas altas los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: Las condiciones permanecen primaverales.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-04-16T15:00:00+00:00",
+      "startTime": "2026-04-15T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-15T15:00:00+00:00",
+    "startTime": "2026-04-14T15:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,142 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la penetración de la humedad son probables avalanchas de deslizamiento basal de tamaño mediano y, locamente, grande por debajo de los 2500 m aproximadamente. <br/> En cotas bajas y en las laderas inclinadas solanas: En el transcurso de la jornada, son posibles purgas de nieve húmeda de tamaño pequeño a mediano. En particular en las laderas muy inclinadas umbrías en las zonas de manto delgado: Los aludes de nieve húmeda pueden, de manera aislada, desencadenarse por la nieve antigua. <br/> <br/> En cotas altas: Con la nieve reciente y el viento de débil a moderado del oeste , se han formado placas de viento delicadas cerca de collados y cordales. Son de esperar algunos aludes de tamaño pequeño y mediano. Estos pueden ser desencadenadas al paso de una persona o de forma natural.",
+    "highlights": "Avalanchas de deslizamiento basal y purgas de nieve húmeda. Nieve venteada en altitud."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2500"
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "upperBound": "2500"
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2500"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "61dfce12-9c4c-4272-8552-0948a8c72363",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-11"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-02-11T07:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Martes: Con la humidificación han caído avalanchas de nieve húmeda de tamaño mediano y, locamente, grande. <br/> <br/> Miércoles: El tiempo será parcialmente nublado. La superficie del manto de nieve se volverá a helar apenas y se ablandará durante el día. En cotas altas: El viento tan solo transportará poca nieve. <br/> <br/> En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas umbrías. En cotas medias están presentes de 120 a 200 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: Con las precipitaciones, ligero aumento del peligro de aludes de nieve seca y de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-02-12T16:00:00+00:00",
+      "startTime": "2026-02-11T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-02-11T16:00:00+00:00",
+    "startTime": "2026-02-10T16:00:00+00:00"
+   }
+  }
+ ]
+}

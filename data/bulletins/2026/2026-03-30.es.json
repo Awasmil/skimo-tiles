@@ -1,0 +1,132 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la nieve reciente y el viento fuerte del noroeste , se han formado peligrosas placas de viento en canales y cubetas y detrás de los cambios abruptos de pendiente. En el transcurso de la noche estas aumentarán de tamaño ligeramente. La nieve reciente y la nieve venteada pueden desencadenarse fácilmente de manera natural o accidental en todas las orientaciones. No se descartan de manera aislada aludes de tamaño grande. <br/> En las laderas inclinadas solanas y en cotas bajas: A consecuencia del aumento de la temperatura diurna y la radiación solar, a partir de la mañana son probables de forma aislada purgas y avalanchas de nieve húmeda. <br/> <br/> En las laderas inclinadas umbrías, en las zonas protegidas del viento: Los aludes pueden, en algunos casos, desencadenarse por la nieve antigua y alcanzar tamaños grandes. Precaución sobre todo en los terreno de montaña poco frecuentadas en la base de las paredes rocosas y detrás de los cambios abruptos de pendiente. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren precaución y prudencia.",
+    "highlights": "La nieve reciente y la nieve venteada deben evaluarse con atención."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "4251e0da-4de4-4760-be68-c44bf907f508",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-30"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "La situación de aludes es delicada.",
+   "lang": "es",
+   "publicationTime": "2026-03-29T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El lunes será parcialmente nublado. El viento del noroeste transportará la nieve reciente. A partir de la tarde caerá un poco de nieve. <br/> <br/> En particular en cotas medias y altas, en las zonas umbrías y protegidas del viento: La unión de las placas de viento es muy desfavorable. Los desencadenamientos de aludes y los tests de estabilidad indican la estructura débil del manto de nieve en estos sectores. <br/> <br/> En cotas medias están presentes de 100 a 200 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Martes: Ligero descenso del peligro de aludes de nieve seca. En las laderas herbosas inclinadas, progresivo aumento del peligro de aludes de deslizamiento basal.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-31T15:00:00+00:00",
+      "startTime": "2026-03-30T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-30T15:00:00+00:00",
+    "startTime": "2026-03-29T15:00:00+00:00"
+   }
+  }
+ ]
+}

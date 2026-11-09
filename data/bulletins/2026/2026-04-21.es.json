@@ -1,0 +1,112 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En todas las orientaciones en zonas de alta montaña: Con el aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada el peligro de aludes de nieve muy húmeda aumentará. Los aludes pueden ser desencadenadas al paso de una persona y alcanzar un tamaño mediano. A partir de mediodía son probables de forma aislada avalanchas naturales. Además hay un peligro acusado de aludes de deslizamiento basal. Estos son a menudo de tamaño mediano. Sin embargo no se descartan de manera aislada aludes de tamaño grande. <br/> <br/> Las excursiones de montaña deben comenzar y acabar muy temprano. Evitar las zonas con grietas de deslizamiento basal.",
+    "highlights": "Avalanchas de nieve muy húmeda y de deslizamiento basal en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "c86958d0-7282-4f21-958b-ef07d7e2b0be",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-21"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada del manto de nieve. Por lo tanto, debe evaluarse detenidamente el peligro de aludes local.",
+   "lang": "es",
+   "publicationTime": "2026-04-20T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El enfriamiento nocturno será reducido. La superficie del manto de nieve se volverá a helar apenas y se ablandará ya durante la mañana. Por la mañana el tiempo será bastante soleado. Durante la tarde caerá lluvia hasta los 2800 m en algunos sectores. <br/> <br/> El manto de nieve es muy húmedo en general. En las laderas inclinadas orientadas a oeste, norte y este en cotas medias y altas: En los últimos días han caído algunas aludes de deslizamiento basal de tamaño mediano y grande. Pueden desencadenarse a cualquier hora del día o de la noche. <br/> <br/> En las laderas orientadas a sudoeste, sur y sudeste en cotas bajas y medias no hay suficiente nieve para la práctica de los deportes de invierno. En muchos lugares el espesor de nieve es superior a la media para estas fechas."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Miércoles: El peligro de aludes de nieve muy húmeda permanecerá invariable.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-04-22T15:00:00+00:00",
+      "startTime": "2026-04-21T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-21T15:00:00+00:00",
+    "startTime": "2026-04-20T15:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,117 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La poca nieve reciente y en particular las placas de viento en general pequeñas que se esperan sobre todo en altitud pueden desencadenarse fácilmente en todas las orientaciones. Las acumulaciones de nieve venteada menos recientes pueden en algunos casos aún desencadenarse accidentalmente sobre todo en laderas umbrías inclinadas. Estas han quedado parcialmente cubiertas de nieve y, por lo tanto, son difíciles de identificar. En particular en las laderas muy inclinadas umbrías en las zonas de manto delgado: Estos pueden, de manera aislada, desencadenarse por la nieve antigua y alcanzar tamaños peligrosamente grandes. <br/> <br/> En las laderas extremadamente inclinadas y en las laderas solanas: Con la nieve reciente, son posibles purgas de nieve sin cohesión, pero en su mayoría pequeñas. Además hay un peligro latente de aludes de deslizamiento basal. <br/> <br/> La actual situación de aludes requiere una elección atenta del itinerario.",
+    "highlights": "Nieve reciente y nieve venteada en cotas medias y altas."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "S",
+      "SW",
+      "W",
+      "E",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "S",
+      "SW",
+      "E",
+      "W",
+      "SE",
+      "N"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1800"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "e0cf5609-fe2c-4923-9771-350118d6351c",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-09"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-02-08T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En una zona amplia hasta el final de la tarde caerán de 5 a 10 cm de nieve, localmente más. El viento con rachas moderadas tan solo transportará poca nieve. Las diversas placas de viento de los últimos días permanecen en parte inestables en todas las orientaciones y generalmente en cotas altas. El lunes será parcialmente soleado. <br/> <br/> En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas umbrías. Son especialmente delicadas las zonas con poco espesor de nieve, donde capas duras descansan sobre un manto de nieve antigua débilmente consolidado. En cotas medias están presentes de 120 a 200 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El martes caerá lluvia hasta en cotas altas. Con las precipitaciones, claro aumento del peligro de aludes de nieve seca y de nieve húmeda.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2026-02-10T16:00:00+00:00",
+      "startTime": "2026-02-09T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-02-09T16:00:00+00:00",
+    "startTime": "2026-02-08T16:00:00+00:00"
+   }
+  }
+ ]
+}

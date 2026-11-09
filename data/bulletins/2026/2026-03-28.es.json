@@ -1,0 +1,120 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la nieve reciente y el viento de moderado a fuerte del noroeste , se han formado placas de viento en su mayoría de tamaño pequeño cerca de los cordales, en canales y cubetas así como por encima del límite del bosque. Sin embargo no se descartan de manera aislada aludes de tamaño mediano. Las placas de viento bien visibles pueden en algunos casos desencadenarse de manera accidental. En cotas medias y altas, en las laderas inclinadas umbrías: La unión de las placas de viento es muy desfavorable. <br/> <br/> Las capas débiles en la nieve antigua pueden ser desencadenadas en algunos lugares al paso de una persona principalmente en las laderas umbrías protegidas del viento. Estos son a veces de tamaño mediano. Precaución sobre todo en los terreno de montaña poco frecuentadas en la base de las paredes rocosas y detrás de los cambios abruptos de pendiente. <br/> <br/> La actual situación de aludes requiere experiencia en la evaluación del peligro de aludes.",
+    "highlights": "La nieve venteada y las capas débiles persistentes requieren atención."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "N",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "5c0a1f3f-93f6-4abe-a1ad-017c2972d183",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-28"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "treeline"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-03-28T07:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El sábado será frío. Por la mañana el tiempo será parcialmente nublado. El viento soplará, cerca de los cordales, de débil a moderado. A partir de la tarde caerá nieve hasta cotas bajas. <br/> <br/> En particular en cotas medias y altas, en las zonas umbrías y protegidas del viento: En algunos lugares la nieve venteada descansa encima de escarcha de superficie. En la parte superior del manto de nieve hay capas débiles de cristales gruesos especialmente por encima de los 2300 m aproximadamente. Los desencadenamientos de aludes y los tests de estabilidad indican la estructura desfavorable del manto de nieve en estos sectores. <br/> <br/> En cotas medias están presentes de 100 a 200 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Última hora de la tarde y noche: Con la intensificación de las nevadas, claro aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2026-03-29T16:00:00+00:00",
+      "startTime": "2026-03-28T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-03-28T16:00:00+00:00",
+    "startTime": "2026-03-27T16:00:00+00:00"
+   }
+  }
+ ]
+}

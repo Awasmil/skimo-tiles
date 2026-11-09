@@ -1,0 +1,124 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la nieve reciente, son probables cada vez más numerosas avalanchas y aludes de nieve seca. Estos pueden a menudo ser desencadenadas muy fácilmente o de forma natural. Los aludes son de tamaño en general pequeño. Son especialmente peligrosas en particular las canales y las cubetas. <br/> <br/> Las capas débiles en la nieve antigua pueden ser desencadenadas aún en algunos lugares sobre todo en las laderas umbrías muy inclinadas. Estas son difíciles de identificar. Los tests de estabilidad y las observaciones sobre el terreno indican la estructura débil del manto de nieve. Los aludes aquí son de manera aislada de tamaño mediano. <br/> <br/> Las actividades fuera pista requieren una elección atenta del itinerario.",
+    "highlights": "Avalanchas y aludes de nieve seca en todas las orientaciones. Las capas débiles en la nieve antigua son difíciles de reconocer."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "SW",
+      "NW",
+      "W",
+      "N",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "W",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2100"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "dfbdc133-52cc-482b-8023-a3ec2e4dc344",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-03"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-02T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta el mediodía caerán de 5 a 10 cm de nieve por encima de los 1500 m aproximadamente, localmente más. La nieve reciente se depositará encima de capas blandas sobre todo en laderas umbrías protegidas del viento. Esta nieve se volverá progresivamente más inestable. <br/> <br/> La nieve reciente de las últimas semanas y las placas de viento y localizadas en algunos lugares no se han unido bien con la nieve antigua especialmente en laderas protegidas del viento orientadas a norte y este. En el manto de nieve antigua hay capas débiles de cristales facetados. <br/> <br/> Sobre todo en altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: Mañana y madrugada: Con la atenuación de la nevada, temporal descenso del peligro de aludes de nieve seca. Tarde: Con la intensificación de las nevadas, adicional aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-04T16:00:00+00:00",
+      "startTime": "2025-12-03T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-03T16:00:00+00:00",
+    "startTime": "2025-12-02T16:00:00+00:00"
+   }
+  }
+ ]
+}

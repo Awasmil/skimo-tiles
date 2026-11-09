@@ -1,0 +1,128 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente fría y las placas de viento en general pequeñas formadas durante la nevada pueden fácilmente desencadenarse de manera natural o accidental en todas las orientaciones. Las placas de viento menos recientes de los últimos días pueden en algunos casos aún desencadenarse de manera accidental. Estas han quedado cubiertas de nieve y por lo tanto son difíciles de detectar. Los aludes son a veces de tamaño mediano. En particular en las laderas muy inclinadas umbrías en las zonas de manto delgado: Los aludes de nieve seca pueden, de manera aislada, desencadenarse por la nieve antigua y alcanzar tamaños peligrosamente grandes. <br/> <br/> En las laderas extremadamente inclinadas: Con la nieve reciente, son posibles purgas de nieve seca. Además hay un peligro latente de aludes de deslizamiento basal. <br/> <br/> La actual situación de aludes requiere experiencia en la evaluación del peligro de aludes y cautela. Los lugares peligrosos son resultan difíciles de reconocer con poca visibilidad.",
+    "highlights": "Nieve reciente y nieve venteada en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "S",
+      "SW",
+      "W",
+      "E",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "S",
+      "SW",
+      "E",
+      "W",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "239033ea-b021-46aa-9445-a7f71972e8af",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-08"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "A consecuencia de la nieve reciente y el viento, progresivo aumento del peligro de aludes de nieve seca.",
+   "lang": "es",
+   "publicationTime": "2026-02-07T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En particular al sur y al este desde el lunes se han acumulado 20 cm de nieve, localmente más. El viento con rachas fuertes ha transportado la nieve reciente. Las diversas placas de viento de los últimos días permanecen en parte inestables en altitud. <br/> <br/> El domingo será frío. A partir de la madrugada caerá un poco de nieve sobre todo en el límite sur del Arán. El viento moderado transportará la nieve reciente. La nieve reciente y la nieve venteada se depositarán encima de capas blandas en cotas medias y altas. <br/> <br/> La capa de nieve reciente es débil, con una superficie suelta formada por escarcha y cristales facetados. En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas orientadas a oeste, norte y este. Son especialmente delicadas las zonas con poco espesor de nieve, donde capas duras descansan sobre un manto de nieve antigua débilmente consolidado. En cotas medias están presentes de 120 a 200 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El domingo caerá un poco de nieve sobre todo al norte. Con el viento con rachas fuertes, adicional aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-02-09T16:00:00+00:00",
+      "startTime": "2026-02-08T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-02-08T16:00:00+00:00",
+    "startTime": "2026-02-07T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,112 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las placas de viento antiguas deben ser evaluadas con cautela especialmente en laderas muy inclinadas orientadas a este, norte y oeste en cotas medias y altas. Estas son a veces gruesas y en algunos casos propensas al desencadenamiento. Las capas débiles en la parte inferior del manto de nieve pueden ser desencadenadas en algunos lugares al paso de una persona especialmente en las laderas umbrías poco frecuentadas y con poco espesor de nieve. Los aludes de nieve seca son a menudo de tamaño mediano. <br/> <br/> A consecuencia del aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada son posibles de forma aislada avalanchas de deslizamiento basal, incluso de tamaño mediano. Los lugares peligrosos se encuentran especialmente en las laderas solanas muy inclinadas por encima de los 2000 m aproximadamente y en las laderas umbrías por debajo de los 2400 m aproximadamente. <br/> <br/> En los límites sur y este del Arán: Las acumulaciones de nieve venteada más recientes son pequeñas pero propensas al desencadenamiento.",
+    "highlights": "Atención a las capas débiles persistentes y los deslizamientos."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "W",
+      "E",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "S",
+      "SW",
+      "NE",
+      "NW",
+      "E",
+      "W",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "39622919-2bd5-43ec-bdbe-92a01e3263ad",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-01"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las capas débiles en la nieve antigua requieren una elección conservadora de la ruta.",
+   "lang": "es",
+   "publicationTime": "2025-12-31T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En las laderas umbrías en cotas medias y altas: La unión de las placas de viento es desfavorable. <br/> En las laderas protegidas del viento umbrías: La parte superficial del manto se ha facetado, con escarcha de superficie. <br/> En las laderas umbrías, en las zonas de manto delgado: En la parte basal del manto de nieve hay capas débiles de cristales gruesos. <br/> <br/> Jueves: El enfriamiento nocturno será bueno. El tiempo será soleado en una zona amplia. <br/> <br/> En cotas medias están presentes de 50 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El peligro de aludes permanecerá invariable.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-01-02T16:00:00+00:00",
+      "startTime": "2026-01-01T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-01T16:00:00+00:00",
+    "startTime": "2025-12-31T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,108 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las placas de viento pueden desencadenarse muy fácilmente de manera accidental especialmente en laderas umbrías inclinadas y en cotas medias y altas. Los aludes son a menudo de tamaño pequeño. Los lugares peligrosos se encuentran sobre todo en las zonas umbrías y protegidas del viento por encima de los 2300 m aproximadamente y en cubetas, canales y detrás de cambios abruptos de pendiente. Estos en algunos casos son de tamaño mediano sobre todo en el límite con la Ribagorça y el Pallars. <br/> <br/> En las laderas solanas y en cotas bajas: En el transcurso de la jornada, son probables purgas y avalanchas de nieve húmeda de tamaño pequeño y, localmente, mediano. Estas pueden ser desencadenadas al paso de un montañero o de forma natural. En las laderas herbosas inclinadas, son aún posibles avalanchas de deslizamiento basal de tamaño pequeño y mediano. <br/> <br/> Es necesaria una cierta experiencia en la evaluación del peligro de aludes.",
+    "highlights": "Las placas de viento deben ser evaluadas con cautela en laderas umbrías. Purgas de nieve seca y húmeda."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "NE",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "b965d3b7-5dfc-4824-9ec8-e82e503259eb",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-12"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-03-12T07:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Durante la noche se han acumulado en algunos sectores hasta 5 cm de nieve por encima de los 1800 m aproximadamente, localmente hasta 10 cm. A partir de la mañana el tiempo será bastante soleado. <br/> <br/> En las umbrías altas hay una costra de polvo sahariano enterrada, con capas por encima con poca cohesión y presencia de escarcha superficial. Las placas de viento apenas identificables de los últimos días descansan encima de capas desfavorables. <br/> <br/> En particular en cotas bajas y en las laderas inclinadas solanas: La superficie del manto de nieve se volverá a helar para formar una costra portante y se ablandará ya durante la mañana. <br/> <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El peligro permanecerá invariable.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-13T16:00:00+00:00",
+      "startTime": "2026-03-12T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-03-12T16:00:00+00:00",
+    "startTime": "2026-03-11T16:00:00+00:00"
+   }
+  }
+ ]
+}

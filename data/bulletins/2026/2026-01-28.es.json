@@ -1,0 +1,152 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En el transcurso de la noche , con la nieve reciente y el viento de débil a moderado del cuadrante oeste , se formarán abundantes placas de viento especialmente en cotas medias y altas. Las nuevas acumulaciones de nieve venteada y las menos recientes pueden desencadenarse muy fácilmente de manera accidental en todas las orientaciones por encima de los 2000 m aproximadamente. Los aludes son a menudo de tamaño mediano. <br/> <br/> La nieve reciente puede fácilmente desencadenarse de manera natural o accidental en todas las orientaciones por encima de los 2000 m aproximadamente. Son posibles avalanchas y aludes de nieve seca, pero en su mayoría pequeñas. <br/> Los aludes de nieve seca pueden, también, desencadenarse por la nieve antigua y alcanzar tamaños grandes de manera aislada. <br/> En todas las orientaciones: Pueden desencadenarse aludes de deslizamiento basal a cualquier hora del día o de la noche. Estos son de manera aislada de tamaño mediano. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren experiencia en la evaluación del peligro de aludes.",
+    "highlights": "Nieve reciente y nieve venteada en cotas medias y altas."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "8340e8ee-c6b4-4d6b-a859-d81d79774107",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-28"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-01-27T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta la madrugada caerán de 15 a 20 cm de nieve por encima de los 1500 m aproximadamente. <br/> El viento con rachas moderadas transportará la nieve reciente. <br/> <br/> En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas con poco espesor de nieve orientadas a oeste, norte y este. <br/> <br/> En cotas medias están presentes de 120 a 160 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: El tiempo será parcialmente soleado. El peligro de aludes no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-01-29T16:00:00+00:00",
+      "startTime": "2026-01-28T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-28T16:00:00+00:00",
+    "startTime": "2026-01-27T16:00:00+00:00"
+   }
+  }
+ ]
+}

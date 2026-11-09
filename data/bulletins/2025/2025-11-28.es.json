@@ -1,0 +1,136 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las capas débiles profundas en el manto de nieve antigua pueden ser desencadenadas al paso de una persona en las laderas umbrías. Los aludes son de tamaño mediano en estas orientaciones. Los desencadenamientos de aludes y los sonidos de \"whumpf\" confirman esta situación. <br/> <br/> Las acumulaciones de nieve venteada más recientes pueden desencadenarse al paso de un solo montañero en cotas medias y altas. Los aludes son de tamaño en general pequeño. Sin embargo no se descartan aludes de tamaño mediano. <br/> <br/> A consecuencia del aumento de la temperatura, son probables avalanchas de deslizamiento basal y purgas de nieve húmeda. <br/> <br/> Se recomienda una elección cuidadosa del itinerario.",
+    "highlights": "La nieve venteada y las capas débiles persistentes deben evaluarse con atención."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2100"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "e6929461-468a-4535-8b9f-344ddcd1f034",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-11-28"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las excursiones por la montaña requieren experiencia en la evaluación del peligro de aludes.",
+   "lang": "es",
+   "publicationTime": "2025-11-27T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En las laderas umbrías en cotas medias y altas: La parte inferior del manto se ha facetado. <br/> <br/> El viernes será parcialmente nublado. <br/> Especialmente en cotas bajas y medias,: La superficie del manto de nieve se ablandará durante el día. <br/> Sobre todo en altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "La actividad de aludes disminuirá lentamente.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2025-11-29T16:00:00+00:00",
+      "startTime": "2025-11-28T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-11-28T16:00:00+00:00",
+    "startTime": "2025-11-27T16:00:00+00:00"
+   }
+  }
+ ]
+}

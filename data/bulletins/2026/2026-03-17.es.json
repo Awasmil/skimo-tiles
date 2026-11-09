@@ -1,0 +1,135 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las placas de viento a veces gruesas de los últimos días pueden desencadenarse de manera accidental en todas las orientaciones en cotas medias y altas, especialmente en los márgenes. Precaución sobre todo en las cubetas, canales y detrás de los cambios abruptos de pendiente. Los aludes son a menudo de tamaño mediano. Estos pueden, también, desencadenarse por la nieve antigua y alcanzar tamaños bastante grandes sobre todo en las laderas umbrías protegidas del viento. <br/> <br/> A consecuencia del aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada son probables cada vez más numerosas purgas y avalanchas de nieve húmeda, incluso de tamaño mediano. <br/> <br/> Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren experiencia en la evaluación del peligro de aludes y una cuidadosa elección del itinerario.",
+    "highlights": "La nieve venteada y las capas débiles persistentes deben evaluarse de manera crítica. Avalanchas y aludes de nieve húmeda en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N",
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "many",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "3cca4f1a-7626-4264-be48-2d021cb8676a",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-17"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "En altitud las condiciones de aludes son en algunos casos precarias.",
+   "lang": "es",
+   "publicationTime": "2026-03-16T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En los últimos días se han acumulado de 20 a 30 cm de nieve por encima de los 1800 m aproximadamente, localmente más. El viento con rachas muy fuertes ha transportado la nieve reciente y, en parte, la nieve antigua. <br/> <br/> Las placas de viento bien visibles permanecen aún inestables en todas las orientaciones. Estas descansan encima de una costra sobre todo en laderas solanas. En las laderas protegidas del viento umbrías: Las acumulaciones de nieve venteada descansan encima de capas débiles. Los desencadenamientos de aludes y las observaciones sobre el terreno muestran la escasa estabilidad del manto de nieve. <br/> En el transcurso de la jornada las condiciones meteorológicas primaverales causarán una rápida humidificación del manto de nieve sobre todo en las laderas solanas inclinadas. <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Miércoles: El peligro de aludes de nieve seca y de nieve húmeda no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-18T16:00:00+00:00",
+      "startTime": "2026-03-17T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-17T16:00:00+00:00",
+    "startTime": "2026-03-16T16:00:00+00:00"
+   }
+  }
+ ]
+}

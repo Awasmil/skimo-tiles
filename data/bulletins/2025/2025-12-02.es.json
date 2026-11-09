@@ -1,0 +1,99 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las capas débiles profundas en el manto de nieve antigua pueden ser desencadenadas aún en algunos lugares sobre todo en las laderas umbrías muy inclinadas. Estas son difíciles de identificar. Los tests de estabilidad y las observaciones sobre el terreno indican la estructura débil del manto de nieve en las laderas umbrías muy inclinadas. Los aludes aquí son de manera aislada de tamaño mediano. <br/> <br/> También en las laderas extremadamente inclinadas umbrías: Con la nieve reciente, son posibles purgas de nieve seca.",
+    "highlights": "Las capas débiles en la nieve antigua son difíciles de reconocer."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "E",
+      "W",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2100"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "25b4d9ea-c24d-4c28-aaca-cbdab7b226f7",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-02"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2100"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2100"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-01T17:51:40+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Domingo se han acumulado hasta 5 cm de nieve por encima de los 1500 m aproximadamente, localmente más. La nieve reciente de las últimas semanas y las placas de viento a veces gruesas en algunos lugares no se han unido bien con la nieve antigua especialmente en laderas umbrías por encima de los 2100 m aproximadamente. En la parte basal del manto de nieve hay capas débiles de cristales facetados. <br/> <br/> Sobre todo en altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Hasta el miércoles caerán 10 cm de nieve, localmente más. Con la nevada, claro aumento del peligro de aludes de nieve seca. Con el enfriamiento, progresivo descenso del peligro de aludes de nieve húmeda.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2025-12-03T16:00:00+00:00",
+      "startTime": "2025-12-02T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2025-12-02T16:00:00+00:00",
+    "startTime": "2025-12-01T16:00:00+00:00"
+   }
+  }
+ ]
+}

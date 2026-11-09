@@ -1,0 +1,108 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En las laderas herbosas muy inclinadas, son posibles avalanchas de deslizamiento basal. Estos son de tamaño mediano. Los lugares peligrosos se encuentran sobre todo en laderas solanas y en las laderas umbrías por debajo de los 2400 m aproximadamente. En el transcurso de la jornada, son posibles purgas de nieve húmeda de tamaño pequeño. Estas pueden ser desencadenadas al paso de una persona. <br/> <br/> En el límite sur del Arán, En cotas altas: Las acumulaciones de nieve venteada más recientes son en su mayoría pequeñas pero en algunos casos propensas al desencadenamiento. <br/> <br/> En el transcurso de la jornada: Evitar las zonas con grietas de deslizamiento basal. Debido a la superficie dura del manto de nieve hay el peligro de resbalar y caer en las laderas inclinadas.",
+    "highlights": "Atención a las avalanchas de deslizamiento basal y purgas de nieve húmeda durante el día."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "SW",
+      "NW",
+      "N",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SW",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "c8a98740-bc6c-4ad8-8b50-904dc96a96af",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-11"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-10T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Jueves: El tiempo será parcialmente soleado. La superficie del manto de nieve se volverá a helar apenas y se ablandará durante el día. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Con el enfriamiento, ligero descenso del peligro de aludes de nieve húmeda.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2025-12-12T16:00:00+00:00",
+      "startTime": "2025-12-11T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-11T16:00:00+00:00",
+    "startTime": "2025-12-10T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,152 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En el transcurso de la jornada , con la nieve reciente y el viento con rachas moderadas del cuadrante oeste , se han formado abundantes placas de viento especialmente cerca de collados y cordales así como en cotas altas y zonas de alta montaña. Las nuevas acumulaciones de nieve venteada y las menos recientes pueden desencadenarse fácilmente de manera natural o accidental en todas las orientaciones por encima de los 2200 m aproximadamente. Los aludes son a menudo de tamaño mediano. <br/> <br/> Con la nieve reciente, son posibles avalanchas y aludes de nieve seca, pero en su mayoría pequeñas. A consecuencia del aumento de la temperatura diurna, son posibles purgas y avalanchas de nieve húmeda, incluso de tamaño mediano. <br/> Los aludes de nieve seca pueden, también, desencadenarse por la nieve antigua y alcanzar tamaños grandes de manera aislada. <br/> En todas las orientaciones: Pueden desencadenarse aludes de deslizamiento basal a cualquier hora del día o de la noche. Estos son de manera aislada de tamaño mediano. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren experiencia en la evaluación del peligro de aludes.",
+    "highlights": "Nieve reciente y nieve venteada en cotas medias y altas."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1800"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "N",
+      "S",
+      "W",
+      "SW",
+      "NW",
+      "SE",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "cb8f61af-ae4d-4daa-b597-230dad320f0b",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-29"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2200"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-01-28T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Martes se han acumulado de 15 a 20 cm de nieve por encima de los 1500 m aproximadamente. <br/> Especialmente cerca de los cordales, en canales y cubetas y en cotas altas: El viento del sudoeste ha transportado intensamente la nieve reciente. <br/> <br/> En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas con poco espesor de nieve orientadas a oeste, norte y este. <br/> <br/> En cotas medias están presentes de 120 a 160 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: El tiempo será nublado. El peligro de aludes de nieve seca no disminuirá aún. El peligro de aludes de nieve húmeda disminuirá durante el día.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-01-30T16:00:00+00:00",
+      "startTime": "2026-01-29T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-29T16:00:00+00:00",
+    "startTime": "2026-01-28T16:00:00+00:00"
+   }
+  }
+ ]
+}

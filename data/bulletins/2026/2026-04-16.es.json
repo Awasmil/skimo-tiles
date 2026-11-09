@@ -1,0 +1,110 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En las laderas inclinadas solanas y en cotas bajas y medias: A consecuencia del aumento de la temperatura diurna y la radiación solar, a partir de la mañana son posibles purgas y avalanchas de nieve húmeda, incluso de tamaño mediano. Además hay un peligro latente de aludes de deslizamiento basal. <br/> <br/> En las laderas umbrías, en cotas altas: Las acumulaciones de nieve venteada son fácilmente identificables y en algunos casos propensas al desencadenamiento. <br/> <br/> Las excursiones por la montaña requieren una elección atenta del itinerario.",
+    "highlights": "Avalanchas y aludes de nieve húmeda en el transcurso de la jornada. Nieve venteada en las laderas umbrías cerca de los cordales."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "fdd1d0c8-1b01-4504-91fc-d7421b6dc3b1",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-16"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada del manto de nieve.",
+   "lang": "es",
+   "publicationTime": "2026-04-15T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Jueves: El tiempo será bastante soleado. La superficie del manto de nieve se enfriará apenas durante la noche nublada y se ablandará ya durante la mañana. <br/> <br/> En cotas medias y altas aún hay mucha nieve. En cotas altas los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Viernes: Las condiciones permanecen primaverales.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-04-17T15:00:00+00:00",
+      "startTime": "2026-04-16T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-16T15:00:00+00:00",
+    "startTime": "2026-04-15T15:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,111 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente y la gran cantidad de nieve venteada del fin de semana deben ser evaluadas con cautela sobre todo en laderas umbrías muy inclinadas y poco frecuentadas. Esta nieve en algunos casos puede ser desencadenada de manera accidental. Precaución sobre todo en la base de las paredes rocosas y detrás de los cambios abruptos de pendiente. Los aludes son de manera aislada de tamaño peligrosamente grande. <br/> <br/> A consecuencia del aumento de la temperatura diurna y la radiación solar, son probables de forma aislada avalanchas naturales de nieve muy húmeda, incluso de tamaño mediano. En el transcurso de la jornada, son posibles avalanchas de placa húmeda. Los aludes de nieve húmeda pueden desencadenarse de manera accidental o natural. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren experiencia en la evaluación del peligro de aludes y cautela.",
+    "highlights": "El problema de capas débiles persistentes debe evaluarse de manera crítica. Avalanchas y aludes de nieve húmeda en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "4754e0b8-47aa-412b-96f5-0bcb74e545e1",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-18"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "En altitud las condiciones de aludes son en algunos casos precarias.",
+   "lang": "es",
+   "publicationTime": "2026-03-17T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "La nieve reciente y la nieve venteada del fin de semana en muchos lugares no se han unido bien con la nieve antigua especialmente en laderas umbrías protegidas del viento en cotas medias y altas. Los desencadenamientos de aludes y las capas débiles en la parte superior del manto de nieve indican la escasa estabilidad del manto de nieve. <br/> En el transcurso de la jornada las condiciones meteorológicas primaverales causarán una progresiva humidificación del manto de nieve sobre todo en las laderas solanas inclinadas. <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: Caerá un poco de nieve. El peligro de aludes de nieve seca y de nieve húmeda disminuirá progresivamente.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-19T16:00:00+00:00",
+      "startTime": "2026-03-18T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-18T16:00:00+00:00",
+    "startTime": "2026-03-17T16:00:00+00:00"
+   }
+  }
+ ]
+}

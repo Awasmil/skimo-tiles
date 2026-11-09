@@ -1,0 +1,135 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las acumulaciones de nieve venteada pueden desencadenarse fácilmente al paso de un solo montañero en todas las orientaciones y por encima del límite del bosque. Atención especialmente en los márgenes. Estos son a veces de tamaño grande. Los desencadenamientos de aludes y los \"whumpfs\" y las fisuras que propagan al pasar confirman esta situación. <br/> De manera aislada, los aludes de nieve seca pueden arrastrar capas más profundas del manto de nieve y alcanzar tamaños bastante grandes en las laderas umbrías. <br/> En las laderas umbrías muy inclinadas, son posibles algunas avalanchas de nieve seca, incluso de tamaño mediano. Sobre todo en las laderas inclinadas solanas: A consecuencia del aumento de la temperatura diurna y la radiación solar, a partir de la mañana son probables cada vez más numerosas avalanchas de nieve húmeda, incluso de tamaño mediano. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren mucha experiencia i y la máxima prudencia.",
+    "highlights": "Las placas de viento, a veces de tamaño grande, deben ser evaluadas con cautela."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "331ba0d5-4702-4da8-b0dc-289be0d17ff4",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-12"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-01-12T07:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En una zona amplia sábado se han acumulado en una zona extensa de 40 a 60 cm de nieve por encima de los 1200 m aproximadamente, localmente más. El viento con rachas fuertes ha transportado intensamente la nieve reciente. El lunes será soleado. La unión entre las placas de viento y con la nieve antigua es desfavorable. <br/> <br/> En el manto de nieve antigua hay capas débiles especialmente en las laderas umbrías inclinadas y poco frecuentadas. <br/> <br/> En cotas medias están presentes de 70 a 100 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Martes: En algunos sectores descenso del peligro de aludes de nieve seca.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2026-01-13T16:00:00+00:00",
+      "startTime": "2026-01-12T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-01-12T16:00:00+00:00",
+    "startTime": "2026-01-11T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,131 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las placas de viento inestables de los últimos días pueden desencadenarse fácilmente de manera accidental o, aisladamente, de manera natural en todas las orientaciones y generalmente por encima del límite del bosque. Precaución sobre todo en la base de las paredes rocosas y detrás de los cambios abruptos de pendiente. Los aludes son a menudo de tamaño mediano. Estos pueden, de manera muy aislada, desencadenarse por la nieve antigua y alcanzar tamaños bastante grandes sobre todo en las laderas umbrías protegidas del viento. <br/> <br/> A consecuencia del aumento de la temperatura diurna y la radiación solar, a partir de la mañana son probables cada vez más numerosas purgas y avalanchas de nieve húmeda, incluso de tamaño mediano. <br/> <br/> Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren experiencia en la evaluación del peligro de aludes y una cuidadosa elección del itinerario.",
+    "highlights": "Nieve venteada y nieve húmeda son la principal fuente de peligro."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N",
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "many",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "18fc4dce-3374-4022-a7e0-c64d47b7ad23",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-16"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-03-15T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En los últimos dos días se han acumulado de 20 a 30 cm de nieve por encima de los 1800 m aproximadamente, localmente más. El viento con rachas muy fuertes ha transportado intensamente la nieve reciente. <br/> <br/> Las placas de viento descansan encima de capas débiles especialmente en laderas umbrías por encima de los 2200 m aproximadamente. <br/> En el transcurso de la jornada las condiciones meteorológicas primaverales causarán una rápida humidificación del manto de nieve sobre todo en las laderas solanas inclinadas. <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Martes: A consecuencia del aumento de la temperatura diurna y la radiación solar, ligero aumento del peligro de aludes de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-17T16:00:00+00:00",
+      "startTime": "2026-03-16T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-16T16:00:00+00:00",
+    "startTime": "2026-03-15T16:00:00+00:00"
+   }
+  }
+ ]
+}

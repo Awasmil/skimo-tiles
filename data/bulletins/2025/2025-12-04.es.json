@@ -1,0 +1,125 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la nieve reciente, son probables avalanchas y aludes de nieve seca. Estos pueden a menudo ser desencadenadas muy fácilmente o de forma natural. Los aludes son de tamaño en general pequeño. Son especialmente peligrosas en particular las canales y las cubetas. <br/> <br/> Las capas débiles en la nieve antigua pueden ser desencadenadas aún en algunos lugares sobre todo en las laderas muy inclinadas orientadas a oeste, norte y este. Estas son difíciles de identificar. Los tests de estabilidad y las observaciones sobre el terreno indican la estructura desfavorable del manto de nieve. Los aludes aquí son de manera aislada de tamaño mediano. <br/> <br/> Las actividades fuera pista requieren una elección atenta del itinerario. Además del peligro de ser enterrado por un alud, se debe tener en cuenta sobre todo el peligro de ser arrastrado hacia una trampa del terreno.",
+    "highlights": "Avalanchas y aludes de nieve seca en todas las orientaciones. Las capas débiles en la nieve antigua son difíciles de reconocer."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "SW",
+      "NW",
+      "W",
+      "N",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "W",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2100"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "3ab5d34c-9d0b-4c4d-ba0d-f94508143707",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-04"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Los lugares peligrosos y la probabilidad de desencadenamiento aumentarán a partir de mediodía.",
+   "lang": "es",
+   "publicationTime": "2025-12-03T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta el mediodía caerá un poco de nieve. La nieve reciente se depositará encima de capas blandas en todas las orientaciones. Esta nieve se volverá progresivamente más inestable. <br/> <br/> La nieve reciente de las últimas semanas y las placas de viento y localizadas en algunos lugares no se han unido bien con la nieve antigua especialmente en laderas protegidas del viento orientadas a oeste, norte y este en cotas medias y altas. En el manto de nieve antigua hay capas débiles de cristales facetados. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: Tarde: Con la intensificación de las nevadas, progresivo aumento del peligro de aludes de nieve seca. Viernes: A consecuencia de la nieve reciente y el viento fuerte, adicional aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2025-12-05T16:00:00+00:00",
+      "startTime": "2025-12-04T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-04T16:00:00+00:00",
+    "startTime": "2025-12-03T16:00:00+00:00"
+   }
+  }
+ ]
+}

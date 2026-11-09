@@ -1,0 +1,142 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las capas débiles en la nieve antigua pueden ser desencadenadas aún en algunos lugares en las laderas umbrías muy inclinadas. Los lugares peligrosos se encuentran en particular en la base de las paredes rocosas y detrás de los cambios abruptos de pendiente, y cerca de los cordales, en canales y cubetas por encima de los 2400 m aproximadamente. Estos pueden, de manera muy aislada, alcanzar tamaños bastante grandes. En las laderas solanas: A consecuencia del aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada son posibles de forma aislada avalanchas de nieve húmeda, incluso de tamaño mediano. También en las laderas umbrías en cotas bajas y medias: Con la penetración de la humedad, son posibles avalanchas de placa húmeda, que pueden llegar a ser medianas. <br/> <br/> La actual situación de aludes requiere una elección atenta del itinerario. Las excursiones de montaña deben acabar a mediodía.",
+    "highlights": "Capas débiles persistentes en altitud. Avalanchas de nieve muy húmeda y de deslizamiento basal en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "E",
+      "NE",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "d25d374f-5aaa-4f06-ace8-0335034cddc2",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-09"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2400"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "later"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-04-08T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En particular en cotas altas en las laderas protegidas del viento umbrías: En la parte superior del manto de nieve hay capas débiles pronunciadas. <br/> <br/> El jueves será bastante soleado. En el transcurso de la jornada el sol y el calor causarán una progresiva humidificación del manto de nieve. <br/> <br/> En cotas medias y altas aún hay mucha nieve. En cotas altas los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Viernes: Las condiciones permanecen primaverales.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-04-10T15:00:00+00:00",
+      "startTime": "2026-04-09T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-09T15:00:00+00:00",
+    "startTime": "2026-04-08T15:00:00+00:00"
+   }
+  }
+ ]
+}

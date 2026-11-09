@@ -1,0 +1,115 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la nieve reciente y el viento fuerte del noroeste , se han formado extensas placas de viento cerca de los cordales, en canales y cubetas así como en cotas medias y altas. Las placas de viento inestables descansan encima de capas desfavorables en todas las orientaciones. Estas en algunos casos son grandes. Especialmente en las laderas con poca nieve umbrías, en cotas altas: De manera aislada, los aludes pueden desprenderse por la nieve antigua y alcanzar tamaños muy grandes. <br/> <br/> También en las laderas inclinadas en las zonas protegidas del viento: A consecuencia del aumento de la temperatura, en el transcurso de la jornada son probables purgas y avalanchas, sobre todo de tamaño mediano. Sin embargo no se descartan aludes de tamaño grande. <br/> En particular en cotas bajas, en las laderas muy inclinadas herbosas: Además son posibles algunos aludes de deslizamiento basal. <br/> <br/> Los lugares peligrosos son numerosos y resultan difíciles de reconocer con poca visibilidad. Las condiciones son desfavorables para las excursiones de montaña.",
+    "highlights": "La nieve reciente y la nieve venteada deben evaluarse de manera crítica. Los aludes pueden desencadenarse de manera accidental o natural."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SW",
+      "SE",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "c2f39b82-b565-46ae-961b-8c53f59b0cd2",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-15"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "high",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "En una zona amplia se han acumulado de 50 a 60 cm de nieve. El viento del noroeste ha transportado intensamente la nieve reciente.",
+   "lang": "es",
+   "publicationTime": "2026-02-15T05:28:40+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "A consecuencia de la nieve reciente y el viento se han desencadenado numerosas avalanchas de nieve seca de tamaño mediano y, locamente, grande. Las fisuras que propagan al pasar y los aludes recientes confirman la estructura desfavorable del manto de nieve. <br/> <br/> El domingo caerá un poco de nieve. El tiempo será nublado. El viento del noroeste transportará la nieve reciente. <br/> <br/> En muchos lugares la nieve reciente y la nieve venteada descansan encima de capas blandas. En la parte basal del manto de nieve hay capas débiles de cristales facetados especialmente en las laderas umbrías. En cotas medias están presentes de 150 a 220 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Lunes: Con las precipitaciones, ligero aumento del peligro de aludes de nieve seca y de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-02-16T16:00:00+00:00",
+      "startTime": "2026-02-15T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-02-15T16:00:00+00:00",
+    "startTime": "2026-02-14T16:00:00+00:00"
+   }
+  }
+ ]
+}

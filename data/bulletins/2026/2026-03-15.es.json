@@ -1,0 +1,137 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las abundantes placas de viento pueden desencadenarse fácilmente de manera accidental o, aisladamente, de manera natural en todas las orientaciones y generalmente por encima del límite del bosque. Precaución sobre todo en las cubetas, canales y detrás de los cambios abruptos de pendiente. Los aludes son a menudo de tamaño mediano. De manera aislada, los aludes de nieve seca pueden desencadenarse por la nieve antigua y alcanzar tamaños grandes sobre todo en las laderas umbrías protegidas del viento. <br/> <br/> Con la nieve reciente, por la mañana son posibles avalanchas de nieve seca, incluso de tamaño mediano. A consecuencia del aumento de la temperatura diurna y la radiación solar, a partir de mediodía son posibles purgas de nieve húmeda, pero en su mayoría pequeñas. <br/> <br/> Los lugares peligrosos son numerosos y resultan difíciles de reconocer con poca visibilidad. Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren mucha precaución y la máxima prudencia.",
+    "highlights": "Las placas de viento a veces gruesas representan la principal fuente de peligro."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "few",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "35489642-b4df-40e9-b27f-6a1009394ba6",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-15"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-03-14T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Desde ayer se han acumulado de 15 a 20 cm de nieve por encima de los 1800 m aproximadamente, localmente más. Hasta el mediodía caerán de 10 a 20 cm de nieve por encima de los 1200 m aproximadamente, localmente más. El viento con rachas muy fuertes transportará intensamente la nieve reciente. Con el viento muy fuerte del norte, en el transcurso de la jornada las placas de viento crecerán. <br/> <br/> Las placas de viento descansan encima de capas débiles especialmente en laderas umbrías por encima de los 2200 m aproximadamente. Son especialmente peligrosas en particular las zonas donde la escarcha de superficie ha quedado cubierta de nieve. <br/> <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Lunes: Con el fin de las precipitaciones, progresivo descenso del peligro de aludes de nieve seca. A consecuencia del aumento de la temperatura diurna y la radiación solar, claro aumento del peligro de aludes de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-16T16:00:00+00:00",
+      "startTime": "2026-03-15T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-15T16:00:00+00:00",
+    "startTime": "2026-03-14T16:00:00+00:00"
+   }
+  }
+ ]
+}

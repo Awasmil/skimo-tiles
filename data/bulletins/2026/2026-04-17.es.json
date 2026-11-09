@@ -1,0 +1,151 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En las laderas solanas y en cotas bajas y medias: A consecuencia del aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada son posibles purgas y avalanchas de nieve húmeda, incluso de tamaño mediano. Además hay un peligro latente de aludes de deslizamiento basal. <br/> <br/> En las laderas muy inclinadas umbrías, por encima de los 2700 m aproximadamente: Las acumulaciones de nieve venteada pueden desencadenarse de manera aislada. <br/> <br/> Las excursiones de montaña deben comenzar y acabar temprano.",
+    "highlights": "Avalanchas y aludes de nieve húmeda en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "E",
+      "NE",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2700"
+     },
+     "frequency": "few",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "N",
+      "E",
+      "NE",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "N",
+      "NE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2700"
+     },
+     "frequency": "few",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "c801ac22-79d8-4862-82bb-093d6d32d842",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-17"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "low",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "later"
+    }
+   ],
+   "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada del manto de nieve.",
+   "lang": "es",
+   "publicationTime": "2026-04-16T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Viernes: El tiempo será bastante soleado. La superficie del manto de nieve se volverá a helar para formar una costra portante y se ablandará durante el día. <br/> En las laderas solanas y en cotas bajas y medias: El manto de nieve es muy húmedo en general. <br/> <br/> En cotas medias y altas aún hay mucha nieve. En cotas altas los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Sábado: Ligero aumento del peligro de aludes de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-04-18T15:00:00+00:00",
+      "startTime": "2026-04-17T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-17T15:00:00+00:00",
+    "startTime": "2026-04-16T15:00:00+00:00"
+   }
+  }
+ ]
+}

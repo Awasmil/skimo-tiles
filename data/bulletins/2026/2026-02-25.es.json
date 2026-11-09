@@ -1,0 +1,201 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las acumulaciones de nieve venteada menos recientes pueden en algunos casos aún desencadenarse accidentalmente sobre todo en laderas umbrías protegidas del viento y en cotas medias y altas. Los lugares peligrosos se encuentran especialmente en cubetas, canales y detrás de los cambios abruptos de pendiente y en terreno pendiente y escarpado. Los aludes son a veces de tamaño mediano. <br/> <br/> En el transcurso de la jornada la probabilidad de desencadenamiento de aludes de deslizamiento basal y de purgas muy húmedas aumentará progresivamente en las laderas solanas muy inclinadas en todas las cotas. Son son posibles aludes naturales de tamaño pequeño y mediano. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren una elección atenta del itinerario. Además del peligro de ser enterrado por un alud, se debe tener en cuenta también el peligro de ser arrastrado hacia una trampa del terreno.",
+    "highlights": "Nieve venteada menos reciente en particular en las laderas umbrías protegidas del viento. Avalanchas de deslizamiento basal y purgas de nieve muy húmeda en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "E",
+      "W",
+      "SE",
+      "SW",
+      "S"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "298fc484-a3d5-4c31-a095-4907b2ae1f44",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-25"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2200"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "later"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-02-24T17:58:56+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En el transcurso de la jornada el sol y el calor causarán una progresiva humidificación del manto de nieve especialmente en las laderas solanas muy inclinadas. <br/> <br/> En las laderas umbrías: Las acumulaciones de nieve venteada permanecen en parte inestables. Estas descansan encima de una costra. La parte central del manto esté bien consolidada, con cristales facetados en superficie. <br/> <br/> En cotas medias están presentes de 150 a 250 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Jueves: El tiempo será bastante soleado. El peligro de aludes de nieve seca y de nieve húmeda permanecerá invariable.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-02-26T16:00:00+00:00",
+      "startTime": "2026-02-25T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-02-25T16:00:00+00:00",
+    "startTime": "2026-02-24T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,127 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Hoy el viento ha soplado de fuerte a muy fuerte en una zona amplia. El viento del noroeste ha transportado intensamente la nieve reciente. A partir de la madrugada , con el viento de débil a moderado del cuadrante sur , se formarán placas de viento adicionales cerca de collados y cordales así como por encima del límite del bosque. Las nuevas y las menos recientes acumulaciones de nieve venteada son identificables y pueden desencadenarse fácilmente. Los aludes son en muchos casos de tamaño mediano en particular en cotas altas y zonas de alta montaña. En las laderas muy inclinadas umbrías en las zonas de manto delgado: Los aludes pueden desprenderse por la nieve antigua y alcanzar tamaños grandes. <br/> Además hay un peligro latente de aludes de deslizamiento basal.",
+    "highlights": "Las placas de viento representan la principal fuente de peligro."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "S",
+      "SW",
+      "W",
+      "E",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "S",
+      "SW",
+      "E",
+      "W",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2300"
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "b742826d-b78a-48a6-a7ac-f73464695849",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-02-13"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "treeline"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-02-12T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El viernes caerá un poco de nieve especialmente en el límite sur del Arán. El tiempo será nublado en una zona amplia. El viento del sur transportará la nieve. <br/> <br/> En muchos lugares la nieve venteada descansa encima de una costra helada. En la parte basal del manto de nieve antigua hay capas débiles de cristales gruesos especialmente en las laderas umbrías. En cotas medias están presentes de 100 a 180 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Sábado: A consecuencia de la nieve reciente y el viento fuerte, progresivo aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2026-02-14T16:00:00+00:00",
+      "startTime": "2026-02-13T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-02-13T16:00:00+00:00",
+    "startTime": "2026-02-12T16:00:00+00:00"
+   }
+  }
+ ]
+}

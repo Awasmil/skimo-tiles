@@ -1,0 +1,115 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las placas de viento a veces cubiertas de nieve reciente pueden desencadenarse fácilmente de manera accidental o, aisladamente, de manera natural especialmente en laderas umbrías por encima del límite del bosque. Las acumulaciones de nieve venteada incluso para el ojo entrenado son difícilmente identificables. Los aludes aquí son a menudo de tamaño mediano. <br/> La nieve reciente puede muy fácilmente ser desencadenada de manera accidental en todas las orientaciones en cotas medias y altas. Estos son de manera aislada de tamaño mediano. <br/> Sobre todo al sur y al este, los lugares peligrosos son más frecuentes. <br/> <br/> Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren mucha experiencia i y la máxima prudencia.",
+    "highlights": "Nieve reciente y nieve venteada son la principal fuente de peligro."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "W",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "SW",
+      "NW",
+      "N",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "some",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "a197e709-aeb5-4ea1-b264-28f00484dadf",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-22"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Por encima del límite del bosque las condiciones son desfavorables.",
+   "lang": "es",
+   "publicationTime": "2025-12-22T07:33:43+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En una zona amplia hasta la noche caerán de 20 a 30 cm de nieve por encima de los 1500 m aproximadamente. El viento del sur ha transportado intensamente la nieve reciente. Con el viento de moderado a fuerte del norte, en el transcurso de la jornada se formarán nuevas placas de viento. La nieve reciente y la nieve venteada descansan encima de una superficie desfavorable del manto de nieve antigua especialmente en laderas umbrías y en cotas medias y altas. Estas últimas se volverán cada vez más inestables. <br/> <br/> En cotas medias están presentes de 40 a 70 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Con las precipitaciones, ligero aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2025-12-23T16:00:00+00:00",
+      "startTime": "2025-12-22T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2025-12-22T16:00:00+00:00",
+    "startTime": "2025-12-21T16:00:00+00:00"
+   }
+  }
+ ]
+}

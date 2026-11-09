@@ -1,0 +1,136 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Weak layers in the lower part of the snowpack can be released by people on shady slopes. In these aspects the avalanches are medium-sized. Released avalanches and whumpfing sounds confirm this situation. <br/> <br/> The more recent wind slabs can be released by a single winter sport participant at intermediate and high altitudes. The avalanches are rather small. Medium-sized avalanches are further not ruled out. <br/> <br/> As a consequence of warming gliding avalanches and moist snow slides are to be expected. <br/> <br/> Careful route selection is recommended.",
+    "highlights": "Wind slabs and weakly bonded old snow are to be assessed with care and prudence."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2100"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "e6929461-468a-4535-8b9f-344ddcd1f034",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-11-28"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Backcountry touring calls for experience in the assessment of avalanche danger.",
+   "lang": "en",
+   "publicationTime": "2025-11-27T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Southern limit of Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "South slope of Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "North and center of Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Shady slopes intermediate and high altitudes: Towards its base, the snowpack is faceted. <br/> <br/> On Friday it will be partly cloudy. <br/> Especially low and intermediate altitudes,: The surface of the snowpack will soften during the day. <br/> In particular at elevated altitudes snow depths vary greatly, depending on the infuence of the wind."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/en"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "The avalanche activity will slowly increase.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2025-11-29T16:00:00+00:00",
+      "startTime": "2025-11-28T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-11-28T16:00:00+00:00",
+    "startTime": "2025-11-27T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,147 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Nuevas acumulaciones de nieve venteada pueden desencadenarse fácilmente de manera accidental o, aisladamente, de manera natural en todas las orientaciones y por encima del límite del bosque. Estos son a veces de tamaño grande. De manera aislada son posibles desencadenamientos a distancia y aludes naturales. <br/> Los aludes de nieve seca pueden arrastrar capas más profundas del manto de nieve y alcanzar tamaños grandes en las laderas umbrías. <br/> En todas las orientaciones y en las zonas protegidas del viento: A consecuencia del aumento de la temperatura diurna y la radiación solar, a partir de la mañana son probables cada vez más numerosas avalanchas de nieve seca y húmeda, incluso de tamaño mediano. <br/> <br/> Los lugares peligrosos son numerosos en itinerarios populares de montaña y terreno fuera pista.",
+    "highlights": "La gran cantidad de nieve reciente y la nieve venteada representan la principal fuente de peligro."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "7569eec7-c5bf-4b49-bbdb-ca53f02e75f1",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-11"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "treeline"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "mainValue": "high",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "En este primer día de sol se recomienda prudencia.",
+   "lang": "es",
+   "publicationTime": "2026-01-10T16:11:35+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Desde el viernes se han acumulado en una zona extensa de 40 a 60 cm de nieve por encima de los 1200 m aproximadamente, localmente más. El viento con rachas fuertes ha transportado intensamente la nieve reciente. Hasta la mañana caerán de 5 a 10 cm de nieve en todas las cotas. La unión entre las placas de viento y con la nieve antigua es desfavorable. Los desencadenamientos de aludes y las observaciones sobre el terreno muestran que la situación de aludes es muy peligrosa en particular por encima del límite del bosque. <br/> <br/> En el manto de nieve antigua hay capas extremadamente débiles especialmente en las laderas umbrías inclinadas y poco frecuentadas. <br/> <br/> En cotas medias están presentes de 70 a 100 cm de nieve, localmente aún más."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Lunes: Progresivo descenso del peligro de aludes de nieve seca. A consecuencia del aumento de la temperatura diurna y la radiación solar, progresivo aumento del peligro de aludes de nieve húmeda.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2026-01-12T16:00:00+00:00",
+      "startTime": "2026-01-11T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2026-01-11T16:00:00+00:00",
+    "startTime": "2026-01-10T16:00:00+00:00"
+   }
+  }
+ ]
+}

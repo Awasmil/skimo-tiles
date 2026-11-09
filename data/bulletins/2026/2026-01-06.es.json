@@ -1,0 +1,124 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las placas de viento en su mayoría delgadas pueden, en algunos casos, desencadenarse al paso de un solo montañero en todas las orientaciones en cotas medias y altas. En el transcurso de la jornada las placas de viento aumentarán de tamaño sobre todo cerca de los cordales, en canales y cubetas. Estas son en su mayoría pequeñas pero propensas al desencadenamiento. <br/> En algunos lugares, los aludes de nieve seca pueden desencadenarse en las capas más profundas del manto de nieve en particular en las laderas poco frecuentadas y con poco espesor de nieve umbrías. Los aludes aquí son a veces de tamaño mediano. <br/> <br/> En las laderas herbosas muy inclinadas y en las laderas umbrías, son posibles algunas avalanchas de deslizamiento basal.",
+    "highlights": "Las placas de viento, en su mayoría de tamaño pequeño, representan la principal fuente de peligro. Las capas débiles en la nieve antigua requieren una elección conservadora de la ruta."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "S",
+      "SW",
+      "NE",
+      "NW",
+      "E",
+      "W",
+      "N",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "W",
+      "E",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "fair",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "5fe8f587-3284-4d59-b5b5-219eb8b7b9f2",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-06"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-01-05T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta el miércoles el tiempo será frío. En el transcurso de la jornada , con el viento de débil a moderado , se formarán placas de viento en su mayoría de tamaño pequeño en todas las orientaciones. <br/> <br/> En las laderas umbrías, en las zonas de manto delgado: En la parte basal del manto de nieve hay capas débiles de cristales gruesos. <br/> <br/> En cotas medias están presentes de 50 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Miércoles: Con la nieve reciente, progresivo aumento del peligro de aludes de nieve seca.",
+     "tendencyType": "increasing",
+     "validTime": {
+      "endTime": "2026-01-07T16:00:00+00:00",
+      "startTime": "2026-01-06T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-06T16:00:00+00:00",
+    "startTime": "2026-01-05T16:00:00+00:00"
+   }
+  }
+ ]
+}

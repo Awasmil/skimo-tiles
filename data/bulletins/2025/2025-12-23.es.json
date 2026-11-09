@@ -1,0 +1,137 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente fría y las placas de viento en su conjunto deben ser evaluadas con cautela en todas las orientaciones. Esta nieve cubre un manto débil de nieve antigua sobre todo en laderas umbrías con poca nieve. Las acumulaciones de nieve venteada menos recientes incluso para el ojo entrenado son difícilmente identificables. En el transcurso de la jornada , con la nieve reciente y el viento moderado del norte , se formarán placas de viento adicionales especialmente en las laderas cercanas a los cordales orientadas a este, sur y oeste. Los aludes de nieve seca pueden en muchos lugares ser desencadenadas muy fácilmente o de forma natural. Estos son a veces de tamaño mediano. <br/> <br/> Las excursiones con esquís y raquetas de nieve, así como los descenos fuera pista requieren mucha experiencia en la evaluación del peligro de aludes y cautela.",
+    "highlights": "La nieve reciente, la nieve venteada y las capas débiles persistentes deben evaluarse con atención."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "SE",
+      "S",
+      "E",
+      "W",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "W",
+      "E",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2200"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "32c914ad-c383-42d1-9c1d-50f3bfef20db",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-23"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las condiciones permanecen peligrosas.",
+   "lang": "es",
+   "publicationTime": "2025-12-22T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En una zona amplia hasta ahora se han acumulado de 20 a 30 cm de nieve por encima de los 1500 m aproximadamente, localmente más. Domingo: El viento del sur ha transportado intensamente la nieve reciente. Martes: Con el viento moderado del norte, en el transcurso de la jornada se formarán nuevas placas de viento. La nieve reciente y la nieve venteada no se han unido bien con la nieve antigua especialmente en laderas umbrías con poca nieve. <br/> <br/> En cotas medias están presentes de 50 a 100 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Con la nieve reciente y el viento, el número y la extensión de los lugares peligrosos aumentará. El peligro de aludes de nieve seca no disminuirá aún.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-24T16:00:00+00:00",
+      "startTime": "2025-12-23T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-23T16:00:00+00:00",
+    "startTime": "2025-12-22T16:00:00+00:00"
+   }
+  }
+ ]
+}

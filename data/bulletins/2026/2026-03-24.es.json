@@ -1,0 +1,157 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En cotas altas, en las laderas inclinadas umbrías: Las capas débiles en la parte superior del manto de nieve pueden ser desencadenadas aún en algunos lugares. Los aludes de nieve seca son a veces de tamaño mediano y pueden ser desencadenados por un solo montañero. Precaución cerca de los cordales, en canales y cubetas, y en la base de las paredes rocosas y detrás de los cambios abruptos de pendiente. En particular cerca de collados y cordales: Además se debe tener cuidado con las placas de viento pequeñas. <br/> <br/> En las laderas muy inclinadas solanas y en cotas bajas: A consecuencia del aumento de la temperatura diurna y la radiación solar, en el transcurso de la jornada son probables de forma aislada purgas de nieve húmeda, pero en su mayoría pequeñas. Los aludes de nieve húmeda pueden desencadenarse de manera accidental o natural. Además son posibles aludes de deslizamiento basal. <br/> <br/> La actual situación de aludes requiere experiencia en la evaluación del peligro de aludes y cautela.",
+    "highlights": "El problema de capas débiles persistentes requiere atención. Purgas de nieve húmeda en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "NE",
+      "N"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "E",
+      "SE",
+      "S"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "later"
+    },
+    {
+     "aspects": [
+      "SE",
+      "SW",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "later"
+    }
+   ],
+   "bulletinID": "04202d50-f7b1-4e6f-a7a0-0ed31b651e4f",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-03-24"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2400"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "earlier"
+    },
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "later"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-03-23T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En particular en cotas altas en las zonas umbrías y protegidas del viento: En la parte superior del manto de nieve hay capas débiles de cristales gruesos. Los tests de estabilidad indican la estructura desfavorable del manto de nieve en estos sectores. <br/> <br/> El martes será soleado. La superficie del manto de nieve se volverá a helar para formar una costra portante y se ablandará durante el día. <br/> <br/> En cotas medias están presentes de 150 a 200 cm de nieve, localmente aún más. Los espesores de nieve varían mucho en cotas altas y alta montaña por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El peligro de aludes permanecerá invariable.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-03-25T16:00:00+00:00",
+      "startTime": "2026-03-24T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-03-24T16:00:00+00:00",
+    "startTime": "2026-03-23T16:00:00+00:00"
+   }
+  }
+ ]
+}

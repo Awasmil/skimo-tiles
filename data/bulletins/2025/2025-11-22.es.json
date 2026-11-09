@@ -1,0 +1,128 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente fría y en particular las placas de viento y localizadas pueden fácilmente desencadenarse de manera accidental o, de manera aislada, natural en todas las orientaciones. Estas se depositarán encima de capas blandas sobre todo en laderas umbrías protegidas del viento y en altitud. Los aludes de nieve seca son de tamaño en general pequeño. Los pequeños aludes pueden arrastrar y hacer caer una persona. Las excursiones por la montaña requieren una elección atenta del itinerario.",
+    "highlights": "Nieve reciente y nieve venteada en todas las orientaciones."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "S",
+      "E",
+      "SW",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "S",
+      "E",
+      "SW",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "few",
+     "problemType": "new_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "8fa39431-c259-45df-9f68-2a6003c6198b",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-11-22"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada. Por lo tanto, debe evaluarse detenidamente el peligro de aludes local.",
+   "lang": "es",
+   "publicationTime": "2025-11-21T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En los últimos dos días se han acumulado en una zona extensa de 20 a 30 cm de nieve por encima de los 1500 m aproximadamente. El tiempo ha sido frío. El viento con rachas fuertes ha transportado intensamente la nieve reciente. Por este motivo los espesores de nieve varían mucho por la influencia del viento. Hasta la madrugada caerán de 5 a 10 cm de nieve, localmente más. Hasta la mañana las placas de viento aumentarán de tamaño. El sábado será soleado en una zona amplia."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Con la subida de la cota de nieve, claro aumento del peligro de aludes de deslizamiento basal y purgas de nieve húmeda. Progresivo descenso del peligro de aludes de nieve seca.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-11-23T16:00:00+00:00",
+      "startTime": "2025-11-22T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-11-22T16:00:00+00:00",
+    "startTime": "2025-11-21T16:00:00+00:00"
+   }
+  }
+ ]
+}

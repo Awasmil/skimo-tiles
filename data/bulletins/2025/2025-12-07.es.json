@@ -1,0 +1,130 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la subida de la temperatura diurna y la radiación solar, son probables purgas y avalanchas de nieve húmeda de tamaño pequeño y, localmente, mediano. En las laderas herbosas muy inclinadas, en cualquier momento son posibles avalanchas de deslizamiento basal. Estos son a veces de tamaño mediano. <br/> <br/> Las placas de viento ya no del todo recientes pueden, de manera aislada, desencadenarse sobre todo en laderas umbrías muy inclinadas por encima de los 2500 m aproximadamente. Estas deben evaluarse con cautela en altitud. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren una elección atenta del itinerario. Evitar las zonas con grietas de deslizamiento basal. Además del peligro de ser enterrado por un alud, se debe tener en cuenta también el peligro de ser arrastrado hacia una trampa del terreno. Primera hora de la mañana: Debido a la superficie dura del manto de nieve hay el peligro de resbalar y caer en las laderas inclinadas.",
+    "highlights": "Atención a las purgas de nieve húmeda durante el día y avalanchas de deslizamiento basal. Nieve venteada menos reciente en altitud."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SW",
+      "SE",
+      "S",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2400"
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2500"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "d3a01d6d-921e-44e1-a728-e390c3e24270",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-07"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-06T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Durante la noche ha caído un poco de lluvia. Estas condiciones meteorológicas han causado en particular en cotas bajas y medias una humidificación del manto de nieve en todas las orientaciones. La superficie del manto de nieve se ha vuelto a helar, pero solo ha formado una fina costra. La nieve reciente de los últimos días y las placas de viento en su conjunto son, de manera aislada, aún inestables sobre todo en laderas umbrías muy inclinadas y en altitud. Estas permanecen aún inestables en cotas altas. El enfriamiento nocturno será bastante bueno. En el transcurso de la jornada el sol y el calor causarán en todas las cotas una progresiva humidificación del manto de nieve en particular en las laderas solanas muy inclinadas. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Lunes: El enfriamiento nocturno será bastante bueno. Temporal descenso del peligro de aludes de nieve húmeda. El peligro de aludes de nieve seca disminuirá progresivamente.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2025-12-08T16:00:00+00:00",
+      "startTime": "2025-12-07T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-07T16:00:00+00:00",
+    "startTime": "2025-12-06T16:00:00+00:00"
+   }
+  }
+ ]
+}

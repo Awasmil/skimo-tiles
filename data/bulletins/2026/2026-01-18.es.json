@@ -1,0 +1,268 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "A consecuencia de la nieve reciente y el viento, en cualquier momento son probables avalanchas y aludes de nieve seca, incluso de tamaño mediano. Estos pueden a menudo ser desencadenadas muy fácilmente o de forma natural. Los lugares peligrosos se encuentran en todas las orientaciones y en las laderas con placas de viento. Los aludes de nieve seca pueden desencadenarse también en el manto débil de nieve antigua. Los aludes aquí son de tamaño peligrosamente grande. <br/> <br/> Los lugares peligrosos son numerosos y resultan difíciles de reconocer con poca visibilidad. Las excursiones de montaña y las actividades fuera pista requieren mucha experiencia i y la máxima prudencia.",
+    "highlights": "Nieve reciente y nieve venteada hasta la mañana. Capas débiles persistentes en las laderas umbrías."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "19471f9a-21dd-4474-a1a3-60070b34c409",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-18"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "high",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las condiciones de aludes son peligrosas.",
+   "lang": "es",
+   "publicationTime": "2026-01-17T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta el domingo caerán de 30 a 50 cm de nieve por encima de los 1500 m aproximadamente, localmente más. En particular por encima del límite del bosque: El viento con rachas fuertes transportará la nieve reciente. La nieve reciente y la nieve venteada se volverán progresivamente más inestables sobre todo en laderas umbrías inclinadas y generalmente en cotas medias y altas. En el manto de nieve antigua hay capas débiles pronunciadas especialmente en las laderas poco frecuentadas y con poco espesor de nieve orientadas a oeste, norte y este. <br/> <br/> En cotas medias están presentes de 80 a 120 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Lunes: Con la atenuación de la nevada, progresivo descenso del peligro de aludes de nieve seca.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-01-19T16:00:00+00:00",
+      "startTime": "2026-01-18T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-18T16:00:00+00:00",
+    "startTime": "2026-01-17T16:00:00+00:00"
+   }
+  },
+  {
+   "avalancheActivity": {
+    "comment": "A consecuencia de la nieve reciente y el viento, en cualquier momento son probables avalanchas y aludes de nieve seca, incluso de tamaño mediano. Estos pueden progresivamente ser desencadenadas muy fácilmente o de forma natural. Los lugares peligrosos se encuentran en todas las orientaciones y en las laderas con placas de viento. Los aludes de nieve seca pueden desencadenarse también en la nieve antigua. Los aludes aquí son como mínimo de tamaño mediano. Además, en cotas bajas, son posibles en número creciente avalanchas y aludes de nieve húmeda de tamaño pequeño y, localmente, mediano. <br/> <br/> Los lugares peligrosos son numerosos y resultan difíciles de reconocer con poca visibilidad. Las excursiones de montaña y las actividades fuera pista requieren mucha experiencia i y la máxima prudencia.",
+    "highlights": "Nieve reciente y nieve venteada hasta la mañana. Capas débiles persistentes en las laderas umbrías."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "many",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "SE",
+      "S",
+      "E",
+      "W",
+      "NE",
+      "SW"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "N",
+      "W",
+      "E",
+      "NE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "persistent_weak_layers",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "5c6d0cb2-7dc3-4842-aef0-24152a55d3fa",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-01-18"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Las condiciones de aludes son peligrosas.",
+   "lang": "es",
+   "publicationTime": "2026-01-17T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta el domingo caerán de 20 a 30 cm de nieve por encima de los 1500 m aproximadamente, localmente más. En particular por encima del límite del bosque: El viento con rachas fuertes transportará la nieve reciente. La nieve reciente y la nieve venteada se volverán progresivamente más inestables sobre todo en laderas umbrías inclinadas y generalmente en cotas medias y altas. En el manto de nieve antigua hay capas débiles pronunciadas especialmente en las laderas poco frecuentadas y con poco espesor de nieve orientadas a oeste, norte y este. <br/> <br/> <br/> <br/> En cotas medias están presentes de 80 a 120 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Lunes: Con la atenuación de la nevada, progresivo descenso del peligro de aludes de nieve seca.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-01-19T16:00:00+00:00",
+      "startTime": "2026-01-18T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-01-18T16:00:00+00:00",
+    "startTime": "2026-01-17T16:00:00+00:00"
+   }
+  }
+ ]
+}

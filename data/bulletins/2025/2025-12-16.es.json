@@ -1,0 +1,231 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Las nuevas acumulaciones de nieve venteada son en su mayoría pequeñas pero pueden desencadenarse fácilmente. Especialmente al este y por encima de los 2000 m aproximadamente, los lugares peligrosos son más frecuentes. En la mitad norte del Arán, estos lugares peligrosos son más raros y el peligro es inferior. Además del peligro de ser enterrado por un alud, se debe tener en cuenta el peligro de ser arrastrado hacia una trampa del terreno. <br/> <br/> Con la penetración de la humedad son aún posibles avalanchas de deslizamiento basal de tamaño pequeño por debajo de los 2300 m aproximadamente. Evitar las zonas con grietas de deslizamiento basal.",
+    "highlights": "El peligro principal son las avalanchas de placa seca."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "SW",
+      "NW",
+      "N",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2300"
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "0dc3e8c7-80f6-4cf2-8838-4f8817eaaa6b",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-16"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-16T06:40:31+00:00",
+   "regions": [
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En las últimas horas se han acumulado de 5 a 10 cm de nieve por encima de los 2000 m aproximadamente, localmente más. El viento ha soplado de moderado a fuerte. El viento del sur ha transportado intensamente la nieve reciente. Las acumulaciones de nieve venteada más recientes descansan encima de capas desfavorables en laderas umbrías en alta montaña. <br/> <br/> En cotas bajas y medias: La superficie del manto de nieve se ablandará durante el día. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Progresivo descenso del peligro de aludes de nieve seca.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2025-12-17T16:00:00+00:00",
+      "startTime": "2025-12-16T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2025-12-16T16:00:00+00:00",
+    "startTime": "2025-12-15T16:00:00+00:00"
+   }
+  },
+  {
+   "avalancheActivity": {
+    "comment": "En cotas altas y en zonas de alta montaña: Las nuevas acumulaciones de nieve venteada son fácilmente identificables y propensas al desencadenamiento. Son posibles aludes de tamaño pequeño y, localmente, mediano. Son especialmente peligrosas las laderas cercanas a los cordales,. Además del peligro de ser enterrado por un alud, se debe tener en cuenta el peligro de ser arrastrado hacia una trampa del terreno. <br/> <br/> Con la penetración de la humedad son aún posibles avalanchas de deslizamiento basal de tamaño pequeño por debajo de los 2300 m aproximadamente. Evitar las zonas con grietas de deslizamiento basal.",
+    "highlights": "Nieve reciente y nieve venteada en cotas altas y alta montaña. Aún son posibles avalanchas de deslizamiento basal."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "W",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "SW",
+      "NW",
+      "N",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2300"
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "42362ed0-be8b-47b1-99ee-d17607139068",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-16"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-16T06:40:31+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Se han acumulado de 10 a 20 cm de nieve por encima de los 2000 m aproximadamente, localmente más. El viento ha soplado de fuerte a muy fuerte en algunos sectores. El viento del sur ha transportado intensamente la nieve reciente. Las nuevas acumulaciones de nieve venteada descansan encima de una superficie desfavorable del manto de nieve antigua en laderas umbrías en alta montaña. <br/> <br/> En cotas bajas y medias: La superficie del manto de nieve se ablandará durante el día. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Progresivo descenso del peligro de aludes de nieve seca.",
+     "tendencyType": "decreasing",
+     "validTime": {
+      "endTime": "2025-12-17T16:00:00+00:00",
+      "startTime": "2025-12-16T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2025-12-16T16:00:00+00:00",
+    "startTime": "2025-12-15T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,118 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la subida de la cota de nieve, en el transcurso de la jornada el peligro de aludes de deslizamiento basal y purgas de nieve húmeda aumentará progresivamente. Sobre todo en las laderas herbosas muy inclinadas son son probables aludes naturales de tamaño pequeño y, localmente, mediano. En zonas de alud típicas los aludes de deslizamiento basal pueden en algunos casos alcanzar hasta cotas bajas. Además en alta montaña las placas de viento son en algunos casos aún proclives al desencadenamiento. Los lugares peligrosos son resultan difíciles de reconocer con poca visibilidad.",
+    "highlights": "Atención a las avalanchas de deslizamiento basal y purgas de nieve húmeda durante el día. Nieve venteada menos reciente en altitud."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "S",
+      "E",
+      "SW",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "upperBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "S",
+      "E",
+      "SW",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "d7ab9d9f-db02-48db-a987-cf593dc6264a",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-11-23"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada.",
+   "lang": "es",
+   "publicationTime": "2025-11-22T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En los últimos dos días se han acumulado en una zona extensa de 20 a 40 cm de nieve por encima de los 1500 m aproximadamente, localmente más. El domingo caerá lluvia hasta cotas medias. Estas condiciones causarán en el transcurso de la jornada una gradual transformación desfavorable del manto de nieve en todas las orientaciones. Sobre todo en altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Con la atenuación de las precipitaciones, temporal descenso del peligro de aludes de nieve seca y de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-11-24T16:00:00+00:00",
+      "startTime": "2025-11-23T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-11-23T16:00:00+00:00",
+    "startTime": "2025-11-22T16:00:00+00:00"
+   }
+  }
+ ]
+}

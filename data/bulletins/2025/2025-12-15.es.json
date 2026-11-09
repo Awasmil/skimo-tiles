@@ -1,0 +1,149 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Con la penetración de la humedad, el peligro de aludes de deslizamiento basal aumentará progresivamente al grado 2 (limitado). Son de esperar algunos aludes de tamaño pequeño y mediano. Además en el transcurso de la jornada son posibles algunas purgas de nieve húmeda de tamaño pequeño. Estas pueden ser desencadenadas al paso de un montañero o de forma natural. <br/> Los lugares peligrosos se encuentran en todas las orientaciones por debajo de los 2300 m aproximadamente. <br/> <br/> En los límites sur y este del Arán, Por encima del límite del bosque: Las nuevas acumulaciones de nieve venteada son fácilmente identificables y propensas al desencadenamiento. <br/> <br/> Evitar las zonas con grietas de deslizamiento basal. Los lugares peligrosos son resultan difíciles de reconocer con poca visibilidad.",
+    "highlights": "Posibles avalanchas de deslizamiento basal y purgas de nieve húmeda. En el transcurso de la jornada: Nieve venteada reciente en los límites sur y este del Arán."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "SW",
+      "S",
+      "SE",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2300"
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "SW",
+      "S",
+      "SE",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "elevation": {
+      "upperBound": "2300"
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "few",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "cd19eca6-525b-4a2e-ab00-1ddd966cd80c",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-15"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2300"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2300"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-15T06:22:56+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Lunes: El tiempo será nublado. El viento soplará de moderado a fuerte. <br/> En el transcurso de la jornada: Caerá un poco de nieve. En particular en los límites sur y este del Arán caerán de 5 a 10 cm de nieve por encima de los 2000 m aproximadamente. El viento del sur transportará la nieve reciente. <br/> <br/> En cotas bajas y medias: La superficie del manto de nieve se ablandará durante el día. Las nuevas acumulaciones de nieve venteada se depositarán encima de una superficie desfavorable del manto de nieve antigua en laderas umbrías en alta montaña. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El peligro de aludes permanecerá invariable.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-16T16:00:00+00:00",
+      "startTime": "2025-12-15T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": true,
+   "validTime": {
+    "endTime": "2025-12-15T16:00:00+00:00",
+    "startTime": "2025-12-14T16:00:00+00:00"
+   }
+  }
+ ]
+}

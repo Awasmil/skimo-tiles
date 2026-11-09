@@ -1,0 +1,128 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente y en particular las placas de viento en conjunto deben evaluarse con mucha cautela en todas las orientaciones y generalmente por encima del límite del bosque. Los aludes de nieve seca pueden a menudo ser desencadenadas muy fácilmente o de forma natural. Estos son a veces de tamaño mediano. Son especialmente peligrosas las laderas con acumulaciones de nieve venteada donde capas duras descansan sobre un manto de nieve antigua débilmente consolidado. Estas deberían evitarse en laderas muy empinadas. <br/> <br/> Las actividades fuera pista requieren precaución y prudencia. Los lugares peligrosos son bastante frecuentes y resultan difíciles de reconocer con poca visibilidad. Además del peligro de ser enterrado por un alud, se debe tener en cuenta también el peligro de ser arrastrado hacia una trampa del terreno.",
+    "highlights": "Atención a la nieve reciente y la nieve venteada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "S",
+      "E",
+      "SW",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "frequency": "some",
+     "problemType": "wind_slab",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NE",
+      "NW",
+      "N",
+      "S",
+      "E",
+      "SW",
+      "W",
+      "SE"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "elevation": {
+      "lowerBound": "1500"
+     },
+     "frequency": "many",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "c1693d60-87b5-43a7-b20b-bd600511692a",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-05"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "treeline"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "treeline"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Por encima del límite del bosque las condiciones fuera de las pistas son peligrosas.",
+   "lang": "es",
+   "publicationTime": "2025-12-04T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Hasta la mañana caerán de 15 a 20 cm de nieve. El viento soplará de fuerte a muy fuerte sobre todo al este y al sur. El viento del noroeste transportará intensamente la nieve reciente. La nieve reciente y las placas de viento se depositarán encima de capas blandas en todas las orientaciones. Estas se volverán cada vez más inestables. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Última hora de la tarde y noche: Con la atenuación de la nevada, progresivo descenso del peligro de aludes de nieve seca. A consecuencia de la lluvia, claro aumento del peligro de aludes de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-06T16:00:00+00:00",
+      "startTime": "2025-12-05T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-05T16:00:00+00:00",
+    "startTime": "2025-12-04T16:00:00+00:00"
+   }
+  }
+ ]
+}

@@ -1,0 +1,124 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "Hay un peligro acusado de aludes de deslizamiento basal. Los aludes son a menudo de tamaño mediano. Sin embargo no se descartan algunos aludes de tamaño grande. Los lugares peligrosos se encuentran especialmente en las laderas umbrías inclinadas en cotas medias y altas. Evitar las zonas con grietas de deslizamiento basal. Pueden desencadenarse a cualquier hora del día o de la noche. <br/> <br/> Con la penetración de la humedad, a partir de la mañana el peligro de aludes de nieve muy húmeda aumentará progresivamente. En todas las orientaciones, son posibles purgas y avalanchas de tamaño pequeño y mediano. Estos pueden ser desencadenadas al paso de una persona o de forma natural. En cotas medias, en las laderas umbrías: Los aludes pueden, de manera aislada, desencadenarse en capas más profundas y alcanzar tamaños grandes. <br/> <br/> Las excursiones de montaña deben comenzar y acabar muy temprano.",
+    "highlights": "El problema de deslizamientos basales debe evitarse. Purgas y avalanchas de nieve muy húmeda en el transcurso de la jornada."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 3,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "few",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "NW",
+      "SE",
+      "SW",
+      "S",
+      "NE",
+      "N",
+      "E",
+      "W"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "95f671c1-6ac3-45f1-a7e8-ffad55fcea55",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-04-24"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2000"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "mainValue": "considerable",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada del manto de nieve. Por lo tanto, debe evaluarse detenidamente el peligro de aludes local.",
+   "lang": "es",
+   "publicationTime": "2026-04-23T15:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "El enfriamiento nocturno será reducido. La superficie del manto de nieve se volverá a helar apenas y se ablandará ya durante la mañana. Por la mañana el tiempo será bastante soleado. Durante la tarde caerá lluvia hasta los 2800 m en algunos sectores. <br/> <br/> El manto de nieve es muy húmedo en general. En las laderas inclinadas orientadas a oeste, norte y este, en cotas medias y altas: En los últimos días han caído algunas aludes de deslizamiento basal de tamaño mediano y grande. <br/> <br/> En las laderas orientadas a sudoeste, sur y sudeste en cotas medias no hay suficiente nieve para la práctica de los deportes de invierno. En muchos lugares el espesor de nieve es superior a la media para estas fechas."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Sábado: El peligro de aludes de nieve muy húmeda y de deslizamiento basal permanecerá invariable.",
+     "validTime": {
+      "endTime": "2026-04-25T15:00:00+00:00",
+      "startTime": "2026-04-24T15:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-04-24T15:00:00+00:00",
+    "startTime": "2026-04-23T15:00:00+00:00"
+   }
+  }
+ ]
+}

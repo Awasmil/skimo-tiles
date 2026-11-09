@@ -1,0 +1,120 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "En las laderas herbosas muy inclinadas, en cualquier momento son posibles avalanchas de deslizamiento basal. Estos son a veces de tamaño mediano. Los lugares peligrosos se encuentran sobre todo en laderas solanas y en las laderas umbrías por debajo de los 2000 m aproximadamente. Con la subida de la temperatura diurna y la radiación solar, son posibles purgas y avalanchas de nieve húmeda de tamaño pequeño. Estas pueden ser desencadenadas al paso de una persona o de forma natural. <br/> <br/> Además cerca de las cumbres las placas de viento antiguas de los últimos días pueden de manera muy aislada aún desencadenarse. Estas deben evaluarse con cautela en altitud. <br/> <br/> Las excursiones de montaña y las actividades fuera pista requieren una elección atenta del itinerario. Evitar las zonas con grietas de deslizamiento basal. Además del peligro de ser enterrado por un alud, se debe tener en cuenta también el peligro de ser arrastrado hacia una trampa del terreno. Primera hora de la mañana: Debido a la superficie dura del manto de nieve hay el peligro de resbalar y caer en las laderas inclinadas.",
+    "highlights": "Atención a las avalanchas de deslizamiento basal y purgas de nieve húmeda durante el día."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "NE",
+      "SW",
+      "NW",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 2,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "glide"
+      }
+     },
+     "elevation": {
+      "upperBound": "2500"
+     },
+     "frequency": "some",
+     "problemType": "gliding_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SW",
+      "W",
+      "S",
+      "SE",
+      "E"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "frequency": "few",
+     "problemType": "wet_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "f643e30b-89e7-4695-a8cd-8da1758eb52b",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2025-12-08"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "elevation": {
+      "upperBound": "2500"
+     },
+     "mainValue": "moderate",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "elevation": {
+      "lowerBound": "2500"
+     },
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2025-12-07T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "Con la lluvia hasta cotas altas, el sábado se ha formado una costra superficial. En el transcurso de la jornada el sol y el calor causarán en todas las cotas una progresiva humidificación del manto de nieve en particular en las laderas solanas muy inclinadas. En las laderas umbrías en cotas medias y altas: La superficie del manto de nieve no se ablandará. <br/> <br/> En cotas medias están presentes de 30 a 50 cm de nieve, localmente aún más. En altitud los espesores de nieve varían mucho por la influencia del viento."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "Hasta que bajen las temperaturas, escaso descenso del peligro de aludes de deslizamiento basal y purgas de nieve húmeda.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2025-12-09T16:00:00+00:00",
+      "startTime": "2025-12-08T16:00:00+00:00"
+     }
+    }
+   ],
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2025-12-08T16:00:00+00:00",
+    "startTime": "2025-12-07T16:00:00+00:00"
+   }
+  }
+ ]
+}
