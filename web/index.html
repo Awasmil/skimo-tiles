@@ -66,6 +66,12 @@
   .legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
   .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
   .legend span.hatch { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6px); outline: 1px solid rgba(0,0,0,.25); }
+  .wxbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(34px, calc(env(safe-area-inset-bottom) + 24px));
+    width: min(440px, calc(100% - 20px)); box-sizing: border-box; background: var(--bg); border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.3); padding: 6px 12px; z-index: 3; display: none; }
+  .wxbar.on { display: block; }
+  .maplibregl-ctrl button.btn-wx.on { background: #1e3a5f; color: #fff; }
+  .maplibregl-ctrl button.btn-wx svg { width: 18px; height: 18px; display: block; margin: auto; }
   .bul-ctrls { display: flex; gap: 6px; }
   .bul-ctrls input, .bul-ctrls select { flex: 1; min-height: 32px; border: 1px solid rgba(127,127,127,.4); border-radius: 8px;
     background: transparent; color: var(--fg); font: 13px system-ui, -apple-system, sans-serif; padding: 0 6px; }
@@ -93,6 +99,33 @@
   </div>
   <iframe id="st-frame" title="Datos de la estación Cap de Vaquèira" style="width:100%;height:min(60vh,520px);border:0;border-radius:8px;margin-top:6px;background:#fff"></iframe>
   <div class="m-sub">Datos medidos (no estimados), cada hora: temperatura, humedad, nieve y viento. Panel público de Arantec. Necesita conexión.</div>
+</div>
+<div class="measure" id="wx" aria-live="polite">
+  <div style="display:flex;align-items:center;gap:8px">
+    <b style="flex:1" id="wx-title">Tiempo</b>
+    <button id="wx-close" style="border:0;background:none;font-size:20px;color:var(--fg);cursor:pointer" aria-label="Cerrar">×</button>
+  </div>
+  <div class="bul-ctrls" style="margin-top:4px">
+    <select id="wx-var" aria-label="Variable">
+      <option value="temperature_2m">Temperatura (°C)</option>
+      <option value="wind_speed_10m">Viento medio (km/h)</option>
+      <option value="wind_gusts_10m">Rachas (km/h)</option>
+      <option value="snowfall">Nieve nueva (cm/h)</option>
+      <option value="precipitation">Precipitación (mm/h)</option>
+      <option value="cloud_cover">Nubosidad (%)</option>
+      <option value="freezing_level_height">Isoterma 0 °C (m)</option>
+    </select>
+  </div>
+  <svg id="wx-chart" viewBox="0 0 300 130" style="width:100%;height:150px;display:block;margin-top:6px"></svg>
+  <input type="range" id="wx-hour" min="0" max="71" value="0" style="width:100%" aria-label="Hora">
+  <div class="m-sub" id="wx-at"></div>
+  <div id="wx-vals" style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:12px;margin-top:4px"></div>
+  <div class="m-sub" id="wx-agree" style="margin-top:4px"></div>
+  <div class="m-sub" id="wx-src"></div>
+</div>
+<div class="wxbar" id="wxbar">
+  <div style="display:flex;justify-content:space-between;font-size:12px"><b id="wxbar-at">–</b><span style="color:var(--muted)" id="wxbar-src">Previsión de modelo</span></div>
+  <input type="range" id="wxbar-hour" min="0" max="71" value="0" style="width:100%" aria-label="Hora de la previsión">
 </div>
 <div class="measure" id="measure" aria-live="polite">
   <div class="m-stats">
@@ -168,6 +201,14 @@
     <div><span style="background:#8d6e63;border-radius:50%"></span>Cabaña / abrigo</div>
     <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente</div>
   </div>
+  <h2>Tiempo (previsión)</h2>
+  <label><input type="checkbox" id="wxtemp"> Temperatura</label>
+  <label><input type="checkbox" id="wxwind"> Viento</label>
+  <div class="legend" id="legend-wxtemp">
+    <div class="ramp" style="background:linear-gradient(90deg,#313695,#4575b4,#91bfdb,#e0f3f8,#ffffbf,#fee090,#fc8d59,#d73027,#a50026)"></div>
+    <div class="ramp-ticks"><span>−20°</span><span>−10°</span><span>0°</span><span>10°</span><span>20°</span></div>
+  </div>
+  <div class="note" style="margin-top:2px">Malla sobre Aran, a la altura real del terreno. Para comparar modelos en un punto, usa el botón de la nube.</div>
   <h2>Aludes · Lauegi</h2>
   <div class="bul-ctrls">
     <input type="date" id="bul-date" aria-label="Fecha del boletín">
@@ -660,6 +701,7 @@
   }).catch(e => console.error("Medidor:", e)));
   const setMeasuring = on => {
     measuring = on;
+    if (on && wxMode) setWxMode(false);
     mPanel.classList.toggle("on", on);
     document.querySelector(".btn-measure")?.classList.toggle("on", on);
     map.getCanvas().style.cursor = on ? "crosshair" : "";
@@ -873,6 +915,173 @@ ${pts}
     });
     return g.getImageData(0, 0, W, W).data;
   };
+  // ---------- Tiempo: previsiones de Open-Meteo (modelos, no medidas) ----------
+  const WX_MODELS = [
+    ["meteofrance_arome_france_hd", "AROME 1,3 km", "#e41a1c"], ["meteofrance_arome_france", "AROME 2,5 km", "#ff7f00"],
+    ["meteofrance_arpege_europe", "ARPEGE", "#a65628"], ["knmi_harmonie_arome_europe", "HARMONIE", "#f781bf"],
+    ["icon_eu", "ICON-EU", "#377eb8"], ["ecmwf_ifs025", "ECMWF IFS", "#4daf4a"], ["ecmwf_aifs025_single", "ECMWF AIFS", "#984ea3"],
+    ["ukmo_global_deterministic_10km", "UKMO", "#777777"], ["gfs_seamless", "GFS", "#17becf"]];
+  const WX_VARS = ["temperature_2m", "wind_speed_10m", "wind_gusts_10m", "wind_direction_10m", "snowfall", "precipitation", "cloud_cover", "freezing_level_height"];
+  const WX_UNIT = { temperature_2m: "°C", wind_speed_10m: "km/h", wind_gusts_10m: "km/h", snowfall: "cm", precipitation: "mm", cloud_cover: "%", freezing_level_height: "m" };
+  // Umbral de dispersion entre modelos (proximas 24 h) para acuerdo alto / medio
+  const WX_AGREE = { temperature_2m: [2, 4], wind_speed_10m: [10, 20], wind_gusts_10m: [15, 30], snowfall: [0.5, 2], precipitation: [0.5, 2], cloud_cover: [25, 50], freezing_level_height: [300, 700] };
+  const OM = "https://api.open-meteo.com/v1/forecast";
+  const fmtHour = iso => new Date(iso).toLocaleString("es-ES", { weekday: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  const nowIndex = times => Math.max(0, times.findIndex(t => new Date(t) > new Date(Date.now() - 36e5)));
+  const wxPanel = document.getElementById("wx");
+  let wxMode = false, wxData = null, wxMarker = null;
+
+  const wxRender = () => {
+    if (!wxData) return;
+    const v = document.getElementById("wx-var").value, h = wxData.hourly, T = h.time, n = T.length;
+    const series = WX_MODELS.map(([id, name, col]) => ({ name, col, vals: h[`${v}_${id}`] })).filter(s => s.vals?.some(x => x != null));
+    const all = series.flatMap(s => s.vals.filter(x => x != null));
+    const svg = document.getElementById("wx-chart");
+    if (!all.length) { svg.innerHTML = `<text x="150" y="65" text-anchor="middle" font-size="10" fill="currentColor">Ningún modelo da esta variable aquí</text>`; }
+    else {
+      let lo = Math.min(...all), hi = Math.max(...all); if (hi - lo < 1) { hi += 0.5; lo -= 0.5; }
+      const X = i => 24 + (i / (n - 1)) * 272, Y = val => 112 - ((val - lo) / (hi - lo)) * 100;
+      let s = "";
+      // banda min-max entre modelos
+      const band = T.map((_, i) => { const xs = series.map(z => z.vals[i]).filter(x => x != null); return xs.length ? [Math.min(...xs), Math.max(...xs)] : null; });
+      const up = band.map((b, i) => b && `${X(i).toFixed(1)},${Y(b[1]).toFixed(1)}`).filter(Boolean), dn = band.map((b, i) => b && `${X(i).toFixed(1)},${Y(b[0]).toFixed(1)}`).filter(Boolean).reverse();
+      s += `<polygon points="${up.concat(dn).join(" ")}" fill="currentColor" fill-opacity=".08"/>`;
+      T.forEach((t, i) => { if (t.endsWith("T00:00")) s += `<line x1="${X(i)}" x2="${X(i)}" y1="8" y2="112" stroke="currentColor" stroke-opacity=".25"/><text x="${X(i) + 2}" y="124" font-size="8" fill="currentColor" opacity=".7">${new Date(t).toLocaleDateString("es-ES", { weekday: "short", day: "numeric" })}</text>`; });
+      if (v === "temperature_2m" && lo < 0 && hi > 0) s += `<line x1="24" x2="296" y1="${Y(0)}" y2="${Y(0)}" stroke="#2166ac" stroke-dasharray="3 2" stroke-opacity=".7"/>`;
+      for (const z of series) {
+        let path = "", pen = false;
+        z.vals.forEach((val, i) => { if (val == null) { pen = false; return; } path += `${pen ? "L" : "M"}${X(i).toFixed(1)},${Y(val).toFixed(1)}`; pen = true; });
+        s += `<path d="${path}" fill="none" stroke="${z.col}" stroke-width="1.4" vector-effect="non-scaling-stroke"/>`;
+      }
+      const hi_ = +document.getElementById("wx-hour").value;
+      s += `<line x1="${X(hi_)}" x2="${X(hi_)}" y1="8" y2="112" stroke="currentColor" stroke-width="1.2"/>`;
+      s += `<text x="2" y="12" font-size="8" fill="currentColor" opacity=".7">${Math.round(hi)}</text><text x="2" y="112" font-size="8" fill="currentColor" opacity=".7">${Math.round(lo)}</text>`;
+      svg.innerHTML = s;
+    }
+    const i = +document.getElementById("wx-hour").value;
+    document.getElementById("wx-at").textContent = `${fmtHour(T[i])} · ${WX_UNIT[v]}`;
+    document.getElementById("wx-vals").innerHTML = series.map(z => `<div><span style="display:inline-block;width:10px;height:3px;background:${z.col};vertical-align:middle;margin-right:4px"></span>${z.name}: <b>${z.vals[i] == null ? "–" : (Math.round(z.vals[i] * 10) / 10).toLocaleString("es-ES")}</b></div>`).join("");
+    // Acuerdo entre modelos en las proximas 24 h (etiqueta de confianza)
+    const i0 = nowIndex(T), spreads = [];
+    for (let k = i0; k < Math.min(n, i0 + 24); k++) { const xs = series.map(z => z.vals[k]).filter(x => x != null); if (xs.length > 1) spreads.push(Math.max(...xs) - Math.min(...xs)); }
+    const sp = spreads.length ? spreads.reduce((a, b) => a + b) / spreads.length : null, th = WX_AGREE[v];
+    document.getElementById("wx-agree").innerHTML = sp == null ? "" : `Acuerdo entre modelos (próximas 24 h): <b>${sp < th[0] ? "alto" : sp < th[1] ? "medio" : "bajo"}</b> (diferencia media ${Math.round(sp * 10) / 10} ${WX_UNIT[v]})`;
+  };
+
+  const wxAt = async c => {
+    const ele = Math.round(await elevation(c) ?? 0);
+    document.getElementById("wx-title").textContent = `Tiempo a ${ele.toLocaleString("es-ES")} m`;
+    document.getElementById("wx-src").textContent = "Cargando previsiones…";
+    wxPanel.classList.add("on");
+    wxMarker?.remove(); wxMarker = new maplibregl.Marker({ color: "#1e3a5f" }).setLngLat(c).addTo(map);
+    const url = `${OM}?latitude=${c[1].toFixed(4)}&longitude=${c[0].toFixed(4)}&elevation=${ele}&hourly=${WX_VARS.join(",")}`
+      + `&models=${WX_MODELS.map(m => m[0]).join(",")}&forecast_days=3&timezone=Europe%2FMadrid`;
+    let at = new Date().toISOString(), cached = false;
+    try {
+      wxData = await (await fetch(url)).json();
+      if (wxData.error) throw new Error(wxData.reason);
+      lsSet("skimo-wx-last", JSON.stringify({ at, c, ele, data: wxData }));
+    } catch {
+      const last = JSON.parse(lsGet("skimo-wx-last") || "null");
+      if (!last) { document.getElementById("wx-src").textContent = "Sin conexión y sin previsión guardada."; return; }
+      wxData = last.data; at = last.at; cached = true;
+      document.getElementById("wx-title").textContent = `Tiempo a ${last.ele} m (último punto consultado)`;
+    }
+    const T = wxData.hourly.time, hr = document.getElementById("wx-hour");
+    hr.max = T.length - 1; hr.value = nowIndex(T);
+    document.getElementById("wx-src").textContent = `Previsión de modelos (Open-Meteo), ajustada a la cota del punto. Consultado ${new Date(at).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}${cached ? " · sin conexión: copia guardada" : ""}. AROME 1,3 km solo cubre ~2 días.`;
+    wxRender();
+  };
+  document.getElementById("wx-var").onchange = wxRender;
+  document.getElementById("wx-hour").oninput = wxRender;
+  const setWxMode = on => {
+    wxMode = on;
+    document.querySelector(".btn-wx")?.classList.toggle("on", on);
+    if (on && measuring) setMeasuring(false);
+    if (!on) { wxPanel.classList.remove("on"); wxMarker?.remove(); }
+    map.getCanvas().style.cursor = on ? "crosshair" : "";
+    if (on) { document.getElementById("wx-title").textContent = "Toca el mapa para ver el tiempo en ese punto"; document.getElementById("wx-chart").innerHTML = "";
+      ["wx-at", "wx-vals", "wx-agree", "wx-src"].forEach(id => document.getElementById(id).textContent = ""); wxPanel.classList.add("on"); }
+  };
+  document.getElementById("wx-close").onclick = () => setWxMode(false);
+  map.on("click", e => { if (wxMode) wxAt([e.lngLat.lng, e.lngLat.lat]); });
+  map.addControl({
+    onAdd() {
+      const div = document.createElement("div"); div.className = "maplibregl-ctrl maplibregl-ctrl-group";
+      const b = document.createElement("button"); b.className = "btn-wx"; b.type = "button"; b.title = "Tiempo en un punto (comparar modelos)";
+      b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"/></svg>';
+      b.onclick = () => setWxMode(!wxMode);
+      div.appendChild(b); return div;
+    }, onRemove() {}
+  }, "top-right");
+
+  // Malla de temperatura y viento sobre Aran (un modelo: la mejor combinacion de Open-Meteo)
+  const wxBar = document.getElementById("wxbar"), wxBarHour = document.getElementById("wxbar-hour");
+  let grid = null, gridP = null;
+  const GRID_PTS = []; for (let la = 42.52; la <= 42.90; la += 0.035) for (let lo = 0.42; lo <= 1.38; lo += 0.05) GRID_PTS.push([+lo.toFixed(3), +la.toFixed(3)]);
+  const loadGrid = () => gridP ??= (async () => {
+    const url = `${OM}?latitude=${GRID_PTS.map(p => p[1]).join(",")}&longitude=${GRID_PTS.map(p => p[0]).join(",")}`
+      + `&hourly=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&forecast_days=3&timezone=Europe%2FMadrid`;
+    try {
+      const j = await (await fetch(url)).json();
+      grid = { at: new Date().toISOString(), list: (Array.isArray(j) ? j : [j]).map(x => x.hourly) };
+      lsSet("skimo-wx-grid", JSON.stringify(grid));
+    } catch { grid = JSON.parse(lsGet("skimo-wx-grid") || "null"); }
+    return grid;
+  })();
+  const drawGrid = () => {
+    if (!grid) return;
+    const i = +wxBarHour.value, T = grid.list[0].time;
+    document.getElementById("wxbar-at").textContent = fmtHour(T[i]);
+    document.getElementById("wxbar-src").textContent = `Previsión Open-Meteo · consultado ${new Date(grid.at).toLocaleString("es-ES", { hour: "2-digit", minute: "2-digit" })}`;
+    map.getSource("wxgrid")?.setData({ type: "FeatureCollection", features: GRID_PTS.map((p, k) => {
+      const hh = grid.list[k];
+      return { type: "Feature", geometry: { type: "Point", coordinates: p }, properties: {
+        t: hh.temperature_2m[i], ws: hh.wind_speed_10m[i], wg: hh.wind_gusts_10m[i], wd: hh.wind_direction_10m[i],
+        tl: hh.temperature_2m[i] == null ? "" : `${Math.round(hh.temperature_2m[i])}°`,
+        wl: hh.wind_speed_10m[i] == null ? "" : `${Math.round(hh.wind_speed_10m[i])}` } };
+    }) });
+  };
+  wxBarHour.oninput = drawGrid;
+  map.on("load", () => {
+    // Flecha de viento (apunta hacia donde va el aire)
+    const S = 48, cv = document.createElement("canvas"); cv.width = cv.height = S; const g = cv.getContext("2d");
+    g.fillStyle = "#1b2430"; g.strokeStyle = "#fff"; g.lineWidth = 3; g.lineJoin = "round";
+    g.beginPath(); g.moveTo(S / 2, 4); g.lineTo(S / 2 + 11, 20); g.lineTo(S / 2 + 4, 20); g.lineTo(S / 2 + 4, S - 4);
+    g.lineTo(S / 2 - 4, S - 4); g.lineTo(S / 2 - 4, 20); g.lineTo(S / 2 - 11, 20); g.closePath(); g.stroke(); g.fill();
+    map.addImage("wind-arrow", g.getImageData(0, 0, S, S), { pixelRatio: 2 });
+    map.addSource("wxgrid", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addLayer({ id: "wxtemp", type: "circle", source: "wxgrid", layout: { visibility: "none" }, paint: {
+      "circle-radius": ["interpolate", ["exponential", 2], ["zoom"], 9, 14, 11, 40, 13, 150],
+      "circle-color": ["interpolate", ["linear"], ["get", "t"], -20, "#313695", -10, "#4575b4", -5, "#91bfdb", 0, "#e0f3f8",
+        3, "#ffffbf", 8, "#fee090", 13, "#fc8d59", 18, "#d73027", 25, "#a50026"],
+      "circle-opacity": 0.4, "circle-blur": 0.6 } }, "contours-minor");
+    map.addLayer({ id: "wxtemp-label", type: "symbol", source: "wxgrid", layout: { visibility: "none",
+      "text-field": ["get", "tl"], "text-font": ["Noto Sans Medium"], "text-size": 13, "text-allow-overlap": true },
+      paint: { "text-color": "#1b2430", "text-halo-color": "#fff", "text-halo-width": 1.6 } });
+    map.addLayer({ id: "wxwind", type: "symbol", source: "wxgrid", layout: { visibility: "none",
+      "icon-image": "wind-arrow", "icon-rotate": ["+", ["get", "wd"], 180], "icon-rotation-alignment": "map", "icon-allow-overlap": true,
+      "icon-size": ["interpolate", ["linear"], ["get", "ws"], 0, 0.5, 20, 0.8, 50, 1.2, 80, 1.5],
+      "text-field": ["get", "wl"], "text-font": ["Noto Sans Medium"], "text-size": 10, "text-offset": [0, 1.6], "text-allow-overlap": true },
+      paint: { "text-color": "#1b2430", "text-halo-color": "#fff", "text-halo-width": 1.4,
+        "icon-opacity": ["interpolate", ["linear"], ["get", "ws"], 0, 0.5, 15, 1] } });
+  });
+  const wxLayersToggle = async () => {
+    const t = document.getElementById("wxtemp").checked, w = document.getElementById("wxwind").checked;
+    setVis("wxtemp", t); setVis("wxtemp-label", t); setVis("wxwind", w);
+    document.getElementById("legend-wxtemp").classList.toggle("on", t);
+    wxBar.classList.toggle("on", t || w);
+    if (t || w) {
+      await loadGrid();
+      if (!grid) { document.getElementById("wxbar-at").textContent = "Sin conexión y sin previsión guardada"; return; }
+      wxBarHour.max = grid.list[0].time.length - 1;
+      if (!wxBarHour.dataset.init) { wxBarHour.value = nowIndex(grid.list[0].time); wxBarHour.dataset.init = 1; }
+      drawGrid();
+    }
+  };
+  document.getElementById("wxtemp").addEventListener("change", wxLayersToggle);
+  document.getElementById("wxwind").addEventListener("change", wxLayersToggle);
+
   // ---------- Estaciones meteorologicas (de momento: Cap de Vaqueira, AEMET 9988B) ----------
   const STATIONS = [{ id: "9988B", name: "Cap de Vaquèira", ele: 2467, lon: 0.97389, lat: 42.69194,
     url: "https://iot.arantec.com/app/dashboards/public/dashboard/zClCrT6DAE8-0me_YzoEohCdhhez6qfYgnUtPkFRwCI?navbar=false&contextbar=false&layersBar=false&datePicker=true&devicePicker=false&displayTitle=false&filters=false" }];
@@ -900,7 +1109,7 @@ ${pts}
       layout: { "text-field": ["get", "label"], "text-font": ["Noto Sans Medium"], "text-size": 11, "text-anchor": "top", "text-offset": [0, 1.4] },
       paint: { "text-color": "#1e3a5f", "text-halo-color": "#fff", "text-halo-width": 1.5 } });
     map.on("click", "stations-dot", e => {
-      if (measuring) return;
+      if (measuring || wxMode) return;
       const s = STATIONS.find(x => x.id === e.features[0].properties.id);
       document.getElementById("st-frame").src = s.url;
       document.getElementById("st-open").href = s.url;
