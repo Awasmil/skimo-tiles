@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"></script>
+<script src="https://unpkg.com/@protomaps/basemaps@5.7.2/dist/basemaps.js"></script>
 <style>
   :root { --bg: rgba(255,255,255,.94); --fg: #1b2430; --muted: #5b6573; --accent: #1e3a5f; }
   @media (prefers-color-scheme: dark) { :root { --bg: rgba(24,28,34,.94); --fg: #e8ecf1; --muted: #9aa4b2; --accent: #8fb6e8; } }
@@ -64,6 +65,13 @@
   .legend .ramp { height: 10px; border-radius: 3px; margin: 4px 0 2px; }
   .legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
   .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .offbtn { width: 100%; min-height: 40px; margin-top: 6px; border: 0; border-radius: 10px; background: #1e3a5f; color: #fff;
+    font: 600 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+  .offbtn:disabled { opacity: .5; }
+  .offlink { border: 0; background: none; color: var(--muted); font-size: 12px; text-decoration: underline; padding: 6px 0 0; cursor: pointer; }
+  .offbar { display: none; height: 6px; border-radius: 3px; background: rgba(127,127,127,.25); margin-top: 6px; overflow: hidden; }
+  .offbar.on { display: block; }
+  .offbar div { height: 100%; width: 0; background: #2ea043; transition: width .3s; }
 </style>
 </head>
 <body>
@@ -99,7 +107,7 @@
   <button class="head" id="toggle" aria-expanded="true"><span>Capas</span><span class="chev">▾</span></button>
   <div class="body">
   <h2>Base</h2>
-  <label><input type="radio" name="base" value="osm" checked> Mapa (OSM)</label>
+  <label><input type="radio" name="base" value="map" checked> Mapa</label>
   <label><input type="radio" name="base" value="pnoa"> Ortofoto (PNOA)</label>
   <label><input type="radio" name="base" value="winter"> Satélite invierno <span id="sat-date" style="color:var(--muted);font-size:12px"></span></label>
   <h2>Capas</h2>
@@ -139,6 +147,11 @@
     <div><span style="background:#8d6e63;border-radius:50%"></span>Cabaña / abrigo</div>
     <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente</div>
   </div>
+  <h2>Sin conexión</h2>
+  <div class="note" id="off-status" style="margin-top:0">Comprobando…</div>
+  <div class="offbar" id="off-bar"><div></div></div>
+  <button class="offbtn" id="off-btn" hidden>Guardar Aran en el móvil</button>
+  <button class="offlink" id="off-del" hidden>Borrar mapas guardados</button>
   <div class="note"><b>Esta app no evalúa el peligro de aludes ni marca rutas seguras.</b> La pendiente se calcula del MDT 2 m. Consulta siempre el boletín del día (Lauegi en Aran).</div>
   </div>
 </div>
@@ -148,10 +161,39 @@
   maplibregl.addProtocol("pmtiles", protocol.tile);
   // __TILES_DIR__ lo sustituye el despliegue por una carpeta unica (evita mezclar cache entre versiones)
   const tilesDir = "__TILES_DIR__";
-  const tilesBase = new URL(tilesDir.startsWith("__") ? "tiles/" : tilesDir, location.href).href;
+  const deployedDir = tilesDir.startsWith("__") ? "tiles/" : tilesDir;
+
+  // ---------- Mapas guardados en el movil (sin conexion) ----------
+  // Los .pmtiles se guardan enteros en la Cache del navegador y se leen por trozos (blob.slice),
+  // sin pasar por la red. Si hay una copia guardada, se usa siempre (aunque haya version nueva).
+  const OFFLINE_CACHE = "skimo-offline";
+  const PM_FILES = ["aran-base", "aran-terrain", "aran-slope", "aran-slope-aval", "aran-aspect", "aran-contours",
+    "aran-osm", "aran-aludes", "aran-sat-winter"].map(n => n + ".pmtiles");
+  const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
+  const lsSet = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
+  const offlineCache = "caches" in window ? await caches.open(OFFLINE_CACHE).catch(() => null) : null;
+  let offlineDir = lsGet("skimo-offline-dir");
+  if (offlineDir && !(offlineCache && await offlineCache.match(new URL(offlineDir + "aran-slope.pmtiles", location.href).href))) {
+    offlineDir = null; lsSet("skimo-offline-dir", null);   // el sistema borro la copia
+  }
+  const usingOffline = !!offlineDir;
+  const tilesBase = new URL(usingOffline ? offlineDir : deployedDir, location.href).href;
   const pm = name => "pmtiles://" + tilesBase + name;
 
-  const slopeFile = new pmtiles.PMTiles(tilesBase + "aran-slope.pmtiles");
+  class CachedSource {
+    constructor(url, blob) { this.url = url; this.blob = blob; }
+    getKey() { return this.url; }
+    async getBytes(offset, length) { return { data: await this.blob.slice(offset, offset + length).arrayBuffer() }; }
+  }
+  const pmFiles = {};
+  if (usingOffline) {
+    for (const name of PM_FILES) {
+      const url = tilesBase + name, hit = await offlineCache.match(url);
+      if (hit) { pmFiles[name] = new pmtiles.PMTiles(new CachedSource(url, await hit.blob())); protocol.add(pmFiles[name]); }
+    }
+  }
+
+  const slopeFile = pmFiles["aran-slope.pmtiles"] ?? new pmtiles.PMTiles(tilesBase + "aran-slope.pmtiles");
   protocol.add(slopeFile);
   const h = await slopeFile.getHeader();
   const bounds = [[h.minLon, h.minLat], [h.maxLon, h.maxLat]];
@@ -164,12 +206,13 @@
     style: {
       version: 8,
       glyphs: new URL("fonts/", location.href).href + "{fontstack}/{range}.pbf",
+      sprite: new URL("sprites/light", location.href).href,
       sources: {
+        base: { type: "vector", url: pm("aran-base.pmtiles"),
+          attribution: "Mapa base © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> · <a href='https://protomaps.com'>Protomaps</a>" },
         contours: { type: "vector", url: pm("aran-contours.pmtiles") },
         osmlabels: { type: "vector", url: pm("aran-osm.pmtiles"),
           attribution: "Nombres © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> (ODbL)" },
-        osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 19,
-          attribution: "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>" },
         pnoa: { type: "raster", tileSize: 256, maxzoom: 19,
           tiles: ["https://www.ign.es/wms-inspire/pnoa-ma?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=OI.OrthoimageCoverage&STYLES=&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/jpeg"],
           attribution: "PNOA © IGN" },
@@ -184,7 +227,8 @@
         aspect: { type: "raster", url: pm("aran-aspect.pmtiles"), tileSize: 256 }
       },
       layers: [
-        { id: "osm", type: "raster", source: "osm" },
+        // Mapa base vectorial (OSM via Protomaps), sin sus puntos de interes: ya tenemos los nuestros
+        ...basemaps.layers("base", basemaps.namedFlavor("light"), { lang: "es" }).filter(l => !l.id.startsWith("pois")),
         { id: "satwinter", type: "raster", source: "satwinter", layout: { visibility: "none" } },
         { id: "pnoa", type: "raster", source: "pnoa", layout: { visibility: "none" } },
         { id: "hillshade", type: "hillshade", source: "terrain",
@@ -302,7 +346,6 @@
 
   const setVis = (id, on) => map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
   document.querySelectorAll("input[name=base]").forEach(r => r.addEventListener("change", () => {
-    setVis("osm", r.value === "osm");
     setVis("pnoa", r.value === "pnoa");
     setVis("satwinter", r.value === "winter");
   }));
@@ -326,7 +369,7 @@
   // ---------- Medidor de distancia y desnivel ----------
   // Altitud leida de las teselas de relieve (terrain-RGB, z13 ~ 14 m); estimacion, no medida.
   const TZ = 13;
-  const terrainFile = new pmtiles.PMTiles(tilesBase + "aran-terrain.pmtiles");
+  const terrainFile = pmFiles["aran-terrain.pmtiles"] ?? new pmtiles.PMTiles(tilesBase + "aran-terrain.pmtiles");
   const tileCache = new Map();
   const tileData = (x, y) => {
     const k = x + "/" + y;
@@ -467,7 +510,9 @@
   document.getElementById("m-gpx").onclick = async () => {
     const stamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "");
     const name = `Skimo ${new Date().toLocaleDateString("es-ES")}`;
-    const pts = mPoints.map(p => `   <trkpt lat="${p.c[1].toFixed(6)}" lon="${p.c[0].toFixed(6)}">${p.h != null ? `<ele>${p.h.toFixed(1)}</ele>` : ""}</trkpt>`).join("\n");
+    // Todos los puntos intermedios (~25 m) con altitud, para que el perfil del recorrido en el reloj sea completo
+    const all = [{ c: mPoints[0].c, h: mPoints[0].h }, ...mSegs.flat()];
+    const pts = all.map(p => `   <trkpt lat="${p.c[1].toFixed(6)}" lon="${p.c[0].toFixed(6)}">${p.h != null ? `<ele>${p.h.toFixed(1)}</ele>` : ""}</trkpt>`).join("\n");
     const gpx = `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="Skimo Pirineo" xmlns="http://www.topografix.com/GPX/1/1">
  <metadata><name>${name}</name></metadata>
@@ -556,6 +601,87 @@ ${pts}
     else if (e.key === "Escape") { hits = []; render(); }
   });
   map.on("click", () => { hits = []; render(); });
+
+  // ---------- Panel "Sin conexion" ----------
+  const offStatus = document.getElementById("off-status"), offBtn = document.getElementById("off-btn"),
+    offDel = document.getElementById("off-del"), offBar = document.getElementById("off-bar");
+  const MB = b => `${Math.round(b / 2 ** 20)} MB`;
+  const fmtDate = s => new Date(s).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  const EXTRA = [  // lo minimo para que la pagina arranque sin red
+    "./", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png",
+    "sprites/light.json", "sprites/light.png", "sprites/light@2x.json", "sprites/light@2x.png",
+    ...["Noto Sans Regular", "Noto Sans Medium", "Noto Sans Italic"].flatMap(f => ["0-255", "256-511", "8192-8447"].map(r => `fonts/${f}/${r}.pbf`)),
+    "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css", "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js",
+    "https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js", "https://unpkg.com/@protomaps/basemaps@5.7.2/dist/basemaps.js"
+  ].map(u => new URL(u, location.href).href);
+
+  const refreshOffline = async () => {
+    offBar.classList.remove("on");
+    if (!offlineCache) { offStatus.textContent = "Este navegador no permite guardar mapas."; return; }
+    const saved = lsGet("skimo-offline-dir"), when = lsGet("skimo-offline-date"), size = Number(lsGet("skimo-offline-size") || 0);
+    let list = null;
+    try { list = await (await fetch(new URL(deployedDir + "offline.json", location.href), { cache: "no-store" })).json(); } catch {}
+    const total = list ? list.reduce((s, f) => s + f.size, 0) : 0;
+    offDel.hidden = !saved;
+    if (saved) {
+      const outdated = list && saved !== deployedDir;
+      offStatus.innerHTML = `<b>Guardado en el móvil</b> el ${fmtDate(when)} (${MB(size)}). Funciona sin conexión, salvo ortofoto y zonas de aludes.`
+        + (outdated ? "<br><b>Hay mapas nuevos publicados.</b>" : "")
+        + (usingOffline ? "" : "<br>Recarga la página para usar la copia guardada.");
+      offBtn.hidden = !outdated; offBtn.textContent = `Actualizar mapas guardados (${MB(total)})`;
+    } else {
+      offStatus.textContent = list ? "Ahora los mapas se cargan de internet. Guárdalos para usarlos en la montaña sin cobertura."
+                                   : "Sin conexión y sin mapas guardados.";
+      offBtn.hidden = !list; offBtn.textContent = `Guardar Aran en el móvil (${MB(total)})`;
+    }
+  };
+
+  offBtn.onclick = async () => {
+    offBtn.disabled = true; offDel.hidden = true;
+    try {
+      const base = new URL(deployedDir, location.href).href;
+      const list = await (await fetch(base + "offline.json", { cache: "no-store" })).json();
+      const total = list.reduce((s, f) => s + f.size, 0);
+      const est = await navigator.storage?.estimate?.();
+      if (est && est.quota - est.usage < total * 1.1) throw new Error(`no hay espacio suficiente (faltan ${MB(total * 1.1 - (est.quota - est.usage))})`);
+      await navigator.storage?.persist?.();
+      offBar.classList.add("on");
+      let done = 0;
+      const bar = offBar.firstElementChild;
+      for (const f of list) {
+        offStatus.textContent = `Guardando ${f.name}… ${MB(done)} de ${MB(total)}`;
+        const res = await fetch(base + f.name, { cache: "no-store" });
+        if (!res.ok || !res.body) throw new Error(`no se pudo descargar ${f.name}`);
+        const [count, store] = res.body.tee();
+        const put = offlineCache.put(base + f.name, new Response(store, { headers: { "Content-Type": "application/octet-stream" } }));
+        const rd = count.getReader();
+        for (;;) {
+          const { done: end, value } = await rd.read(); if (end) break;
+          done += value.length; bar.style.width = `${Math.min(100, 100 * done / total)}%`;
+          offStatus.textContent = `Guardando ${f.name}… ${MB(done)} de ${MB(total)}`;
+        }
+        await put;
+      }
+      offStatus.textContent = "Guardando la aplicación…";
+      for (const u of EXTRA) { try { await offlineCache.add(u); } catch { /* opcional */ } }
+      // Borrar copias de versiones anteriores
+      for (const req of await offlineCache.keys()) if (req.url.includes("/tiles/") && !req.url.startsWith(base)) await offlineCache.delete(req);
+      lsSet("skimo-offline-dir", deployedDir); lsSet("skimo-offline-date", new Date().toISOString()); lsSet("skimo-offline-size", String(total));
+      offStatus.textContent = "Listo. Recargando para usar la copia guardada…";
+      setTimeout(() => location.reload(), 800);
+    } catch (e) {
+      offStatus.textContent = `No se ha podido guardar: ${e.message}. Prueba con wifi.`;
+      offBtn.disabled = false; offBar.classList.remove("on");
+    }
+  };
+
+  offDel.onclick = async () => {
+    if (!confirm("¿Borrar los mapas guardados del móvil? Sin conexión dejarán de funcionar.")) return;
+    await caches.delete(OFFLINE_CACHE);
+    ["skimo-offline-dir", "skimo-offline-date", "skimo-offline-size"].forEach(k => lsSet(k, null));
+    location.reload();
+  };
+  refreshOffline();
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 })();

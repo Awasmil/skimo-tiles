@@ -1,19 +1,12 @@
-// Cachea solo la "carcasa" de la app. Las teselas (peticiones por rangos) aun no se guardan offline.
-const CACHE = "skimo-shell-v1";
-const SHELL = [
-  "./", "index.html", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png",
-  "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css",
-  "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js",
-  "https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"
-];
+// Service worker: que la pagina y sus recursos arranquen sin conexion.
+// Los mapas (.pmtiles) NO pasan por aqui: la pagina los lee directamente de la cache "skimo-offline".
+const RUNTIME = "skimo-runtime-v2";
 
-self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
-});
+self.addEventListener("install", () => self.skipWaiting());
 
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(keys => Promise.all(keys.filter(k => k.startsWith("skimo-shell") || (k.startsWith("skimo-runtime") && k !== RUNTIME)).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 
@@ -21,12 +14,23 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET" || req.headers.has("range")) return;
   const url = new URL(req.url);
-  const isShell = SHELL.some(s => new URL(s, self.location).href === url.href);
-  if (!isShell) return;
-  // Red primero (para ver cambios al momento), cache si no hay conexion
+  if (url.pathname.endsWith(".pmtiles")) return;
+
+  const sameOrigin = url.origin === self.location.origin;
+  const isLib = url.hostname === "unpkg.com";
+  if (!sameOrigin && !isLib) return;   // ortofoto, ICGC, Overpass... solo con red
+
+  if (isLib) {
+    // Librerias con version fija: primero cache
+    e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(res => {
+      if (res.ok) { const copy = res.clone(); caches.open(RUNTIME).then(c => c.put(req, copy)); }
+      return res;
+    })));
+    return;
+  }
+  // Mismo origen: red primero (ver cambios al momento); sin red, lo guardado (cualquier cache)
   e.respondWith(fetch(req).then(res => {
-    const copy = res.clone();
-    caches.open(CACHE).then(c => c.put(req, copy));
+    if (res.ok) { const copy = res.clone(); caches.open(RUNTIME).then(c => c.put(req, copy)); }
     return res;
-  }).catch(() => caches.match(req)));
+  }).catch(async () => (await caches.match(req, { ignoreSearch: true })) || Response.error()));
 });
