@@ -415,12 +415,15 @@
       <text x="2" y="54" font-size="9" fill="currentColor" opacity=".7">${Math.round(hMin)} m</text>`;
   };
 
-  const addPoint = async c => {
+  // En cola: si se toca rapido (o la red va lenta), cada punto espera al anterior para no calcular
+  // tramos desde un punto equivocado.
+  let mQueue = Promise.resolve();
+  const addPoint = c => (mQueue = mQueue.then(async () => {
     const h = await elevation(c);
     if (mPoints.length) mSegs.push(await segmentSamples(mPoints.at(-1).c, c));
     mPoints.push({ c, h });
     renderMeasure();
-  };
+  }).catch(e => console.error("Medidor:", e)));
   const setMeasuring = on => {
     measuring = on;
     mPanel.classList.toggle("on", on);
