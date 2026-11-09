@@ -216,12 +216,18 @@
   </div>
   <h2>Tiempo (previsión)</h2>
   <label><input type="checkbox" id="wxtemp"> Temperatura</label>
-  <label><input type="checkbox" id="wxwind"> Viento</label>
   <div class="legend" id="legend-wxtemp">
-    <div class="ramp" style="background:linear-gradient(90deg,#313695,#4575b4,#91bfdb,#e0f3f8,#ffffbf,#fee090,#fc8d59,#d73027,#a50026)"></div>
-    <div class="ramp-ticks"><span>−20°</span><span>−10°</span><span>0°</span><span>10°</span><span>20°</span></div>
+    <div class="ramp" style="background:linear-gradient(90deg,#313695 0%,#4575b4 22%,#91bfdb 33%,#e0f3f8 44%,#ffffbf 51%,#fee090 62%,#fc8d59 73%,#d73027 84%,#a50026 100%)"></div>
+    <div class="ramp-ticks"><span>−20°</span><span>−10°</span><span>0°</span><span>10°</span><span>25°</span></div>
+    <div style="color:var(--muted)">Estimación: modelo (~4 km) corregido a la cota de cada punto (−6,5 °C por 1000 m). No incluye el efecto del sol según la orientación.</div>
   </div>
-  <div class="note" style="margin-top:2px">Malla sobre Aran, a la altura real del terreno. Para comparar modelos en un punto, usa el botón de la nube.</div>
+  <label><input type="checkbox" id="wxwind"> Viento (partículas)</label>
+  <div class="legend" id="legend-wxwind">
+    <div class="ramp" style="background:linear-gradient(90deg,#e0f3f8 0%,#abd9e9 11%,#ffffbf 21%,#fdae61 36%,#f46d43 54%,#d73027 71%,#a50026 100%)"></div>
+    <div class="ramp-ticks"><span>0</span><span>20</span><span>40</span><span>70</span><span>100 km/h</span></div>
+    <div style="color:var(--muted)">AROME 1,3 km (~2 días). Ve el flujo de los valles grandes y las crestas anchas; <b>no</b> resuelve canales, collados ni aceleraciones locales. Actívalo con 3D para verlo sobre el relieve.</div>
+  </div>
+  <div class="note" style="margin-top:2px">Para comparar modelos en un punto, usa el botón de la nube.</div>
   <h2>Aludes · Lauegi</h2>
   <div class="bul-ctrls">
     <input type="hidden" id="bul-date">
@@ -1067,69 +1073,166 @@ ${pts}
     }, onRemove() {}
   }, "top-right");
 
-  // Malla de temperatura y viento sobre Aran (un modelo: la mejor combinacion de Open-Meteo)
+  // ---------- Temperatura continua y viento 3D (previsiones, no medidas) ----------
   const wxBar = document.getElementById("wxbar"), wxBarHour = document.getElementById("wxbar-hour");
-  let grid = null, gridP = null;
-  const GRID_PTS = []; for (let la = 42.52; la <= 42.90; la += 0.035) for (let lo = 0.42; lo <= 1.38; lo += 0.05) GRID_PTS.push([+lo.toFixed(3), +la.toFixed(3)]);
-  const loadGrid = () => gridP ??= (async () => {
-    const url = `${OM}?latitude=${GRID_PTS.map(p => p[1]).join(",")}&longitude=${GRID_PTS.map(p => p[0]).join(",")}`
-      + `&hourly=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&forecast_days=3&timezone=Europe%2FMadrid`;
-    try {
-      const j = await (await fetch(url)).json();
-      grid = { at: new Date().toISOString(), list: (Array.isArray(j) ? j : [j]).map(x => x.hourly) };
-      lsSet("skimo-wx-grid", JSON.stringify(grid));
-    } catch { grid = JSON.parse(lsGet("skimo-wx-grid") || "null"); }
-    return grid;
-  })();
-  const drawGrid = () => {
-    if (!grid) return;
-    const i = +wxBarHour.value, T = grid.list[0].time;
-    document.getElementById("wxbar-at").textContent = fmtHour(T[i]);
-    document.getElementById("wxbar-src").textContent = `Previsión Open-Meteo · consultado ${new Date(grid.at).toLocaleString("es-ES", { hour: "2-digit", minute: "2-digit" })}`;
-    map.getSource("wxgrid")?.setData({ type: "FeatureCollection", features: GRID_PTS.map((p, k) => {
-      const hh = grid.list[k];
-      return { type: "Feature", geometry: { type: "Point", coordinates: p }, properties: {
-        t: hh.temperature_2m[i], ws: hh.wind_speed_10m[i], wg: hh.wind_gusts_10m[i], wd: hh.wind_direction_10m[i],
-        tl: hh.temperature_2m[i] == null ? "" : `${Math.round(hh.temperature_2m[i])}°`,
-        wl: hh.wind_speed_10m[i] == null ? "" : `${Math.round(hh.wind_speed_10m[i])}` } };
-    }) });
+  const LAPSE = 0.0065;   // descenso de temperatura con la altura (grados por metro), atmosfera estandar
+  // Malla regular de Open-Meteo sobre Aran (filas de latitud, columnas de longitud)
+  const lattice = (lo0, lo1, dlo, la0, la1, dla) => {
+    const lons = [], lats = [];
+    for (let x = lo0; x <= lo1 + 1e-9; x += dlo) lons.push(+x.toFixed(4));
+    for (let y = la0; y <= la1 + 1e-9; y += dla) lats.push(+y.toFixed(4));
+    return { lo0, dlo, la0, dla, nc: lons.length, nr: lats.length, pts: lats.flatMap(la => lons.map(lo => [lo, la])) };
   };
-  wxBarHour.oninput = drawGrid;
+  const TG = lattice(0.40, 1.40, 0.05, 42.50, 42.92, 0.035);    // temperatura: ~4 km, mejor combinacion de modelos
+  const WG = lattice(0.40, 1.40, 0.02, 42.50, 42.92, 0.015);    // viento: ~1,6 km, AROME 1,3 km
+  // Interpolacion bilineal en la malla; f(k) devuelve el valor del nodo k (o null)
+  const bilinear = (L, lon, lat, f) => {
+    const fc = Math.max(0, Math.min(L.nc - 1, (lon - L.lo0) / L.dlo)), fr = Math.max(0, Math.min(L.nr - 1, (lat - L.la0) / L.dla));
+    const c0 = Math.floor(fc), r0 = Math.floor(fr), c1 = Math.min(c0 + 1, L.nc - 1), r1 = Math.min(r0 + 1, L.nr - 1);
+    const tc = fc - c0, tr = fr - r0; let sum = 0, w = 0;
+    for (const [r, c, wt] of [[r0, c0, (1 - tc) * (1 - tr)], [r0, c1, tc * (1 - tr)], [r1, c0, (1 - tc) * tr], [r1, c1, tc * tr]]) {
+      const v = f(r * L.nc + c); if (v != null && wt > 0) { sum += v * wt; w += wt; }
+    }
+    return w ? sum / w : null;
+  };
+  const omMulti = async (L, params) => {
+    const out = [];
+    for (let i = 0; i < L.pts.length; i += 400) {     // varias peticiones (limite de puntos por llamada)
+      const part = L.pts.slice(i, i + 400);
+      const j = await (await fetch(`${OM}?latitude=${part.map(p => p[1]).join(",")}&longitude=${part.map(p => p[0]).join(",")}&${params}`)).json();
+      if (j.error) throw new Error(j.reason);
+      out.push(...(Array.isArray(j) ? j : [j]));
+    }
+    return out;
+  };
+
+  let tGrid = null, tGridP = null, wField = null, wFieldP = null, tVersion = 0;
+  const loadTemp = () => tGridP ??= (async () => {
+    try {
+      const r = await omMulti(TG, "hourly=temperature_2m&forecast_days=3&timezone=Europe%2FMadrid");
+      tGrid = { at: new Date().toISOString(), time: r[0].hourly.time, elev: r.map(x => x.elevation), t: r.map(x => x.hourly.temperature_2m) };
+      lsSet("skimo-wx-tgrid", JSON.stringify(tGrid));
+    } catch { tGrid = JSON.parse(lsGet("skimo-wx-tgrid") || "null"); }
+    return tGrid;
+  })();
+  const loadWind = () => wFieldP ??= (async () => {
+    try {
+      const r = await omMulti(WG, "hourly=wind_speed_10m,wind_direction_10m&models=meteofrance_arome_france_hd&forecast_days=2&timezone=Europe%2FMadrid&wind_speed_unit=ms");
+      const time = r[0].hourly.time;
+      // u (hacia el este) y v (hacia el norte) en m/s; la direccion meteorologica es de donde VIENE el viento
+      const comp = (h, fn) => r.map(x => { const sp = x.hourly.wind_speed_10m[h], d = x.hourly.wind_direction_10m[h];
+        return sp == null || d == null ? null : fn(sp, d * Math.PI / 180); });
+      wField = { at: new Date().toISOString(), time,
+        u: time.map((_, h) => comp(h, (sp, d) => -sp * Math.sin(d))), v: time.map((_, h) => comp(h, (sp, d) => -sp * Math.cos(d))) };
+    } catch (e) { console.warn("Viento AROME no disponible:", e); wField = null; }
+    return wField;
+  })();
+
+  // Teselas "wxtemp://z/x/y": temperatura del punto de malla corregida a la cota real de cada pixel
+  const TEMP_STOPS = [[-20, [49, 54, 149]], [-10, [69, 117, 180]], [-5, [145, 191, 219]], [0, [224, 243, 248]], [3, [255, 255, 191]],
+    [8, [254, 224, 144]], [13, [252, 141, 89]], [18, [215, 48, 39]], [25, [165, 0, 38]]];
+  const tempRGB = t => {
+    if (t <= TEMP_STOPS[0][0]) return TEMP_STOPS[0][1];
+    for (let i = 1; i < TEMP_STOPS.length; i++) { const [a, ca] = TEMP_STOPS[i - 1], [b, cb] = TEMP_STOPS[i];
+      if (t <= b) { const f = (t - a) / (b - a); return ca.map((x, k) => x + (cb[k] - x) * f); } }
+    return TEMP_STOPS.at(-1)[1];
+  };
+  const emptyTile = (async () => await (await new OffscreenCanvas(1, 1).convertToBlob({ type: "image/png" })).arrayBuffer())();
+  maplibregl.addProtocol("wxtemp", async params => {
+    const [z, x, y] = params.url.match(/wxtemp:\/\/(\d+)\/(\d+)\/(\d+)/).slice(1).map(Number);
+    const g0 = tGrid, hIdx = +wxBarHour.value;
+    if (!g0) return { data: await emptyTile };
+    const r = await terrainFile.getZxy(z, x, y);
+    if (!r) return { data: await emptyTile };
+    const bmp = await createImageBitmap(new Blob([r.data])), W = bmp.width;
+    const c = new OffscreenCanvas(W, W), g = c.getContext("2d", { willReadFrequently: true });
+    g.drawImage(bmp, 0, 0);
+    const src = g.getImageData(0, 0, W, W).data, out = g.createImageData(W, W), o = out.data, n = 2 ** z;
+    const tAt = g0.t.map(a => a[hIdx]);
+    for (let j = 0; j < W; j++) {
+      const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + (j + 0.5) / W) / n))) * 180 / Math.PI;
+      for (let i = 0; i < W; i++) {
+        const k = j * W + i, hPix = -10000 + (src[4 * k] * 65536 + src[4 * k + 1] * 256 + src[4 * k + 2]) * 0.1;
+        const lon = (x + (i + 0.5) / W) / n * 360 - 180;
+        const t = bilinear(TG, lon, lat, q => tAt[q] == null ? null : tAt[q] + LAPSE * (g0.elev[q] - hPix));
+        if (t == null) continue;
+        const rgb = tempRGB(t);
+        o[4 * k] = rgb[0]; o[4 * k + 1] = rgb[1]; o[4 * k + 2] = rgb[2]; o[4 * k + 3] = 165;
+      }
+    }
+    g.putImageData(out, 0, 0);
+    return { data: await (await c.convertToBlob({ type: "image/png" })).arrayBuffer() };
+  });
+
+  // Particulas de viento: se mueven con el campo de AROME y se dibujan pegadas al relieve (tambien en 3D)
+  const NP = 1200, TRAIL = 9, STEP_S = 90;   // particulas, puntos de estela, segundos simulados por fotograma
+  let parts = [], windOn = false, windHour = -1, lastFrame = 0;
+  const spawn = () => ({ lon: 0.40 + Math.random() * 1.0, lat: 42.50 + Math.random() * 0.42, age: Math.floor(Math.random() * 80), trail: [] });
+  const windHourIdx = () => {
+    if (!wField) return -1;
+    const t = tGrid?.time?.[+wxBarHour.value];
+    return t ? wField.time.indexOf(t) : Math.min(+wxBarHour.value, wField.time.length - 1);
+  };
+  const stepParticles = () => {
+    const h = windHour; if (h < 0 || !wField) return [];
+    const U = wField.u[h], V = wField.v[h], feats = [];
+    for (const p of parts) {
+      if (p.age-- <= 0) Object.assign(p, spawn(), { age: 60 + Math.floor(Math.random() * 40) });
+      const u = bilinear(WG, p.lon, p.lat, q => U[q]), v = bilinear(WG, p.lon, p.lat, q => V[q]);
+      if (u == null || v == null) { p.age = 0; continue; }
+      p.lon += u * STEP_S / (111320 * Math.cos(p.lat * Math.PI / 180));
+      p.lat += v * STEP_S / 110540;
+      if (p.lon < 0.40 || p.lon > 1.40 || p.lat < 42.50 || p.lat > 42.92) { p.age = 0; p.trail = []; continue; }
+      p.trail.push([p.lon, p.lat]); if (p.trail.length > TRAIL) p.trail.shift();
+      if (p.trail.length > 1) feats.push({ type: "Feature", properties: { sp: Math.hypot(u, v) }, geometry: { type: "LineString", coordinates: p.trail } });
+    }
+    return feats;
+  };
+  const animateWind = ts => {
+    if (!windOn) return;
+    if (ts - lastFrame > 60) {   // ~16 fotogramas por segundo: suave y asumible para el movil
+      lastFrame = ts;
+      map.getSource("windparts")?.setData({ type: "FeatureCollection", features: stepParticles() });
+    }
+    requestAnimationFrame(animateWind);
+  };
+
+  const drawWx = () => {
+    const g0 = tGrid || wField; if (!g0) return;
+    const T = tGrid ? tGrid.time : wField.time, i = Math.min(+wxBarHour.value, T.length - 1);
+    document.getElementById("wxbar-at").textContent = fmtHour(T[i]);
+    windHour = windHourIdx();
+    const windMsg = windOn && windHour < 0 ? " · viento AROME solo cubre ~2 días" : "";
+    document.getElementById("wxbar-src").textContent = `Previsión de modelo · consultado ${new Date(g0.at).toLocaleString("es-ES", { hour: "2-digit", minute: "2-digit" })}${windMsg}`;
+    tVersion++;
+    if (document.getElementById("wxtemp").checked) map.getSource("wxtemp")?.setTiles([`wxtemp://{z}/{x}/{y}?v=${tVersion}`]);
+  };
+  wxBarHour.oninput = drawWx;
   map.on("load", () => {
-    // Flecha de viento (apunta hacia donde va el aire)
-    const S = 48, cv = document.createElement("canvas"); cv.width = cv.height = S; const g = cv.getContext("2d");
-    g.fillStyle = "#1b2430"; g.strokeStyle = "#fff"; g.lineWidth = 3; g.lineJoin = "round";
-    g.beginPath(); g.moveTo(S / 2, 4); g.lineTo(S / 2 + 11, 20); g.lineTo(S / 2 + 4, 20); g.lineTo(S / 2 + 4, S - 4);
-    g.lineTo(S / 2 - 4, S - 4); g.lineTo(S / 2 - 4, 20); g.lineTo(S / 2 - 11, 20); g.closePath(); g.stroke(); g.fill();
-    map.addImage("wind-arrow", g.getImageData(0, 0, S, S), { pixelRatio: 2 });
-    map.addSource("wxgrid", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
-    map.addLayer({ id: "wxtemp", type: "circle", source: "wxgrid", layout: { visibility: "none" }, paint: {
-      "circle-radius": ["interpolate", ["exponential", 2], ["zoom"], 9, 14, 11, 40, 13, 150],
-      "circle-color": ["interpolate", ["linear"], ["get", "t"], -20, "#313695", -10, "#4575b4", -5, "#91bfdb", 0, "#e0f3f8",
-        3, "#ffffbf", 8, "#fee090", 13, "#fc8d59", 18, "#d73027", 25, "#a50026"],
-      "circle-opacity": 0.4, "circle-blur": 0.6 } }, "contours-minor");
-    map.addLayer({ id: "wxtemp-label", type: "symbol", source: "wxgrid", layout: { visibility: "none",
-      "text-field": ["get", "tl"], "text-font": ["Noto Sans Medium"], "text-size": 13, "text-allow-overlap": true },
-      paint: { "text-color": "#1b2430", "text-halo-color": "#fff", "text-halo-width": 1.6 } });
-    map.addLayer({ id: "wxwind", type: "symbol", source: "wxgrid", layout: { visibility: "none",
-      "icon-image": "wind-arrow", "icon-rotate": ["+", ["get", "wd"], 180], "icon-rotation-alignment": "map", "icon-allow-overlap": true,
-      "icon-size": ["interpolate", ["linear"], ["get", "ws"], 0, 0.5, 20, 0.8, 50, 1.2, 80, 1.5],
-      "text-field": ["get", "wl"], "text-font": ["Noto Sans Medium"], "text-size": 10, "text-offset": [0, 1.6], "text-allow-overlap": true },
-      paint: { "text-color": "#1b2430", "text-halo-color": "#fff", "text-halo-width": 1.4,
-        "icon-opacity": ["interpolate", ["linear"], ["get", "ws"], 0, 0.5, 15, 1] } });
+    map.addSource("wxtemp", { type: "raster", tiles: ["wxtemp://{z}/{x}/{y}?v=0"], tileSize: 256, minzoom: 8, maxzoom: 13, bounds: [0.40, 42.50, 1.40, 42.92] });
+    map.addLayer({ id: "wxtemp", type: "raster", source: "wxtemp", layout: { visibility: "none" },
+      paint: { "raster-opacity": 0.75, "raster-resampling": "linear", "raster-fade-duration": 0 } }, "contours-minor");
+    map.addSource("windparts", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addLayer({ id: "wxwind", type: "line", source: "windparts", layout: { visibility: "none", "line-cap": "round" },
+      paint: { "line-width": ["interpolate", ["linear"], ["zoom"], 9, 1.2, 13, 2.4],
+        "line-color": ["interpolate", ["linear"], ["get", "sp"], 0, "#e0f3f8", 3, "#abd9e9", 6, "#ffffbf", 10, "#fdae61", 15, "#f46d43", 20, "#d73027", 28, "#a50026"],
+        "line-opacity": 0.9 } });
   });
   const wxLayersToggle = async () => {
     const t = document.getElementById("wxtemp").checked, w = document.getElementById("wxwind").checked;
-    setVis("wxtemp", t); setVis("wxtemp-label", t); setVis("wxwind", w);
+    setVis("wxtemp", t); setVis("wxwind", w);
     document.getElementById("legend-wxtemp").classList.toggle("on", t);
+    document.getElementById("legend-wxwind").classList.toggle("on", w);
     wxBar.classList.toggle("on", t || w);
-    if (t || w) {
-      await loadGrid();
-      if (!grid) { document.getElementById("wxbar-at").textContent = "Sin conexión y sin previsión guardada"; return; }
-      wxBarHour.max = grid.list[0].time.length - 1;
-      if (!wxBarHour.dataset.init) { wxBarHour.value = nowIndex(grid.list[0].time); wxBarHour.dataset.init = 1; }
-      drawGrid();
-    }
+    if (t) await loadTemp();
+    if (w) await loadWind();
+    const T = tGrid?.time || wField?.time;
+    if (!T) { document.getElementById("wxbar-at").textContent = "Sin conexión y sin previsión guardada"; return; }
+    wxBarHour.max = T.length - 1;
+    if (!wxBarHour.dataset.init) { wxBarHour.value = nowIndex(T); wxBarHour.dataset.init = 1; }
+    if (w && !windOn) { windOn = true; parts = Array.from({ length: NP }, spawn); requestAnimationFrame(animateWind); }
+    if (!w) { windOn = false; map.getSource("windparts")?.setData({ type: "FeatureCollection", features: [] }); }
+    drawWx();
   };
   document.getElementById("wxtemp").addEventListener("change", wxLayersToggle);
   document.getElementById("wxwind").addEventListener("change", wxLayersToggle);
