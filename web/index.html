@@ -65,6 +65,7 @@
   .legend .ramp { height: 10px; border-radius: 3px; margin: 4px 0 2px; }
   .legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
   .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .legend span.hatch { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6px); outline: 1px solid rgba(0,0,0,.25); }
   .bul-ctrls { display: flex; gap: 6px; }
   .bul-ctrls input, .bul-ctrls select { flex: 1; min-height: 32px; border: 1px solid rgba(127,127,127,.4); border-radius: 8px;
     background: transparent; color: var(--fg); font: 13px system-ui, -apple-system, sans-serif; padding: 0 6px; }
@@ -84,6 +85,15 @@
 </head>
 <body>
 <div id="map"></div>
+<div class="measure" id="station" style="padding:8px">
+  <div style="display:flex;align-items:center;gap:8px">
+    <b style="flex:1">Estación Cap de Vaquèira · 2467 m <span style="font-weight:400;color:var(--muted);font-size:12px">(AEMET 9988B)</span></b>
+    <a id="st-open" target="_blank" rel="noopener" style="font-size:12px">Abrir</a>
+    <button id="st-close" style="border:0;background:none;font-size:20px;color:var(--fg);cursor:pointer" aria-label="Cerrar">×</button>
+  </div>
+  <iframe id="st-frame" title="Datos de la estación Cap de Vaquèira" style="width:100%;height:min(60vh,520px);border:0;border-radius:8px;margin-top:6px;background:#fff"></iframe>
+  <div class="m-sub">Datos medidos (no estimados), cada hora: temperatura, humedad, nieve y viento. Panel público de Arantec. Necesita conexión.</div>
+</div>
 <div class="measure" id="measure" aria-live="polite">
   <div class="m-stats">
     <div><span>Distancia</span><b id="m-dist">0 m</b></div>
@@ -164,11 +174,11 @@
     <select id="bul-period" aria-label="Momento del día" hidden><option value="earlier">Mañana</option><option value="later">Tarde</option></select>
   </div>
   <div class="bul" id="bul">Cargando boletín…</div>
-  <label><input type="checkbox" id="danger" checked> Sombrear caras con problema (≥30°)</label>
+  <label><input type="checkbox" id="danger" checked> Rayar caras con problema (≥30°)</label>
   <div class="legend on" id="legend-danger">
-    <div><span style="background:#ccff66"></span>1 Débil <span style="background:#ffff00;margin-left:6px"></span>2 Limitado <span style="background:#ff9900;margin-left:6px"></span>3 Notable</div>
-    <div><span style="background:#ff0000"></span>4 Fuerte <span style="background:#800000;margin-left:6px"></span>5 Muy fuerte</div>
-    <div style="color:var(--muted)">Solo laderas ≥30° cuya orientación y cota coinciden con un problema del boletín. Límite del bosque estimado en 2200 m.</div>
+    <div><span class="hatch" style="--c:#ccff66"></span>1 Débil <span class="hatch" style="--c:#ffff00;margin-left:6px"></span>2 Limitado <span class="hatch" style="--c:#ff9900;margin-left:6px"></span>3 Notable</div>
+    <div><span class="hatch" style="--c:#ff0000"></span>4 Fuerte <span class="hatch" style="--c:#800000;margin-left:6px"></span>5 Muy fuerte</div>
+    <div style="color:var(--muted)"><b>Interpretación de Skimo, no del Lauegi:</b> el boletín da caras y cotas para todo Aran; aquí se rayan las laderas ≥30° que coinciden. Límite del bosque estimado en 2200 m.</div>
   </div>
   <h2>Sin conexión</h2>
   <div class="note" id="off-status" style="margin-top:0">Comprobando…</div>
@@ -202,6 +212,14 @@
   const usingOffline = !!offlineDir;
   const tilesBase = new URL(usingOffline ? offlineDir : deployedDir, location.href).href;
   const pm = name => "pmtiles://" + tilesBase + name;
+  // Ficheros de datos (buscador, senderos...): primero la copia guardada; la carpeta de la copia
+  // puede no existir ya en el servidor tras publicar una version nueva.
+  const getData = async name => {
+    if (usingOffline) { const hit = await offlineCache.match(tilesBase + name); if (hit) return hit.json(); }
+    const r = await fetch(tilesBase + name);
+    if (!r.ok) throw new Error(`${name}: ${r.status}`);
+    return r.json();
+  };
 
   class CachedSource {
     constructor(url, blob) { this.url = url; this.blob = blob; }
@@ -378,7 +396,7 @@
     setVis("pnoa", r.value === "pnoa");
     setVis("satwinter", r.value === "winter");
   }));
-  fetch(tilesBase + "sat-winter.json").then(r => r.ok ? r.json() : null).then(j => {
+  getData("sat-winter.json").then(j => {
     if (j?.date) document.getElementById("sat-date").textContent = "(" + new Date(j.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })
       + (j.cloud_pct != null ? `, ${String(j.cloud_pct).replace(".", ",")} % nubes` : "") + ")";
   }).catch(() => {});
@@ -453,7 +471,7 @@
   const GRID = 0.005, cellKey = (x, y) => `${Math.floor(x / GRID)},${Math.floor(y / GRID)}`;
   let graphP = null;
   const loadGraph = () => graphP ??= (async () => {
-    const j = await (await fetch(tilesBase + "paths.json")).json();
+    const j = await getData("paths.json");
     const nodes = j.n.map(([x, y]) => [x / 1e5, y / 1e5]);
     const edges = j.e.map(([a, b, , flat]) => {
       const c = []; let x = 0, y = 0;
@@ -574,9 +592,9 @@
     document.getElementById("m-down").textContent = fmtM(down);
     const last = mPoints.at(-1)?.h;
     document.getElementById("m-ele").textContent = last != null ? fmtM(last) : "–";
-    document.getElementById("m-sub").textContent = mPoints.length
+    document.getElementById("m-sub").textContent = (mPoints.length
       ? `${mPoints.length} punto${mPoints.length > 1 ? "s" : ""}. Toca el mapa para seguir añadiendo.`
-      : "Toca el mapa para añadir puntos.";
+      : "Toca el mapa para añadir puntos.") + (pathsWarn ? " ⚠ " + pathsWarn : "");
     document.getElementById("m-undo").disabled = document.getElementById("m-clear").disabled = !mPoints.length;
     document.getElementById("m-gpx").disabled = mPoints.length < 2;
     // Grafico del perfil
@@ -605,6 +623,7 @@
   // En cola: si se toca rapido (o la red va lenta), cada punto espera al anterior para no calcular
   // tramos desde un punto equivocado.
   let mQueue = Promise.resolve();
+  let pathsWarn = "";
   const followEl = document.getElementById("m-follow");
   followEl.checked = lsGet("skimo-follow") !== "0";
   followEl.onchange = () => lsSet("skimo-follow", followEl.checked ? "1" : "0");
@@ -630,6 +649,7 @@
         }
       } catch (e) {
         console.warn("Senderos no disponibles:", e);
+        pathsWarn = "Senderos no disponibles en esta copia: trazado en línea recta. Actualiza los mapas guardados.";
         if (mPoints.length) mSegs.push(await lineSamples([mPoints.at(-1).c, c]));
       }
     } else if (mPoints.length) {
@@ -708,7 +728,7 @@ ${pts}
   const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   let index = null, marker = null, sel = -1, hits = [];
   const q = document.getElementById("q"), list = document.getElementById("results");
-  const loadIndex = async () => index ??= (await (await fetch(tilesBase + "search.json")).json()).map(r => [norm(r[0]), r]);
+  const loadIndex = async () => index ??= (await getData("search.json")).map(r => [norm(r[0]), r]);
   const go = r => {
     const [name, kind, ele, lon, lat] = r;
     list.innerHTML = ""; q.value = name; q.blur();
@@ -853,6 +873,34 @@ ${pts}
     });
     return g.getImageData(0, 0, W, W).data;
   };
+  // ---------- Estaciones meteorologicas (de momento: Cap de Vaqueira, AEMET 9988B) ----------
+  const STATIONS = [{ id: "9988B", name: "Cap de Vaquèira", ele: 2467, lon: 0.97389, lat: 42.69194,
+    url: "https://iot.arantec.com/app/dashboards/public/dashboard/zClCrT6DAE8-0me_YzoEohCdhhez6qfYgnUtPkFRwCI?navbar=false&contextbar=false&layersBar=false&datePicker=true&devicePicker=false&displayTitle=false&filters=false" }];
+  const stPanel = document.getElementById("station");
+  map.on("load", () => {
+    map.addSource("stations", { type: "geojson", data: { type: "FeatureCollection", features: STATIONS.map(s => ({
+      type: "Feature", properties: { id: s.id, label: `${s.name}\n${s.ele} m · estación` }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } })) } });
+    map.addLayer({ id: "stations-dot", type: "circle", source: "stations",
+      paint: { "circle-radius": 8, "circle-color": "#1e3a5f", "circle-stroke-color": "#fff", "circle-stroke-width": 2.5 } });
+    map.addLayer({ id: "stations-label", type: "symbol", source: "stations", minzoom: 10,
+      layout: { "text-field": ["get", "label"], "text-font": ["Noto Sans Medium"], "text-size": 11, "text-anchor": "top", "text-offset": [0, 0.9] },
+      paint: { "text-color": "#1e3a5f", "text-halo-color": "#fff", "text-halo-width": 1.5 } });
+    map.on("click", "stations-dot", e => {
+      if (measuring) return;
+      const s = STATIONS.find(x => x.id === e.features[0].properties.id);
+      document.getElementById("st-frame").src = s.url;
+      document.getElementById("st-open").href = s.url;
+      stPanel.classList.add("on");
+    });
+    map.on("mouseenter", "stations-dot", () => { if (!measuring) map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "stations-dot", () => { if (!measuring) map.getCanvas().style.cursor = ""; });
+  });
+  document.getElementById("st-close").onclick = () => { stPanel.classList.remove("on"); document.getElementById("st-frame").src = "about:blank"; };
+
+  document.getElementById("danger").addEventListener("change", e => {
+    const sa = document.getElementById("slopeaval");
+    if (e.target.checked && sa.checked) sa.click();
+  });
   const emptyPng = (async () => await (await new OffscreenCanvas(1, 1).convertToBlob({ type: "image/png" })).arrayBuffer())();
   maplibregl.addProtocol("danger", async params => {
     const [z, x, y] = params.url.match(/danger:\/\/(\d+)\/(\d+)\/(\d+)/).slice(1).map(Number);
@@ -886,7 +934,12 @@ ${pts}
       if (!hit) continue;
       const lvl = dangerAt(b, h, p), rgb = DANGER_RGB[lvl];
       if (!rgb) continue;
-      o[4 * k] = rgb[0]; o[4 * k + 1] = rgb[1]; o[4 * k + 2] = rgb[2]; o[4 * k + 3] = 200;
+      // Rayado diagonal (distinto de las capas de pendiente): lineas de 3 px cada 8 px, con borde oscuro
+      const s = (i + j) % 8;
+      if (s > 3) continue;
+      const edge = s === 0 || s === 3;
+      o[4 * k] = edge ? rgb[0] * 0.55 : rgb[0]; o[4 * k + 1] = edge ? rgb[1] * 0.55 : rgb[1];
+      o[4 * k + 2] = edge ? rgb[2] * 0.55 : rgb[2]; o[4 * k + 3] = 235;
     }
     g.putImageData(out, 0, 0);
     return { data: await (await c.convertToBlob({ type: "image/png" })).arrayBuffer() };

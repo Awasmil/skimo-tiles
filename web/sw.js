@@ -28,9 +28,11 @@ self.addEventListener("fetch", e => {
     })));
     return;
   }
-  // Mismo origen: red primero (ver cambios al momento); sin red, lo guardado (cualquier cache)
+  // Mismo origen: red primero (ver cambios al momento); sin red o si el servidor ya no lo tiene
+  // (p. ej. carpeta de una version antigua), lo guardado en cualquier cache.
+  const fromCache = async fallback => (await caches.match(req, { ignoreSearch: true })) || fallback || Response.error();
   e.respondWith(fetch(req).then(res => {
-    if (res.ok) { const copy = res.clone(); caches.open(RUNTIME).then(c => c.put(req, copy)); }
-    return res;
-  }).catch(async () => (await caches.match(req, { ignoreSearch: true })) || Response.error()));
+    if (res.ok) { const copy = res.clone(); caches.open(RUNTIME).then(c => c.put(req, copy)); return res; }
+    return fromCache(res);
+  }).catch(() => fromCache()));
 });
