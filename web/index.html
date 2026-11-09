@@ -77,6 +77,9 @@
   </div>
   <div class="m-sub" id="m-sub">Toca el mapa para añadir puntos.</div>
   <svg class="profile" id="m-profile" viewBox="0 0 300 56" preserveAspectRatio="none"></svg>
+  <div class="m-sub">Color de la ruta = inclinación del tramo</div>
+  <div style="height:8px;border-radius:3px;margin-top:2px;background:linear-gradient(90deg,#2ea043 0%,#c8dc3c 33%,#ffe628 50%,#ff9600 67%,#e63228 83%,#9a1466 100%)"></div>
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)"><span>0°</span><span>10°</span><span>15°</span><span>20°</span><span>25°</span><span>30°+</span></div>
   <div class="m-sub">Desnivel estimado con el modelo de terreno (~15 m), no medido.</div>
   <div class="m-btns">
     <button id="m-undo" disabled>Deshacer</button>
@@ -357,16 +360,31 @@
   const segmentSamples = async (a, b) => {
     const len = haversine(a, b), steps = Math.max(1, Math.ceil(len / SAMPLE)), out = [];
     for (let i = 1; i <= steps; i++) {
-      const f = i / steps;
-      out.push({ d: len * f, h: await elevation([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]) });
+      const f = i / steps, c = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+      out.push({ d: len * f, h: await elevation(c), c });
     }
     return out;
+  };
+
+  // Tramos de ~25 m coloreados por su inclinacion (grados, subiendo o bajando), suavizada con los vecinos
+  const gradeFeatures = () => {
+    const pieces = [];
+    mSegs.forEach((seg, k) => {
+      let prev = { c: mPoints[k].c, h: mPoints[k].h, d: 0 };
+      for (const s of seg) { pieces.push({ a: prev.c, b: s.c, dd: s.d - prev.d, dh: (s.h ?? 0) - (prev.h ?? 0), ok: s.h != null && prev.h != null }); prev = s; }
+    });
+    return pieces.map((p, i) => {
+      let dh = 0, dd = 0;
+      for (let j = Math.max(0, i - 1); j <= Math.min(pieces.length - 1, i + 1); j++) if (pieces[j].ok) { dh += pieces[j].dh; dd += pieces[j].dd; }
+      const deg = dd > 0 ? Math.atan(Math.abs(dh) / dd) * 180 / Math.PI : 0;
+      return { type: "Feature", properties: { deg }, geometry: { type: "LineString", coordinates: [p.a, p.b] } };
+    });
   };
 
   const renderMeasure = () => {
     const src = map.getSource("measure");
     src?.setData({ type: "FeatureCollection", features: [
-      ...(mPoints.length > 1 ? [{ type: "Feature", geometry: { type: "LineString", coordinates: mPoints.map(p => p.c) } }] : []),
+      ...gradeFeatures(),
       ...mPoints.map((p, i) => ({ type: "Feature", properties: { i }, geometry: { type: "Point", coordinates: p.c } }))
     ] });
     // Perfil acumulado
@@ -437,8 +455,12 @@ ${pts}
   map.on("click", e => { if (measuring) addPoint([e.lngLat.lng, e.lngLat.lat]); });
   map.on("load", () => {
     map.addSource("measure", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addLayer({ id: "measure-casing", type: "line", source: "measure", filter: ["==", ["geometry-type"], "LineString"],
+      layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#ffffff", "line-width": 7 } });
     map.addLayer({ id: "measure-line", type: "line", source: "measure", filter: ["==", ["geometry-type"], "LineString"],
-      paint: { "line-color": "#e31a1c", "line-width": 3, "line-dasharray": [2, 1] } });
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-width": 4.5, "line-color": ["interpolate", ["linear"], ["get", "deg"],
+        0, "#2ea043", 10, "#c8dc3c", 15, "#ffe628", 20, "#ff9600", 25, "#e63228", 30, "#9a1466"] } });
     map.addLayer({ id: "measure-pts", type: "circle", source: "measure", filter: ["==", ["geometry-type"], "Point"],
       paint: { "circle-radius": 5, "circle-color": "#fff", "circle-stroke-color": "#e31a1c", "circle-stroke-width": 2.5 } });
   });
