@@ -76,7 +76,10 @@
     <div><span>Altitud</span><b id="m-ele">–</b></div>
   </div>
   <div class="m-sub" id="m-sub">Toca el mapa para añadir puntos.</div>
-  <svg class="profile" id="m-profile" viewBox="0 0 300 56" preserveAspectRatio="none"></svg>
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px">
+    <span>Mín. <b id="m-hmin">–</b></span><span>Máx. <b id="m-hmax">–</b></span>
+  </div>
+  <svg class="profile" id="m-profile" viewBox="0 0 300 56" preserveAspectRatio="none" style="margin-top:2px"></svg>
   <div class="m-sub">Color de la ruta = inclinación del tramo</div>
   <div style="height:8px;border-radius:3px;margin-top:2px;background:linear-gradient(90deg,#2ea043 0%,#c8dc3c 33%,#ffe628 50%,#ff9600 67%,#e63228 83%,#9a1466 100%)"></div>
   <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)"><span>0°</span><span>10°</span><span>15°</span><span>20°</span><span>25°</span><span>30°+</span></div>
@@ -381,16 +384,30 @@
     });
   };
 
+  // Mismos colores que la linea del mapa (interpolate en grados)
+  const GRADE_STOPS = [[0, [46, 160, 67]], [10, [200, 220, 60]], [15, [255, 230, 40]], [20, [255, 150, 0]], [25, [230, 50, 40]], [30, [154, 20, 102]]];
+  const gradeColor = deg => {
+    const d = Math.max(0, Math.min(30, deg));
+    for (let i = 1; i < GRADE_STOPS.length; i++) {
+      const [d0, c0] = GRADE_STOPS[i - 1], [d1, c1] = GRADE_STOPS[i];
+      if (d <= d1) { const t = (d - d0) / (d1 - d0); return `rgb(${c0.map((v, k) => Math.round(v + (c1[k] - v) * t)).join(",")})`; }
+    }
+    return "rgb(154,20,102)";
+  };
+
   const renderMeasure = () => {
     const src = map.getSource("measure");
+    const grades = gradeFeatures();
     src?.setData({ type: "FeatureCollection", features: [
-      ...gradeFeatures(),
+      ...grades,
       ...mPoints.map((p, i) => ({ type: "Feature", properties: { i }, geometry: { type: "Point", coordinates: p.c } }))
     ] });
     // Perfil acumulado
-    const prof = []; let dist = 0;
+    const prof = []; let dist = 0; const wpDist = [0];
     if (mPoints.length) prof.push({ d: 0, h: mPoints[0].h });
-    mSegs.forEach(seg => { seg.forEach(s => prof.push({ d: dist + s.d, h: s.h })); dist += seg.at(-1)?.d ?? 0; });
+    mSegs.forEach(seg => { seg.forEach(s => prof.push({ d: dist + s.d, h: s.h })); dist += seg.at(-1)?.d ?? 0; wpDist.push(dist); });
+    // prof[i] -> prof[i+1] es el tramo grades[i] (mismo orden que la linea del mapa)
+    prof.forEach((p, i) => { if (i > 0) p.deg = grades[i - 1]?.properties.deg ?? 0; });
     let up = 0, down = 0, prev = null;
     for (const p of prof) { if (p.h == null) continue; if (prev != null) { const dh = p.h - prev; if (dh > 0) up += dh; else down -= dh; } prev = p.h; }
     document.getElementById("m-dist").textContent = fmtDist(dist);
@@ -405,14 +422,25 @@
     document.getElementById("m-gpx").disabled = mPoints.length < 2;
     // Grafico del perfil
     const svg = document.getElementById("m-profile"), hs = prof.filter(p => p.h != null);
-    if (hs.length < 2 || dist === 0) { svg.innerHTML = ""; return; }
+    if (hs.length < 2 || dist === 0) {
+      svg.innerHTML = ""; document.getElementById("m-hmax").textContent = document.getElementById("m-hmin").textContent = "–"; return;
+    }
     const hMin = Math.min(...hs.map(p => p.h)), hMax = Math.max(...hs.map(p => p.h)), span = Math.max(hMax - hMin, 20);
-    const X = d => (d / dist) * 300, Y = h => 52 - ((h - hMin) / span) * 46;
+    const X = d => (d / dist) * 300, Y = h => 50 - ((h - hMin) / span) * 40;
+    // Relleno por tramos con el color de la inclinacion
+    let fill = "";
+    for (let i = 1; i < prof.length; i++) {
+      const a = prof[i - 1], b = prof[i];
+      if (a.h == null || b.h == null) continue;
+      const x1 = X(a.d).toFixed(1), x2 = (X(b.d) + 0.4).toFixed(1);
+      fill += `<polygon points="${x1},56 ${x1},${Y(a.h).toFixed(1)} ${x2},${Y(b.h).toFixed(1)} ${x2},56" fill="${gradeColor(b.deg)}" fill-opacity=".85"/>`;
+    }
     const line = hs.map(p => `${X(p.d).toFixed(1)},${Y(p.h).toFixed(1)}`).join(" ");
-    svg.innerHTML = `<polygon points="0,56 ${line} 300,56" fill="rgba(227,26,28,.18)"/>
-      <polyline points="${line}" fill="none" stroke="#e31a1c" stroke-width="2" vector-effect="non-scaling-stroke"/>
-      <text x="2" y="10" font-size="9" fill="currentColor" opacity=".7">${Math.round(hMax)} m</text>
-      <text x="2" y="54" font-size="9" fill="currentColor" opacity=".7">${Math.round(hMin)} m</text>`;
+    const marks = wpDist.map(d => `<line x1="${X(d).toFixed(1)}" x2="${X(d).toFixed(1)}" y1="0" y2="56" stroke="currentColor" stroke-opacity=".35" stroke-width="1" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>`).join("");
+    svg.innerHTML = `${fill}${marks}
+      <polyline points="${line}" fill="none" stroke="#3b2a1a" stroke-width="1.2" vector-effect="non-scaling-stroke"/>`;
+    document.getElementById("m-hmax").textContent = fmtM(hMax);
+    document.getElementById("m-hmin").textContent = fmtM(hMin);
   };
 
   // En cola: si se toca rapido (o la red va lenta), cada punto espera al anterior para no calcular
