@@ -328,7 +328,7 @@
         satwinter: { type: "raster", url: pm("aran-sat-winter.pmtiles"), tileSize: 256,
           attribution: "Contiene datos modificados de Copernicus Sentinel-2" },
         aspect: { type: "raster", url: pm("aran-aspect.pmtiles"), tileSize: 256 },
-        danger: { type: "raster", tiles: ["danger://{z}/{x}/{y}?v=0"], tileSize: 256, minzoom: 9, maxzoom: 13,
+        danger: { type: "raster", tiles: ["danger://{z}/{x}/{y}?v=0"], tileSize: 256, minzoom: 9, maxzoom: 16,
           bounds: [0.40, 42.50, 1.40, 42.92],
           attribution: "Boletín © <a href='https://lauegi.report'>Centre de Lauegi d'Aran</a> (CC BY 4.0)" }
       },
@@ -1280,41 +1280,66 @@ ${pts}
     if (e.target.checked && sa.checked) sa.click();
   });
   const emptyPng = (async () => await (await new OffscreenCanvas(1, 1).convertToBlob({ type: "image/png" })).arrayBuffer())();
+  // Pendiente, orientacion y cota de una tesela de relieve z13 (se guarda: se reutiliza al acercar el zoom)
+  const TZMAX = 13, gradCache = new Map();
+  const terrainGrad = (x, y) => {
+    const key = x + "/" + y;
+    if (!gradCache.has(key)) {
+      if (gradCache.size > 48) gradCache.delete(gradCache.keys().next().value);
+      gradCache.set(key, (async () => {
+        const r = await terrainFile.getZxy(TZMAX, x, y); if (!r) return null;
+        const bmp = await createImageBitmap(new Blob([r.data])), W = bmp.width;
+        const c = new OffscreenCanvas(W, W), g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(bmp, 0, 0);
+        const src = g.getImageData(0, 0, W, W).data, H = new Float32Array(W * W), GX = new Float32Array(W * W), GY = new Float32Array(W * W);
+        for (let i = 0; i < W * W; i++) H[i] = -10000 + (src[4 * i] * 65536 + src[4 * i + 1] * 256 + src[4 * i + 2]) * 0.1;
+        const n = 2 ** TZMAX, latC = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + 0.5) / n))) * 180 / Math.PI;
+        const res = 156543.03392 * Math.cos(latC * Math.PI / 180) / n * (256 / W);
+        for (let j = 0; j < W; j++) for (let i = 0; i < W; i++) {
+          const k = j * W + i;
+          GX[k] = (H[j * W + Math.min(W - 1, i + 1)] - H[j * W + Math.max(0, i - 1)]) / (((i > 0) + (i < W - 1)) * res);
+          GY[k] = (H[Math.min(W - 1, j + 1) * W + i] - H[Math.max(0, j - 1) * W + i]) / (((j > 0) + (j < W - 1)) * res);
+        }
+        return { W, H, GX, GY };
+      })());
+    }
+    return gradCache.get(key);
+  };
+  // Valor bilineal de un campo de la tesela en coordenadas de pixel continuas
+  const sample = (A, W, fx, fy) => {
+    fx = Math.max(0, Math.min(W - 1, fx - 0.5)); fy = Math.max(0, Math.min(W - 1, fy - 0.5));
+    const x0 = Math.floor(fx), y0 = Math.floor(fy), x1 = Math.min(W - 1, x0 + 1), y1 = Math.min(W - 1, y0 + 1), tx = fx - x0, ty = fy - y0;
+    return (A[y0 * W + x0] * (1 - tx) + A[y0 * W + x1] * tx) * (1 - ty) + (A[y1 * W + x0] * (1 - tx) + A[y1 * W + x1] * tx) * ty;
+  };
+
+  // Se dibuja a la resolucion de pantalla (hasta z16) interpolando el relieve: bordes suaves y rayas finas
   maplibregl.addProtocol("danger", async params => {
     const [z, x, y] = params.url.match(/danger:\/\/(\d+)\/(\d+)\/(\d+)/).slice(1).map(Number);
     const bs = bulletins;
     if (!bs) return { data: await emptyPng };
-    const r = await terrainFile.getZxy(z, x, y);
-    if (!r) return { data: await emptyPng };
-    const bmp = await createImageBitmap(new Blob([r.data])), W = bmp.width;
-    const c = new OffscreenCanvas(W, W), g = c.getContext("2d", { willReadFrequently: true });
-    g.drawImage(bmp, 0, 0);
-    const src = g.getImageData(0, 0, W, W).data, H = new Float32Array(W * W);
-    for (let i = 0; i < W * W; i++) H[i] = -10000 + (src[4 * i] * 65536 + src[4 * i + 1] * 256 + src[4 * i + 2]) * 0.1;
-    const n = 2 ** z, latC = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + 0.5) / n))) * 180 / Math.PI;
-    const res = 156543.03392 * Math.cos(latC * Math.PI / 180) / n * (256 / W);   // metros reales por pixel
-    const reg = regionRaster(z, x, y, W, bs);
+    const dz = Math.max(0, z - TZMAX), px = x >> dz, py = y >> dz, f = 2 ** dz;
+    const t = await terrainGrad(px, py);
+    if (!t) return { data: await emptyPng };
+    const W = t.W, OUT = 256, c = new OffscreenCanvas(OUT, OUT), g = c.getContext("2d");
+    const offX = (x - px * f) * W / f, offY = (y - py * f) * W / f, sc = W / f / OUT;
+    const reg = regionRaster(z, x, y, OUT, bs);
     const hasLater = bs.some(b => b.dangerRatings.some(q => q.validTimePeriod === "later"));
     const p = hasLater ? bulPeriod : "all_day";
-    const out = g.createImageData(W, W), o = out.data;
-    for (let j = 0; j < W; j++) for (let i = 0; i < W; i++) {
-      const k = j * W + i, h = H[k];
-      const l = H[j * W + Math.max(0, i - 1)], rr = H[j * W + Math.min(W - 1, i + 1)];
-      const u = H[Math.max(0, j - 1) * W + i], d = H[Math.min(W - 1, j + 1) * W + i];
-      const gx = (rr - l) / (((i > 0) + (i < W - 1)) * res), gy = (d - u) / (((j > 0) + (j < W - 1)) * res);
+    const out = g.createImageData(OUT, OUT), o = out.data;
+    for (let j = 0; j < OUT; j++) for (let i = 0; i < OUT; i++) {
+      // Rayado diagonal de 3 px cada 8 px de pantalla, con borde oscuro (distinto de las capas de pendiente)
+      const s = (i + j) % 8; if (s > 3) continue;
+      const fx = offX + (i + 0.5) * sc, fy = offY + (j + 0.5) * sc;
+      const gx = sample(t.GX, W, fx, fy), gy = sample(t.GY, W, fx, fy);
       if (Math.atan(Math.hypot(gx, gy)) * 180 / Math.PI < 30) continue;
-      const az = (Math.atan2(-gx, gy) * 180 / Math.PI + 360) % 360;
-      const sector = SECTORS[Math.round(az / 45) % 8];
-      const b = reg ? bs[reg[4 * k] - 1] : bs[0];
+      const h = sample(t.H, W, fx, fy);
+      const sector = SECTORS[Math.round(((Math.atan2(-gx, gy) * 180 / Math.PI + 360) % 360) / 45) % 8];
+      const k = j * OUT + i, b = reg ? bs[reg[4 * k] - 1] : bs[0];
       if (!b) continue;
       const hit = b.avalancheProblems.some(q => inPeriod(q, p) && (q.aspects || []).includes(sector) && inBand(h, q.elevation)
         && !["favourable_situation", "no_distinct_avalanche_problem"].includes(q.problemType));
       if (!hit) continue;
-      const lvl = dangerAt(b, h, p), rgb = DANGER_RGB[lvl];
+      const rgb = DANGER_RGB[dangerAt(b, h, p)];
       if (!rgb) continue;
-      // Rayado diagonal (distinto de las capas de pendiente): lineas de 3 px cada 8 px, con borde oscuro
-      const s = (i + j) % 8;
-      if (s > 3) continue;
       const edge = s === 0 || s === 3;
       o[4 * k] = edge ? rgb[0] * 0.55 : rgb[0]; o[4 * k + 1] = edge ? rgb[1] * 0.55 : rgb[1];
       o[4 * k + 2] = edge ? rgb[2] * 0.55 : rgb[2]; o[4 * k + 3] = 235;
