@@ -55,6 +55,22 @@ jobs:
           done
           du -sh site; ls -lh "site/$DIR"
 
+      - name: Mapa base vectorial (recorte de Protomaps/OSM para Aran)
+        run: |
+          if curl -fsSL --retry 3 --retry-all-errors -o pmtiles.tar.gz               https://github.com/protomaps/go-pmtiles/releases/download/v1.28.0/go-pmtiles_1.28.0_Linux_x86_64.tar.gz; then
+            tar -xzf pmtiles.tar.gz pmtiles
+          else
+            GOBIN="$PWD" go install github.com/protomaps/go-pmtiles@v1.28.0 && mv go-pmtiles pmtiles
+          fi
+          BUILD=$(curl -fsS --retry 3 https://build-metadata.protomaps.dev/builds.json | python3 -c "import json,sys; print(json.load(sys.stdin)[-1]['key'])")
+          echo "Protomaps: $BUILD"
+          ./pmtiles extract "https://build.protomaps.com/$BUILD" "site/$TILES_DIR/aran-base.pmtiles"             --bbox=0.40,42.50,1.40,42.92 --maxzoom=15
+          ls -lh "site/$TILES_DIR/aran-base.pmtiles"
+          mkdir -p site/sprites
+          for f in light.json light.png light@2x.json light@2x.png; do
+            curl -fsS --retry 3 -o "site/sprites/$f" "https://protomaps.github.io/basemaps-assets/sprites/v4/$f"
+          done
+
       - name: Zonas de aludes ICGC a teselas vectoriales
         continue-on-error: true
         run: |
@@ -82,6 +98,16 @@ jobs:
               curl -fsS --retry 3 -o "site/fonts/$f/$r.pbf"                 "https://protomaps.github.io/basemaps-assets/fonts/${f// /%20}/$r.pbf" || echo "sin $f $r"
             done
           done
+
+      - name: Lista de ficheros para guardar sin conexion
+        run: |
+          cd "site/$TILES_DIR"
+          python3 - <<'PY2'
+          import json, os
+          files = sorted(f for f in os.listdir(".") if f.endswith((".pmtiles", ".json")) and f != "offline.json")
+          json.dump([{"name": f, "size": os.path.getsize(f)} for f in files], open("offline.json", "w"))
+          print(sum(os.path.getsize(f) for f in files) // 2**20, "MB para guardar sin conexion")
+          PY2
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
