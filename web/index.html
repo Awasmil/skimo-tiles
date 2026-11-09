@@ -880,10 +880,24 @@ ${pts}
   map.on("load", () => {
     map.addSource("stations", { type: "geojson", data: { type: "FeatureCollection", features: STATIONS.map(s => ({
       type: "Feature", properties: { id: s.id, label: `${s.name}\n${s.ele} m · estación` }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } })) } });
-    map.addLayer({ id: "stations-dot", type: "circle", source: "stations",
-      paint: { "circle-radius": 8, "circle-color": "#1e3a5f", "circle-stroke-color": "#fff", "circle-stroke-width": 2.5 } });
+    // Icono de termometro dibujado aqui (sin depender de fuentes de emoji)
+    const S = 64, cv = document.createElement("canvas"); cv.width = cv.height = S;
+    const g = cv.getContext("2d");
+    g.fillStyle = "#1e3a5f"; g.strokeStyle = "#fff"; g.lineWidth = 4;
+    g.beginPath(); g.arc(S / 2, S / 2, S / 2 - 3, 0, 2 * Math.PI); g.fill(); g.stroke();
+    g.fillStyle = "#fff";
+    g.beginPath(); g.arc(S / 2, S * 0.68, S * 0.12, 0, 2 * Math.PI); g.fill();               // bulbo
+    g.beginPath(); g.roundRect(S / 2 - S * 0.06, S * 0.2, S * 0.12, S * 0.46, S * 0.06); g.fill(); // tubo
+    g.fillStyle = "#e31a1c";
+    g.beginPath(); g.arc(S / 2, S * 0.68, S * 0.075, 0, 2 * Math.PI); g.fill();              // mercurio
+    g.fillRect(S / 2 - S * 0.025, S * 0.38, S * 0.05, S * 0.3);
+    g.strokeStyle = "#fff"; g.lineWidth = 2;
+    for (const yy of [0.28, 0.36, 0.44]) { g.beginPath(); g.moveTo(S / 2 + S * 0.09, S * yy); g.lineTo(S / 2 + S * 0.16, S * yy); g.stroke(); }
+    map.addImage("thermometer", g.getImageData(0, 0, S, S), { pixelRatio: 2 });
+    map.addLayer({ id: "stations-dot", type: "symbol", source: "stations",
+      layout: { "icon-image": "thermometer", "icon-allow-overlap": true, "icon-ignore-placement": true } });
     map.addLayer({ id: "stations-label", type: "symbol", source: "stations", minzoom: 10,
-      layout: { "text-field": ["get", "label"], "text-font": ["Noto Sans Medium"], "text-size": 11, "text-anchor": "top", "text-offset": [0, 0.9] },
+      layout: { "text-field": ["get", "label"], "text-font": ["Noto Sans Medium"], "text-size": 11, "text-anchor": "top", "text-offset": [0, 1.4] },
       paint: { "text-color": "#1e3a5f", "text-halo-color": "#fff", "text-halo-width": 1.5 } });
     map.on("click", "stations-dot", e => {
       if (measuring) return;
