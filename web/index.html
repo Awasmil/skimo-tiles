@@ -758,10 +758,11 @@ ${pts}
   const SECTORS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   const SECTOR_ES = { N: "N", NE: "NE", E: "E", SE: "SE", S: "S", SW: "SO", W: "O", NW: "NO" };
   const elevOf = v => v == null ? null : v === "treeline" ? TREELINE : Number(v);
-  const bound = v => v === "treeline" ? "el límite del bosque (~2200 m)" : `${v} m`;
+  const TL = "límite del bosque (~2200 m)";
   const elevTxt = e => !e || (!e.lowerBound && !e.upperBound) ? "en todas las cotas"
-    : e.lowerBound && e.upperBound ? `entre ${bound(e.lowerBound)} y ${bound(e.upperBound)}`
-    : e.lowerBound ? `por encima de ${bound(e.lowerBound)}` : `por debajo de ${bound(e.upperBound)}`;
+    : e.lowerBound && e.upperBound ? `entre ${e.lowerBound === "treeline" ? "el " + TL : e.lowerBound + " m"} y ${e.upperBound === "treeline" ? "el " + TL : e.upperBound + " m"}`
+    : e.lowerBound ? `por encima ${e.lowerBound === "treeline" ? "del " + TL : "de " + e.lowerBound + " m"}`
+    : `por debajo ${e.upperBound === "treeline" ? "del " + TL : "de " + e.upperBound + " m"}`;
   const inBand = (h, e) => (!e || ((elevOf(e.lowerBound) ?? -1e9) <= h && h < (elevOf(e.upperBound) ?? 1e9)));
   const inPeriod = (x, p) => !x.validTimePeriod || x.validTimePeriod === "all_day" || x.validTimePeriod === p;
   const isoDay = d => d.toLocaleDateString("sv-SE", { timeZone: "Europe/Madrid" });
