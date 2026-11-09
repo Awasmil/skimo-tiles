@@ -89,6 +89,7 @@ jobs:
           ogr2ogr -f PMTiles -nln osm -dsco MINZOOM=9 -dsco MAXZOOM=15             "site/$TILES_DIR/aran-osm.pmtiles" osm.geojson
           ls -lh "site/$TILES_DIR/aran-osm.pmtiles"
           python3 scripts/search_index.py osm.geojson "site/$TILES_DIR/search.json"
+          python3 scripts/paths_graph.py "42.50,0.40,42.92,1.40" "site/$TILES_DIR/paths.json"
 
       - name: Tipografias para las etiquetas (alojadas aqui para que funcionen sin depender de terceros)
         run: |
