@@ -65,6 +65,19 @@
   .legend .ramp { height: 10px; border-radius: 3px; margin: 4px 0 2px; }
   .legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
   .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .calbtn { flex: 1; min-height: 32px; border: 1px solid rgba(127,127,127,.4); border-radius: 8px; background: transparent;
+    color: var(--fg); font: 13px system-ui, -apple-system, sans-serif; text-align: left; padding: 0 8px; cursor: pointer; }
+  .cal { margin-top: 6px; border: 1px solid rgba(127,127,127,.3); border-radius: 10px; padding: 6px; }
+  .cal .hd { display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .cal .hd button { border: 0; background: none; font-size: 18px; color: var(--fg); cursor: pointer; padding: 0 8px; }
+  .cal .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal .wd { font-size: 10px; color: var(--muted); text-align: center; }
+  .cal .d { border: 0; border-radius: 6px; min-height: 26px; font: 12px system-ui, -apple-system, sans-serif; cursor: pointer;
+    background: rgba(127,127,127,.1); color: var(--fg); }
+  .cal .d.lv { color: #111; font-weight: 600; }
+  .cal .d.today { outline: 2px solid var(--accent); }
+  .cal .d.sel { box-shadow: inset 0 0 0 2px #111; }
+  .cal .note { margin-top: 4px; }
   .legend span.hatch { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6px); outline: 1px solid rgba(0,0,0,.25); }
   .wxbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(34px, calc(env(safe-area-inset-bottom) + 24px));
     width: min(440px, calc(100% - 20px)); box-sizing: border-box; background: var(--bg); border-radius: 12px;
@@ -211,9 +224,11 @@
   <div class="note" style="margin-top:2px">Malla sobre Aran, a la altura real del terreno. Para comparar modelos en un punto, usa el botón de la nube.</div>
   <h2>Aludes · Lauegi</h2>
   <div class="bul-ctrls">
-    <input type="date" id="bul-date" aria-label="Fecha del boletín">
+    <input type="hidden" id="bul-date">
+    <button type="button" id="bul-cal-btn" class="calbtn" aria-haspopup="dialog">–</button>
     <select id="bul-period" aria-label="Momento del día" hidden><option value="earlier">Mañana</option><option value="later">Tarde</option></select>
   </div>
+  <div class="cal" id="bul-cal" hidden role="dialog" aria-label="Calendario de boletines"></div>
   <div class="bul" id="bul">Cargando boletín…</div>
   <label><input type="checkbox" id="danger" checked> Rayar caras con problema (≥30°)</label>
   <div class="legend on" id="legend-danger">
@@ -877,7 +892,9 @@ ${pts}
     box.innerHTML = html;
   };
 
+  let bulDateHook = () => {};   // lo asigna el calendario (boton con la fecha y su nivel)
   const loadBulletin = async (day, isToday) => {
+    bulDateHook();
     document.getElementById("bul").textContent = "Cargando boletín…";
     const res = await fetchBulletin(day);
     bulletins = res?.j?.bulletins || null;
@@ -893,6 +910,41 @@ ${pts}
   periodEl.value = bulPeriod;
   periodEl.onchange = () => { bulPeriod = periodEl.value; loadBulletin(dateEl.value, dateEl.value === todayIso || dateEl.value === tomorrowIso); };
   dateEl.onchange = () => loadBulletin(dateEl.value, dateEl.value === todayIso || dateEl.value === tomorrowIso);
+
+  // Calendario propio: cada dia con el color del nivel maximo de su boletin (resumen levels.json del historico)
+  const calBtn = document.getElementById("bul-cal-btn"), calBox = document.getElementById("bul-cal");
+  let levels = JSON.parse(lsGet("skimo-levels") || "{}"), calMonth = null;
+  fetch("https://raw.githubusercontent.com/Awasmil/skimo-tiles/main/data/bulletins/levels.json", { cache: "no-cache" })
+    .then(r => r.ok ? r.json() : null).then(j => { if (j) { levels = j; lsSet("skimo-levels", JSON.stringify(j)); if (!calBox.hidden) renderCal(); } }).catch(() => {});
+  const setCalBtn = () => {
+    const d = dateEl.value, lv = levels[d];
+    calBtn.innerHTML = `${new Date(d + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}`
+      + (lv ? ` <span class="lvl" style="background:rgb(${DANGER_RGB[lv]});padding:0 6px;border-radius:4px;color:#111;font-weight:700">${lv}</span>` : "") + " ▾";
+  };
+  const renderCal = () => {
+    const [y, m] = calMonth, first = new Date(y, m, 1), days = new Date(y, m + 1, 0).getDate(), lead = (first.getDay() + 6) % 7;
+    let h = `<div class="hd"><button type="button" data-nav="-1" aria-label="Mes anterior">‹</button>`
+      + `<span>${first.toLocaleDateString("es-ES", { month: "long", year: "numeric" })}</span>`
+      + `<button type="button" data-nav="1" aria-label="Mes siguiente">›</button></div><div class="grid">`
+      + ["L", "M", "X", "J", "V", "S", "D"].map(w => `<div class="wd">${w}</div>`).join("") + "<div></div>".repeat(lead);
+    for (let d = 1; d <= days; d++) {
+      const iso = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`, lv = levels[iso];
+      h += `<button type="button" class="d${lv ? " lv" : ""}${iso === todayIso ? " today" : ""}${iso === dateEl.value ? " sel" : ""}" data-day="${iso}"`
+        + (lv ? ` style="background:rgb(${DANGER_RGB[lv]})" title="Nivel ${DANGER_NAME[lv]}"` : ` title="Sin boletín guardado"`) + `>${d}</button>`;
+    }
+    calBox.innerHTML = h + `</div><div class="note">Color = nivel máximo del día. Gris = sin boletín guardado.</div>`;
+  };
+  calBtn.onclick = () => {
+    if (calBox.hidden) { const d = new Date((dateEl.value || todayIso) + "T12:00"); calMonth = [d.getFullYear(), d.getMonth()]; renderCal(); }
+    calBox.hidden = !calBox.hidden;
+  };
+  calBox.onclick = e => {
+    const nav = e.target.closest("[data-nav]"), day = e.target.closest("[data-day]");
+    if (nav) { const dt = new Date(calMonth[0], calMonth[1] + Number(nav.dataset.nav), 1); calMonth = [dt.getFullYear(), dt.getMonth()]; renderCal(); }
+    if (day) { dateEl.value = day.dataset.day; calBox.hidden = true; setCalBtn(); dateEl.dispatchEvent(new Event("change")); }
+  };
+  bulDateHook = setCalBtn;
+  if (dateEl.value) setCalBtn();
   (async () => {
     const after17 = Number(new Date().toLocaleString("en-GB", { hour: "2-digit", hour12: false, timeZone: "Europe/Madrid" })) >= 17;
     const first = after17 && (await fetchBulletin(tomorrowIso)) ? tomorrowIso : todayIso;
