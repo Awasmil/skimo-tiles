@@ -65,6 +65,14 @@
   .legend .ramp { height: 10px; border-radius: 3px; margin: 4px 0 2px; }
   .legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
   .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .bul-ctrls { display: flex; gap: 6px; }
+  .bul-ctrls input, .bul-ctrls select { flex: 1; min-height: 32px; border: 1px solid rgba(127,127,127,.4); border-radius: 8px;
+    background: transparent; color: var(--fg); font: 13px system-ui, -apple-system, sans-serif; padding: 0 6px; }
+  .bul { font-size: 12px; margin: 6px 0 4px; }
+  .bul .lvl { display: inline-block; padding: 2px 8px; border-radius: 6px; font-weight: 700; color: #111; }
+  .bul .warn { color: #c0392b; font-weight: 600; }
+  .bul ul { margin: 4px 0; padding-left: 16px; }
+  .bul .src { color: var(--muted); font-size: 11px; }
   .offbtn { width: 100%; min-height: 40px; margin-top: 6px; border: 0; border-radius: 10px; background: #1e3a5f; color: #fff;
     font: 600 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
   .offbtn:disabled { opacity: .5; }
@@ -150,6 +158,18 @@
     <div><span style="background:#8d6e63;border-radius:50%"></span>Cabaña / abrigo</div>
     <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente</div>
   </div>
+  <h2>Aludes · Lauegi</h2>
+  <div class="bul-ctrls">
+    <input type="date" id="bul-date" aria-label="Fecha del boletín">
+    <select id="bul-period" aria-label="Momento del día" hidden><option value="earlier">Mañana</option><option value="later">Tarde</option></select>
+  </div>
+  <div class="bul" id="bul">Cargando boletín…</div>
+  <label><input type="checkbox" id="danger" checked> Sombrear caras con problema (≥30°)</label>
+  <div class="legend on" id="legend-danger">
+    <div><span style="background:#ccff66"></span>1 Débil <span style="background:#ffff00;margin-left:6px"></span>2 Limitado <span style="background:#ff9900;margin-left:6px"></span>3 Notable</div>
+    <div><span style="background:#ff0000"></span>4 Fuerte <span style="background:#800000;margin-left:6px"></span>5 Muy fuerte</div>
+    <div style="color:var(--muted)">Solo laderas ≥30° cuya orientación y cota coinciden con un problema del boletín. Límite del bosque estimado en 2200 m.</div>
+  </div>
   <h2>Sin conexión</h2>
   <div class="note" id="off-status" style="margin-top:0">Comprobando…</div>
   <div class="offbar" id="off-bar"><div></div></div>
@@ -227,7 +247,10 @@
         slopeaval: { type: "raster", url: pm("aran-slope-aval.pmtiles"), tileSize: 256 },
         satwinter: { type: "raster", url: pm("aran-sat-winter.pmtiles"), tileSize: 256,
           attribution: "Contiene datos modificados de Copernicus Sentinel-2" },
-        aspect: { type: "raster", url: pm("aran-aspect.pmtiles"), tileSize: 256 }
+        aspect: { type: "raster", url: pm("aran-aspect.pmtiles"), tileSize: 256 },
+        danger: { type: "raster", tiles: ["danger://{z}/{x}/{y}?v=0"], tileSize: 256, minzoom: 9, maxzoom: 13,
+          bounds: [0.40, 42.50, 1.40, 42.92],
+          attribution: "Boletín © <a href='https://lauegi.report'>Centre de Lauegi d'Aran</a> (CC BY 4.0)" }
       },
       layers: [
         // Mapa base vectorial (OSM via Protomaps), sin sus puntos de interes: ya tenemos los nuestros
@@ -257,6 +280,9 @@
         { id: "avalanche-line-dash", type: "line", source: "avalanche", "source-layer": "aludes", layout: { visibility: "none" },
           filter: ["==", ["get", "tipufoto"], 2],
           paint: { "line-color": "#b07d10", "line-width": 0.9, "line-dasharray": [3, 2] } },
+
+        // Caras con problema segun el boletin del dia (se calcula en el navegador a partir del relieve)
+        { id: "danger", type: "raster", source: "danger", paint: { "raster-opacity": 0.7, "raster-resampling": "nearest", "raster-fade-duration": 0 } },
 
         // Curvas de nivel (cada 20 m; maestras cada 100 m)
         { id: "contours-minor", type: "line", source: "contours", "source-layer": "contours", minzoom: 13,
@@ -359,7 +385,7 @@
   const groups = {
     hillshade: ["hillshade"], slope: ["slope"], slopeaval: ["slopeaval"], aspect: ["aspect"],
     avalanche: ["avalanche", "avalanche-line", "avalanche-line-dash"],
-    contours: ["contours-minor", "contours-major", "contours-label"],
+    contours: ["contours-minor", "contours-major", "contours-label"], danger: ["danger"],
     labels: ["osm-river", "osm-stream", "osm-spring", "osm-hut", "osm-peak-dot",
       "osm-label-detail", "osm-label-lake", "osm-label-peak", "osm-label-hut"]
   };
@@ -719,13 +745,159 @@ ${pts}
   });
   map.on("click", () => { hits = []; render(); });
 
+  // ---------- Boletin de aludes del Lauegi (EAWS/CAAML v6) ----------
+  // Principio 1: el boletin manda. Se sombrean las laderas >= 30 grados cuya orientacion y cota coinciden
+  // con un problema del boletin, con el color del nivel de peligro de esa cota.
+  const TREELINE = 2200;   // limite del bosque en Aran (estimacion)
+  const DANGER_LVL = { low: 1, moderate: 2, considerable: 3, high: 4, very_high: 5 };
+  const DANGER_RGB = { 1: [204, 255, 102], 2: [255, 255, 0], 3: [255, 153, 0], 4: [255, 0, 0], 5: [128, 0, 0] };
+  const DANGER_NAME = { 1: "1 · Débil", 2: "2 · Limitado", 3: "3 · Notable", 4: "4 · Fuerte", 5: "5 · Muy fuerte" };
+  const PROBLEM_NAME = { new_snow: "Nieve reciente", wind_slab: "Placas de viento", persistent_weak_layers: "Capas débiles persistentes",
+    wet_snow: "Nieve húmeda", gliding_snow: "Deslizamiento basal", cornices: "Cornisas",
+    favourable_situation: "Situación favorable", no_distinct_avalanche_problem: "Sin problema definido" };
+  const SECTORS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  const SECTOR_ES = { N: "N", NE: "NE", E: "E", SE: "SE", S: "S", SW: "SO", W: "O", NW: "NO" };
+  const elevOf = v => v == null ? null : v === "treeline" ? TREELINE : Number(v);
+  const bound = v => v === "treeline" ? "el límite del bosque (~2200 m)" : `${v} m`;
+  const elevTxt = e => !e || (!e.lowerBound && !e.upperBound) ? "en todas las cotas"
+    : e.lowerBound && e.upperBound ? `entre ${bound(e.lowerBound)} y ${bound(e.upperBound)}`
+    : e.lowerBound ? `por encima de ${bound(e.lowerBound)}` : `por debajo de ${bound(e.upperBound)}`;
+  const inBand = (h, e) => (!e || ((elevOf(e.lowerBound) ?? -1e9) <= h && h < (elevOf(e.upperBound) ?? 1e9)));
+  const inPeriod = (x, p) => !x.validTimePeriod || x.validTimePeriod === "all_day" || x.validTimePeriod === p;
+  const isoDay = d => d.toLocaleDateString("sv-SE", { timeZone: "Europe/Madrid" });
+
+  let bulletins = null, bulPeriod = "earlier", bulVersion = 0, regionsGeo = null;
+  fetch("data/aran-regions.geojson").then(r => r.json()).then(j => regionsGeo = j).catch(() => {});
+
+  const fetchBulletin = async day => {
+    const key = "skimo-bulletin-" + day;
+    try {
+      const r = await fetch(`https://static.avalanche.report/eaws_bulletins/${day}/${day}-ES-CT-L.es.json`, { cache: "no-cache" });
+      if (r.status === 404) return null;
+      if (!r.ok) throw new Error(r.status);
+      const j = await r.json();
+      lsSet(key, JSON.stringify({ at: new Date().toISOString(), j }));
+      return { at: new Date().toISOString(), j, cached: false };
+    } catch {
+      const c = lsGet(key);   // sin red: la ultima copia consultada, con su hora
+      return c ? { ...JSON.parse(c), cached: true } : undefined;
+    }
+  };
+
+  const dangerAt = (b, h, p) => Math.max(0, ...b.dangerRatings.filter(r => inPeriod(r, p) && inBand(h, r.elevation)).map(r => DANGER_LVL[r.mainValue] || 0));
+
+  const renderBulletin = (day, res, isToday) => {
+    const box = document.getElementById("bul");
+    if (res === undefined) { box.innerHTML = `<span class="warn">Sin conexión y sin copia guardada del boletín del ${day}.</span>`; return; }
+    if (!res) { box.innerHTML = `No hay boletín del Lauegi para el ${new Date(day).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}.`
+      + (isToday ? " La temporada de aludes suele ir de diciembre a mayo." : ""); return; }
+    const bs = res.j.bulletins, hasLater = bs.some(b => b.dangerRatings.some(r => r.validTimePeriod === "later"));
+    document.getElementById("bul-period").hidden = !hasLater;
+    const p = hasLater ? bulPeriod : "all_day";
+    let html = "";
+    if (!isToday) html += `<div class="warn">Boletín del ${new Date(day).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}: no es el de hoy.</div>`;
+    for (const b of bs) {
+      const lvls = b.dangerRatings.filter(r => inPeriod(r, p));
+      const max = Math.max(0, ...lvls.map(r => DANGER_LVL[r.mainValue] || 0));
+      const zones = b.regions.map(r => r.name || r.regionID).join(", ");
+      html += `<div style="margin-top:4px">${bs.length > 1 ? `<b>${zones}</b><br>` : ""}`
+        + `Peligro máx.: <span class="lvl" style="background:rgb(${DANGER_RGB[max] || [220, 220, 220]})">${DANGER_NAME[max] || "–"}</span>`
+        + `<br>${lvls.map(r => `${DANGER_NAME[DANGER_LVL[r.mainValue]] || r.mainValue} ${elevTxt(r.elevation)}`).join("<br>")}`
+        + `<ul>${b.avalancheProblems.filter(x => inPeriod(x, p)).map(x =>
+            `<li><b>${PROBLEM_NAME[x.problemType] || x.problemType}</b>: ${(x.aspects || []).map(a => SECTOR_ES[a]).join(" ")} · ${elevTxt(x.elevation)}</li>`).join("")}</ul>`
+        + (b.avalancheActivity?.highlights ? `<div>${b.avalancheActivity.highlights}</div>` : "")
+        + `</div>`;
+    }
+    const at = new Date(res.at).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    html += `<div class="src">Consultado ${at}${res.cached ? " (copia guardada, sin conexión)" : ""} · `
+      + `<a href="https://lauegi.report/es" target="_blank" rel="noopener">Boletín completo en lauegi.report</a> · © Centre de Lauegi d'Aran, CC BY 4.0</div>`;
+    box.innerHTML = html;
+  };
+
+  const loadBulletin = async (day, isToday) => {
+    document.getElementById("bul").textContent = "Cargando boletín…";
+    const res = await fetchBulletin(day);
+    bulletins = res?.j?.bulletins || null;
+    renderBulletin(day, res, isToday);
+    bulVersion++;
+    map.getSource("danger")?.setTiles([`danger://{z}/{x}/{y}?v=${bulVersion}`]);
+  };
+
+  // Hoy (o manana, si ya se ha publicado por la tarde)
+  const dateEl = document.getElementById("bul-date"), periodEl = document.getElementById("bul-period");
+  const todayIso = isoDay(new Date()), tomorrowIso = isoDay(new Date(Date.now() + 864e5));
+  bulPeriod = Number(new Date().toLocaleString("en-GB", { hour: "2-digit", hour12: false, timeZone: "Europe/Madrid" })) >= 12 ? "later" : "earlier";
+  periodEl.value = bulPeriod;
+  periodEl.onchange = () => { bulPeriod = periodEl.value; loadBulletin(dateEl.value, dateEl.value === todayIso || dateEl.value === tomorrowIso); };
+  dateEl.onchange = () => loadBulletin(dateEl.value, dateEl.value === todayIso || dateEl.value === tomorrowIso);
+  (async () => {
+    const after17 = Number(new Date().toLocaleString("en-GB", { hour: "2-digit", hour12: false, timeZone: "Europe/Madrid" })) >= 17;
+    const first = after17 && (await fetchBulletin(tomorrowIso)) ? tomorrowIso : todayIso;
+    dateEl.value = first; loadBulletin(first, true);
+  })();
+
+  // Teselas "danger://z/x/y": se calculan aqui a partir del relieve (pendiente, orientacion y cota)
+  const regionRaster = (z, x, y, W, bs) => {
+    if (bs.length < 2 || !regionsGeo) return null;
+    const c = new OffscreenCanvas(W, W), g = c.getContext("2d", { willReadFrequently: true }), n = 2 ** z;
+    const px = lon => ((lon + 180) / 360 * n - x) * W;
+    const py = lat => { const s = Math.sin(lat * Math.PI / 180); return ((0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n - y) * W; };
+    bs.forEach((b, i) => {
+      const ids = new Set(b.regions.map(r => r.regionID));
+      g.fillStyle = `rgb(${i + 1},0,0)`;
+      for (const f of regionsGeo.features.filter(f => ids.has(f.properties.id))) {
+        const polys = f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.coordinates;
+        for (const poly of polys) { g.beginPath(); for (const ring of poly) ring.forEach(([lo, la], k) => k ? g.lineTo(px(lo), py(la)) : g.moveTo(px(lo), py(la))); g.fill("evenodd"); }
+      }
+    });
+    return g.getImageData(0, 0, W, W).data;
+  };
+  const emptyPng = (async () => await (await new OffscreenCanvas(1, 1).convertToBlob({ type: "image/png" })).arrayBuffer())();
+  maplibregl.addProtocol("danger", async params => {
+    const [z, x, y] = params.url.match(/danger:\/\/(\d+)\/(\d+)\/(\d+)/).slice(1).map(Number);
+    const bs = bulletins;
+    if (!bs) return { data: await emptyPng };
+    const r = await terrainFile.getZxy(z, x, y);
+    if (!r) return { data: await emptyPng };
+    const bmp = await createImageBitmap(new Blob([r.data])), W = bmp.width;
+    const c = new OffscreenCanvas(W, W), g = c.getContext("2d", { willReadFrequently: true });
+    g.drawImage(bmp, 0, 0);
+    const src = g.getImageData(0, 0, W, W).data, H = new Float32Array(W * W);
+    for (let i = 0; i < W * W; i++) H[i] = -10000 + (src[4 * i] * 65536 + src[4 * i + 1] * 256 + src[4 * i + 2]) * 0.1;
+    const n = 2 ** z, latC = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + 0.5) / n))) * 180 / Math.PI;
+    const res = 156543.03392 * Math.cos(latC * Math.PI / 180) / n * (256 / W);   // metros reales por pixel
+    const reg = regionRaster(z, x, y, W, bs);
+    const hasLater = bs.some(b => b.dangerRatings.some(q => q.validTimePeriod === "later"));
+    const p = hasLater ? bulPeriod : "all_day";
+    const out = g.createImageData(W, W), o = out.data;
+    for (let j = 0; j < W; j++) for (let i = 0; i < W; i++) {
+      const k = j * W + i, h = H[k];
+      const l = H[j * W + Math.max(0, i - 1)], rr = H[j * W + Math.min(W - 1, i + 1)];
+      const u = H[Math.max(0, j - 1) * W + i], d = H[Math.min(W - 1, j + 1) * W + i];
+      const gx = (rr - l) / (((i > 0) + (i < W - 1)) * res), gy = (d - u) / (((j > 0) + (j < W - 1)) * res);
+      if (Math.atan(Math.hypot(gx, gy)) * 180 / Math.PI < 30) continue;
+      const az = (Math.atan2(-gx, gy) * 180 / Math.PI + 360) % 360;
+      const sector = SECTORS[Math.round(az / 45) % 8];
+      const b = reg ? bs[reg[4 * k] - 1] : bs[0];
+      if (!b) continue;
+      const hit = b.avalancheProblems.some(q => inPeriod(q, p) && (q.aspects || []).includes(sector) && inBand(h, q.elevation)
+        && !["favourable_situation", "no_distinct_avalanche_problem"].includes(q.problemType));
+      if (!hit) continue;
+      const lvl = dangerAt(b, h, p), rgb = DANGER_RGB[lvl];
+      if (!rgb) continue;
+      o[4 * k] = rgb[0]; o[4 * k + 1] = rgb[1]; o[4 * k + 2] = rgb[2]; o[4 * k + 3] = 200;
+    }
+    g.putImageData(out, 0, 0);
+    return { data: await (await c.convertToBlob({ type: "image/png" })).arrayBuffer() };
+  });
+
   // ---------- Panel "Sin conexion" ----------
   const offStatus = document.getElementById("off-status"), offBtn = document.getElementById("off-btn"),
     offDel = document.getElementById("off-del"), offBar = document.getElementById("off-bar");
   const MB = b => `${Math.round(b / 2 ** 20)} MB`;
   const fmtDate = s => new Date(s).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   const EXTRA = [  // lo minimo para que la pagina arranque sin red
-    "./", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png",
+    "./", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png", "data/aran-regions.geojson",
     "sprites/light.json", "sprites/light.png", "sprites/light@2x.json", "sprites/light@2x.png",
     ...["Noto Sans Regular", "Noto Sans Medium", "Noto Sans Italic"].flatMap(f => ["0-255", "256-511", "8192-8447"].map(r => `fonts/${f}/${r}.pbf`)),
     "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css", "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js",
