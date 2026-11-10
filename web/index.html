@@ -79,6 +79,22 @@
   .cal .d.sel { box-shadow: inset 0 0 0 2px #111; }
   .cal .note { margin-top: 4px; }
   .legend span.hatch { background: repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6px); outline: 1px solid rgba(0,0,0,.25); }
+  .stcard, .stchip { position: absolute; top: calc(max(10px, env(safe-area-inset-top)) + 54px); right: 56px;
+    background: var(--bg); border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.25); z-index: 2; }
+  .stcard { display: flex; align-items: stretch; max-width: min(430px, calc(100% - 330px)); }
+  .stcard[hidden], .stchip[hidden] { display: none; }
+  .stcard .st-main { display: flex; gap: 8px; align-items: center; border: 0; background: none; color: var(--fg); text-align: left;
+    padding: 6px 4px 6px 8px; cursor: pointer; font: 12px/1.3 system-ui, -apple-system, sans-serif; min-width: 0; }
+  .stcard .st-ico { width: 30px; height: 30px; flex: none; }
+  .stcard .st-body { display: flex; flex-direction: column; min-width: 0; }
+  .stcard .st-head { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stcard .st-head b { color: var(--fg); }
+  .stcard .st-vals { white-space: normal; }
+  .stcard .st-vals b { font-size: 15px; }
+  .stcard .st-x { border: 0; background: none; color: var(--muted); font-size: 18px; padding: 0 10px; cursor: pointer; }
+  .stchip { display: flex; align-items: center; gap: 6px; border: 0; padding: 5px 10px 5px 6px; color: var(--fg);
+    font: 600 13px system-ui, -apple-system, sans-serif; cursor: pointer; }
+  @media (max-width: 600px) { .stcard { left: 120px; right: 56px; max-width: none; } }
   .wxbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(34px, calc(env(safe-area-inset-bottom) + 24px));
     width: min(440px, calc(100% - 20px)); box-sizing: border-box; background: var(--bg); border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,.3); padding: 6px 12px; z-index: 3; display: none; }
@@ -104,6 +120,20 @@
 </head>
 <body>
 <div id="map"></div>
+<div class="stcard" id="stcard" hidden>
+  <button class="st-main" id="stcard-open" type="button" title="Ver el panel completo de la estación">
+    <svg viewBox="0 0 24 24" class="st-ico" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#1e3a5f"/><rect x="10.6" y="4.5" width="2.8" height="11" rx="1.4" fill="#fff"/><circle cx="12" cy="16.5" r="3" fill="#fff"/><circle cx="12" cy="16.5" r="1.9" fill="#e31a1c"/><rect x="11.4" y="9" width="1.2" height="7" fill="#e31a1c"/></svg>
+    <span class="st-body">
+      <span class="st-head"><b>Cap de Vaquèira</b> 2467 m · <span id="st-time">–</span></span>
+      <span class="st-vals" id="st-vals">Cargando…</span>
+    </span>
+  </button>
+  <button class="st-x" id="stcard-min" type="button" aria-label="Plegar">–</button>
+</div>
+<button class="stchip" id="stchip" type="button" hidden aria-label="Mostrar estación">
+  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#1e3a5f"/><rect x="10.6" y="4.5" width="2.8" height="11" rx="1.4" fill="#fff"/><circle cx="12" cy="16.5" r="3" fill="#fff"/><circle cx="12" cy="16.5" r="1.9" fill="#e31a1c"/><rect x="11.4" y="9" width="1.2" height="7" fill="#e31a1c"/></svg>
+  <span id="stchip-t">–</span>
+</button>
 <div class="measure" id="station" style="padding:8px">
   <div style="display:flex;align-items:center;gap:8px">
     <b style="flex:1">Estación Cap de Vaquèira · 2467 m <span style="font-weight:400;color:var(--muted);font-size:12px">(AEMET 9988B)</span></b>
@@ -1276,6 +1306,41 @@ ${pts}
     map.on("mouseleave", "stations-dot", () => { if (!measuring) map.getCanvas().style.cursor = ""; });
   });
   document.getElementById("st-close").onclick = () => { stPanel.classList.remove("on"); document.getElementById("st-frame").src = "about:blank"; };
+  const openStation = s => {
+    document.getElementById("st-frame").src = s.url; document.getElementById("st-open").href = s.url; stPanel.classList.add("on");
+  };
+
+  // Tarjeta flotante: ultimos valores medidos (AEMET OpenData, leidos cada hora por GitHub Actions)
+  const DIR16 = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"];
+  const num = (v, d = 1) => v == null ? "–" : (Math.round(v * 10 ** d) / 10 ** d).toLocaleString("es-ES");
+  const stCard = document.getElementById("stcard"), stChip = document.getElementById("stchip");
+  const showCard = open => { stCard.hidden = !open; stChip.hidden = open; lsSet("skimo-stcard", open ? "1" : "0"); };
+  const renderStation = (d, fromCache) => {
+    const t = new Date(d.time.replace(/\+0000$/, "Z")), hrs = d.series?.length || 24;
+    const ageH = (Date.now() - t) / 36e5;
+    document.getElementById("st-time").textContent = t.toLocaleString("es-ES", { weekday: "short", hour: "2-digit", minute: "2-digit" })
+      + (ageH > 3 ? ` (hace ${Math.round(ageH)} h)` : "") + (fromCache ? " · sin conexión" : "");
+    const dir = d.wind_dir == null ? "" : ` ${DIR16[Math.round(d.wind_dir / 22.5) % 16]}`;
+    document.getElementById("st-vals").innerHTML =
+      `<b>${num(d.ta)} °C</b> · mín ${num(d.tamin24)}° (${hrs} h) · nieve ${num(d.snow_depth, 0)} cm`
+      + (d.snow_new24 ? ` (+${num(d.snow_new24, 0)} cm 24 h)` : " (+0 en 24 h)")
+      + ` · viento <b>${num(d.wind, 0)} km/h${dir}</b>${d.gust != null ? `, rachas ${num(d.gust, 0)}` : ""}`;
+    document.getElementById("stchip-t").textContent = `${num(d.ta)} °C`;
+  };
+  const loadStation = async () => {
+    try {
+      const d = await (await fetch("https://raw.githubusercontent.com/Awasmil/skimo-tiles/main/data/stations/9988B/latest.json", { cache: "no-cache" })).json();
+      lsSet("skimo-st-9988B", JSON.stringify(d)); renderStation(d, false);
+    } catch {
+      const c = lsGet("skimo-st-9988B");
+      if (c) renderStation(JSON.parse(c), true); else document.getElementById("st-vals").textContent = "Sin conexión";
+    }
+  };
+  showCard(lsGet("skimo-stcard") !== "0");
+  document.getElementById("stcard-min").onclick = () => showCard(false);
+  stChip.onclick = () => showCard(true);
+  document.getElementById("stcard-open").onclick = () => openStation(STATIONS[0]);
+  loadStation(); setInterval(loadStation, 10 * 60 * 1000);
 
   document.getElementById("danger").addEventListener("change", e => {
     const sa = document.getElementById("slopeaval");
