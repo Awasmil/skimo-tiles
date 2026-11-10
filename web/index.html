@@ -108,6 +108,10 @@
   .road-detail { padding: 0 10px 8px; color: var(--fg); }
   .road-detail ul { margin: 2px 0 6px; padding-left: 16px; }
   .road-detail .src { color: var(--muted); font-size: 11px; }
+  .wxtip { position: absolute; z-index: 5; pointer-events: none; background: var(--bg); color: var(--fg); border-radius: 8px;
+    padding: 4px 8px; font: 12px/1.35 system-ui, -apple-system, sans-serif; box-shadow: 0 1px 6px rgba(0,0,0,.3); white-space: nowrap; }
+  .wxtip[hidden] { display: none; }
+  .maplibregl-popup-content { background: var(--bg); color: var(--fg); }
   .wxbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(34px, calc(env(safe-area-inset-bottom) + 24px));
     width: min(440px, calc(100% - 20px)); box-sizing: border-box; background: var(--bg); border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,.3); padding: 6px 12px; z-index: 3; display: none; }
@@ -1336,6 +1340,53 @@ ${pts}
   };
   document.getElementById("wxtemp").addEventListener("change", wxLayersToggle);
   document.getElementById("wxwind").addEventListener("change", wxLayersToggle);
+
+  // Valor en el punto: al pasar el cursor (ordenador) o al tocar (movil) con el mapa del tiempo o el viento activos
+  const wxTip = document.createElement("div"); wxTip.className = "wxtip"; wxTip.hidden = true; map.getContainer().appendChild(wxTip);
+  const wxActive = () => document.getElementById("wxtemp").checked || document.getElementById("wxwind").checked;
+  const wxValueAt = async c => {
+    const h = await elevation(c), parts = [];
+    if (document.getElementById("wxtemp").checked && tGrid) {
+      const F = WXF.find(f => f.id === wxVarEl.value) || WXF[0], arr = tGrid.v?.[F.id], i = +wxBarHour.value;
+      if (arr && h != null) {
+        const v = F.lapse ? bilinear(TG, c[0], c[1], q => arr[q][i] == null ? null : arr[q][i] + LAPSE * (tGrid.elev[q] - h))
+                          : bilinear(TG, c[0], c[1], q => arr[q][i]);
+        if (v != null) parts.push(`<b>${(Math.round(v * (F.unit === "m" ? 0.1 : 10)) / (F.unit === "m" ? 0.1 : 10)).toLocaleString("es-ES")} ${F.unit}</b> ${wxVarEl.selectedOptions[0].text.toLowerCase()}`);
+      }
+    }
+    if (document.getElementById("wxwind").checked && wField && windHour >= 0) {
+      const u = bilinear(WG, c[0], c[1], q => wField.u[windHour][q]), v = bilinear(WG, c[0], c[1], q => wField.v[windHour][q]);
+      if (u != null && v != null) {
+        const sp = Math.hypot(u, v) * 3.6, from = (Math.atan2(-u, -v) * 180 / Math.PI + 360) % 360;
+        parts.push(`viento <b>${Math.round(sp)} km/h ${DIR16[Math.round(from / 22.5) % 16]}</b> (AROME)`);
+      }
+    }
+    if (!parts.length) return null;
+    return parts.join(" · ") + `<br><span style="color:var(--muted)">${h != null ? Math.round(h).toLocaleString("es-ES") + " m · " : ""}${document.getElementById("wxbar-at").textContent} · previsión</span>`;
+  };
+  let tipBusy = false, tipNext = null;
+  map.on("mousemove", e => {
+    if (!wxActive() || measuring || wxMode || matchMedia("(hover: none)").matches) { wxTip.hidden = true; return; }
+    tipNext = e;
+    if (tipBusy) return;
+    tipBusy = true;
+    requestAnimationFrame(async () => {
+      const ev = tipNext; tipBusy = false;
+      const html = await wxValueAt([ev.lngLat.lng, ev.lngLat.lat]);
+      if (!html) { wxTip.hidden = true; return; }
+      wxTip.innerHTML = html; wxTip.hidden = false;
+      wxTip.style.left = `${ev.point.x + 14}px`; wxTip.style.top = `${ev.point.y + 14}px`;
+    });
+  });
+  map.getCanvas().addEventListener("mouseleave", () => { wxTip.hidden = true; });
+  let tapPopup = null;
+  map.on("click", async e => {
+    if (!wxActive() || measuring || wxMode || !matchMedia("(hover: none)").matches) return;
+    if (map.queryRenderedFeatures(e.point, { layers: ["stations-dot"] }).length) return;
+    const html = await wxValueAt([e.lngLat.lng, e.lngLat.lat]);
+    tapPopup?.remove();
+    if (html) tapPopup = new maplibregl.Popup({ closeButton: true, maxWidth: "260px" }).setLngLat(e.lngLat).setHTML(`<div style="font-size:12px">${html}</div>`).addTo(map);
+  });
 
   // ---------- Estaciones meteorologicas de AEMET (valores medidos, leidos cada hora por GitHub Actions) ----------
   const ARANTEC_9988B = "https://iot.arantec.com/app/dashboards/public/dashboard/zClCrT6DAE8-0me_YzoEohCdhhez6qfYgnUtPkFRwCI?navbar=false&contextbar=false&layersBar=false&datePicker=true&devicePicker=false&displayTitle=false&filters=false";
