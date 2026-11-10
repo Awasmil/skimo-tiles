@@ -131,6 +131,34 @@
     width: min(440px, calc(100% - 20px)); box-sizing: border-box; background: var(--bg); border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,.3); padding: 6px 12px; z-index: 3; display: none; }
   .wxbar.on { display: block; }
+  .wxbar.wide { width: min(980px, calc(100% - 20px)); }
+  .fc-toggle { border: 1px solid rgba(127,127,127,.4); background: transparent; color: var(--fg); border-radius: 8px; padding: 3px 8px; font: 600 12px system-ui, sans-serif; cursor: pointer; white-space: nowrap; }
+  .fc { font: 12px/1.3 system-ui, -apple-system, sans-serif; margin-bottom: 6px; }
+  .fc[hidden], .acc[hidden] { display: none; }
+  .fc-head { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .fc-head span, .fc-note { color: var(--muted); font-size: 11px; }
+  .fc-days { display: flex; overflow-x: auto; gap: 2px; padding-bottom: 4px; scrollbar-width: thin; }
+  .fc-day { flex: 0 0 auto; min-width: 58px; text-align: center; border-radius: 8px; padding: 3px 2px; cursor: pointer; border: 1px solid transparent; }
+  .fc-day:hover, .fc-day.on { border-color: rgba(127,127,127,.5); }
+  .fc-day .ic { font-size: 18px; line-height: 1.2; }
+  .fc-day .sn { color: #2b6cb0; font-weight: 600; font-size: 11px; }
+  .fc-scroll { overflow-x: auto; max-height: 34vh; scrollbar-width: thin; }
+  .fc-tab { border-collapse: collapse; white-space: nowrap; }
+  .fc-tab th { position: sticky; left: 0; background: var(--bg); text-align: left; font-weight: 600; padding: 1px 6px 1px 0; color: var(--muted); z-index: 1; }
+  .fc-tab td { text-align: center; min-width: 30px; padding: 1px 2px; cursor: pointer; }
+  .fc-tab tr.dayrow td { font-weight: 700; text-align: left; border-left: 2px solid rgba(127,127,127,.5); }
+  .fc-tab td.d0 { border-left: 2px solid rgba(127,127,127,.5); }
+  .fc-tab td.sel { outline: 2px solid #e8590c; outline-offset: -2px; }
+  .fc-tab .ic td { font-size: 16px; }
+  .acc { font-size: 12px; margin-bottom: 4px; }
+  .acc button { border: 1px solid rgba(127,127,127,.4); background: transparent; color: var(--fg); border-radius: 12px; padding: 2px 8px; margin: 1px; cursor: pointer; font: 12px system-ui, sans-serif; }
+  .acc button.on { background: #e8a33d; border-color: #e8a33d; color: #000; font-weight: 600; }
+  .radar-ctl { position: absolute; left: 10px; bottom: max(34px, calc(env(safe-area-inset-bottom) + 24px)); z-index: 4; display: flex; align-items: center; gap: 6px; }
+  .radar-btn { width: 44px; height: 44px; border-radius: 10px; border: 0; background: var(--bg); box-shadow: 0 1px 6px rgba(0,0,0,.3); font-size: 22px; cursor: pointer; }
+  .radar-btn.on { background: #1e3a5f; }
+  .radar-info { background: var(--bg); color: var(--fg); border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,.3); padding: 4px 10px; font: 12px/1.3 system-ui, sans-serif; }
+  .radar-info[hidden] { display: none; }
+  @media (min-width: 700px) { .radar-ctl { left: 320px; } body.panel-closed .radar-ctl { left: 10px; } }
   .maplibregl-ctrl button.btn-wx.on { background: #1e3a5f; color: #fff; }
   .maplibregl-ctrl button.btn-wx svg { width: 18px; height: 18px; display: block; margin: auto; }
   .bul-ctrls { display: flex; gap: 6px; }
@@ -212,7 +240,16 @@
   <div class="m-sub" id="wx-src"></div>
 </div>
 <div class="wxbar" id="wxbar">
-  <div style="display:flex;justify-content:space-between;font-size:12px"><b id="wxbar-at">–</b><span style="color:var(--muted)" id="wxbar-src">Previsión de modelo</span></div>
+  <div class="fc" id="fc" hidden>
+    <div class="fc-head"><b id="fc-place">–</b><span id="fc-meta"></span></div>
+    <div class="fc-days" id="fc-days"></div>
+    <div class="fc-scroll" id="fc-scroll"><table class="fc-tab" id="fc-tab"></table></div>
+    <div class="fc-note">Previsión de modelo (Open-Meteo, mejor combinación) a la cota del punto. Estimación. Toca el mapa para cambiar de punto.</div>
+  </div>
+  <div class="acc" id="acc" hidden>Acumular: <span id="acc-btns"></span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px">
+    <button type="button" id="fc-toggle" class="fc-toggle" aria-expanded="false">▴ Previsión</button>
+    <b id="wxbar-at" style="flex:1">–</b><span style="color:var(--muted)" id="wxbar-src">Previsión de modelo</span></div>
   <input type="range" id="wxbar-hour" min="0" max="71" value="0" style="width:100%" aria-label="Hora de la previsión">
 </div>
 <div class="measure" id="measure" aria-live="polite">
@@ -304,6 +341,7 @@
       <option value="precipitation">Precipitación (mm/h)</option>
       <option value="cloud_cover">Nubosidad</option>
       <option value="freezing_level_height">Isoterma 0 °C</option>
+      <option value="snow_acc">Nieve acumulada (hasta 16 días)</option>
     </select>
     <label style="padding:2px 0"><input type="checkbox" id="wxiso" checked> Isolíneas (líneas de igual valor)</label>
     <div class="ramp" id="wxramp"></div>
@@ -882,7 +920,7 @@ ${pts}
   }, "top-right");
 
   const panel = document.getElementById("panel"), toggle = document.getElementById("toggle");
-  const setPanel = open => { panel.classList.toggle("min", !open); toggle.setAttribute("aria-expanded", open); };
+  const setPanel = open => { panel.classList.toggle("min", !open); toggle.setAttribute("aria-expanded", open); document.body.classList.toggle("panel-closed", !open); };
   toggle.addEventListener("click", () => setPanel(panel.classList.contains("min")));
   if (window.innerWidth < 600) setPanel(false);
 
@@ -1223,6 +1261,9 @@ ${pts}
       stops: [[0, [247, 251, 255]], [10, [198, 219, 239]], [20, [107, 174, 214]], [35, [255, 255, 178]], [50, [253, 141, 60]], [70, [227, 26, 28]], [100, [128, 0, 38]]] },
     { id: "wind_gusts_10m", unit: "km/h", iso: 10, ticks: ["0", "20", "40", "70", "100 km/h"], note: "Rachas del modelo (~4 km): en crestas pueden ser mayores. Flechas: hacia dónde sopla el viento medio (AROME 1,3 km, ~2 días).",
       stops: [[0, [247, 251, 255]], [10, [198, 219, 239]], [20, [107, 174, 214]], [35, [255, 255, 178]], [50, [253, 141, 60]], [70, [227, 26, 28]], [100, [128, 0, 38]]] },
+    { id: "snow_acc", unit: "cm", min: 0.5, iso: 10, even: true, ticks: ["cm", "2", "5", "10", "50", "1 m", "3 m"],
+      note: "Nieve nueva acumulada desde ahora (elige 12 h … 16 días abajo, o mueve la barra). Más allá de 3–5 días es poco fiable. Sin color = nada.",
+      stops: [[0.5, [80, 80, 190]], [2, [60, 100, 210]], [5, [40, 150, 200]], [10, [40, 175, 150]], [50, [140, 190, 50]], [100, [215, 160, 50]], [300, [190, 50, 140]]] },
     { id: "snowfall", unit: "cm/h", min: 0.05, iso: 0.5, ticks: ["0,1", "0,5", "1", "2", "4 cm/h"], note: "Nieve nueva por hora según el modelo. Sin color = no nieva.",
       stops: [[0.05, [224, 236, 244]], [0.5, [158, 188, 218]], [1, [140, 150, 198]], [2, [136, 86, 167]], [4, [129, 15, 124]]] },
     { id: "precipitation", unit: "mm/h", min: 0.05, iso: 1, ticks: ["0,1", "0,5", "2", "5", "10 mm/h"], note: "Lluvia o nieve (agua equivalente) por hora. Sin color = seco.",
@@ -1240,7 +1281,8 @@ ${pts}
   const wxVarEl = document.getElementById("wxvar");
   const wxLegend = () => {
     const F = WXF.find(f => f.id === wxVarEl.value), a = F.stops[0][0], b = F.stops.at(-1)[0];
-    document.getElementById("wxramp").style.background = `linear-gradient(90deg,${F.stops.map(([v, c]) => `rgb(${c}) ${Math.round(100 * (v - a) / (b - a))}%`).join(",")})`;
+    document.getElementById("wxramp").style.background = `linear-gradient(90deg,${F.stops.map(([v, c], i) => `rgb(${c}) ${F.even ? Math.round(100 * i / (F.stops.length - 1)) : Math.round(100 * (v - a) / (b - a))}%`).join(",")})`;
+    document.getElementById("acc").hidden = F.id !== "snow_acc";
     document.getElementById("wxticks").innerHTML = F.ticks.map(x => `<span>${x}</span>`).join("");
     document.getElementById("wxnote").textContent = `${F.note} Isolíneas cada ${String(F.iso).replace(".", ",")} ${F.unit}${F.isoBold != null ? " (0 °C en blanco grueso)" : ""}.`;
   };
@@ -1350,6 +1392,7 @@ ${pts}
     tVersion++;
     if (document.getElementById("wxtemp").checked) map.getSource("wxtemp")?.setTiles([`wxtemp://{z}/{x}/{y}?v=${tVersion}`]);
     drawArrows();
+    window.__markFc?.();
   };
   // Flechas de direccion del viento (AROME 1,3 km, malla ~1,6 km) cuando el mapa del tiempo muestra viento o rachas
   const arrowsWanted = () => document.getElementById("wxtemp").checked && /^wind_/.test(wxVarEl.value);
@@ -1415,12 +1458,15 @@ ${pts}
     const b3d = document.querySelector(".btn-3d");
     if (e.target.checked) {
       if (b3d && !b3d.classList.contains("on")) { b3d.click(); wx3dAuto = true; }
-      // Enfoca Baqueira en 3D, mirando hacia el sur desde el lado de Beret
-      // En móvil (pantalla estrecha y vertical) se aleja y se inclina menos: si no, las laderas cercanas tapan todo
-      const narrow = window.innerWidth < 700;
-      map.flyTo(narrow
-        ? { center: [0.9400, 42.6760], zoom: 11.3, pitch: 58, bearing: 165, duration: 2500, essential: true }
-        : { center: [0.9316, 42.6900], zoom: 12.6, pitch: 72, bearing: 165, duration: 2500, essential: true });
+      // Cámara encima de Gessa (a 4000 m) mirando de frente al Cap de Vaquèira.
+      // MapLibre 4 sitúa el punto de mira a nivel del mar: se prolonga la línea Gessa → cima del Cap hasta la cota 0.
+      map.setMaxPitch(85);
+      const ex = map.getTerrain()?.exaggeration || 1, G = [0.88994, 42.70579], C = [0.97424, 42.6919], H = 4000;
+      const kx = 111320 * Math.cos(42.7 * Math.PI / 180), ky = 110574;
+      const dx = (C[0] - G[0]) * kx, dy = (C[1] - G[1]) * ky, f = H / (H - 2469 * ex);
+      const cam = map.calculateCameraOptionsFromTo(new maplibregl.LngLat(...G), H,
+        new maplibregl.LngLat(G[0] + dx * f / kx, G[1] + dy * f / ky), 0);
+      map.flyTo({ ...cam, duration: 2500, essential: true });
     } else if (wx3dAuto) {
       wx3dAuto = false;
       if (b3d?.classList.contains("on")) b3d.click();
@@ -1578,6 +1624,165 @@ ${pts}
   stCurrent = STATIONS[0];
   loadStations();
   setInterval(loadStations, 10 * 60 * 1000);
+
+  // ---------- Previsión del punto (tipo Windy): 16 días, por días y cada 3 h, ocultable ----------
+  const fcEl = document.getElementById("fc"), fcToggle = document.getElementById("fc-toggle");
+  const FC_DEF = { name: "Cap de Vaquèira", lon: 0.97424, lat: 42.6919 };
+  let fcLoc = JSON.parse(lsGet("skimo-fc-loc") || "null") || FC_DEF, fcData = JSON.parse(lsGet("skimo-fc") || "null"), fcBusy = false;
+  const wmoIcon = (c, day = 1) => c == null ? "" : c === 0 ? (day ? "☀️" : "🌙") : c <= 2 ? (day ? "🌤️" : "☁️") : c === 3 ? "☁️" : c <= 48 ? "🌫️"
+    : c <= 57 ? "🌦️" : c <= 67 ? "🌧️" : c <= 77 ? "🌨️" : c <= 82 ? "🌦️" : c <= 86 ? "🌨️" : "⛈️";
+  const windBg = k => k == null ? "" : k < 10 ? "" : k < 20 ? "#c7e9c0" : k < 35 ? "#fff3a0" : k < 50 ? "#fdbe85" : k < 70 ? "#fb6a4a" : "#cb181d";
+  const fmtN = (v, d = 0) => v == null ? "" : (Math.round(v * 10 ** d) / 10 ** d).toLocaleString("es-ES");
+  const loadFc = async () => {
+    if (fcBusy) return; fcBusy = true;
+    document.getElementById("fc-meta").textContent = "Cargando…";
+    try {
+      const h = Math.round(await elevation([fcLoc.lon, fcLoc.lat]) ?? 0);
+      const hv = "temperature_2m,apparent_temperature,precipitation,snowfall,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,freezing_level_height,is_day";
+      const url = `${OM}?latitude=${fcLoc.lat}&longitude=${fcLoc.lon}&elevation=${h}&hourly=${hv}` +
+        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum&forecast_days=16&timezone=Europe%2FMadrid`;
+      const j = await (await fetch(url)).json();
+      if (!j.hourly) throw new Error(j.reason || "sin datos");
+      fcData = { ...j, loc: fcLoc, elev: h, at: new Date().toISOString() };
+      lsSet("skimo-fc", JSON.stringify(fcData));
+    } catch (e) { if (!fcData) document.getElementById("fc-meta").textContent = "Sin conexión y sin previsión guardada"; }
+    fcBusy = false; renderFc();
+  };
+  const renderFc = () => {
+    if (!fcData) return;
+    const H = fcData.hourly, D = fcData.daily, loc = fcData.loc;
+    document.getElementById("fc-place").textContent = `${loc.name} · ${fcData.elev} m`;
+    document.getElementById("fc-meta").textContent = `consultado ${new Date(fcData.at).toLocaleString("es-ES", { weekday: "short", hour: "2-digit", minute: "2-digit" })} · 16 días`;
+    document.getElementById("fc-days").innerHTML = D.time.map((d, i) => {
+      const wd = new Date(d + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric" });
+      const sn = D.snowfall_sum[i] >= 0.5 ? `❄ ${fmtN(D.snowfall_sum[i])} cm` : D.precipitation_sum[i] >= 0.5 ? `💧 ${fmtN(D.precipitation_sum[i], 1)} mm` : "&nbsp;";
+      return `<div class="fc-day" data-day="${d}"><div>${wd}</div><div class="ic">${wmoIcon(D.weather_code[i])}</div>
+        <div><b>${fmtN(D.temperature_2m_max[i])}°</b> / ${fmtN(D.temperature_2m_min[i])}°</div><div class="sn">${sn}</div></div>`;
+    }).join("");
+    // Columnas cada 3 h desde la hora actual
+    const now = Date.now() - 36e5, cols = [];
+    H.time.forEach((t, i) => { if (new Date(t).getTime() >= now && new Date(t).getHours() % 3 === 0) cols.push(i); });
+    const sum3 = (arr, i) => { let s = 0; for (let q = Math.max(0, i - 2); q <= i; q++) s += arr[q] || 0; return s; };   // las 3 h que acaban en esa hora
+    const row = (label, f, cls = "") => `<tr class="${cls}"><th>${label}</th>${cols.map((i, k) => {
+      const d0 = k === 0 || H.time[i].slice(0, 10) !== H.time[cols[k - 1]].slice(0, 10);
+      const [txt, st] = [].concat(f(i));
+      return `<td data-t="${H.time[i]}" class="${d0 ? "d0" : ""}" ${st ? `style="${st}"` : ""}>${txt ?? ""}</td>`; }).join("")}</tr>`;
+    let dayRow = "<tr class='dayrow'><th></th>", span = 0;
+    cols.forEach((i, k) => {
+      span++;
+      const last = k === cols.length - 1 || H.time[cols[k + 1]].slice(0, 10) !== H.time[i].slice(0, 10);
+      if (last) { dayRow += `<td colspan="${span}" data-day="${H.time[i].slice(0, 10)}">${new Date(H.time[i]).toLocaleDateString("es-ES", { weekday: "long", day: "numeric" })}</td>`; span = 0; }
+    });
+    document.getElementById("fc-tab").innerHTML = dayRow + "</tr>" +
+      row("Hora", i => H.time[i].slice(11, 13)) +
+      row("", i => wmoIcon(H.weather_code[i], H.is_day[i]), "ic") +
+      row("°C", i => `<b>${fmtN(H.temperature_2m[i])}°</b>`) +
+      row("Sensación", i => `${fmtN(H.apparent_temperature[i])}°`) +
+      row("Precip. mm", i => { const p = sum3(H.precipitation, i); return p >= 0.1 ? fmtN(p, 1) : ""; }) +
+      row("Nieve cm", i => { const s = sum3(H.snowfall, i); return s >= 0.1 ? [`<b>${fmtN(s, 1)}</b>`, "color:#2b6cb0"] : ""; }) +
+      row("Viento km/h", i => [fmtN(H.wind_speed_10m[i]), windBg(H.wind_speed_10m[i]) && `background:${windBg(H.wind_speed_10m[i])};color:#111`]) +
+      row("Rachas", i => [fmtN(H.wind_gusts_10m[i]), windBg(H.wind_gusts_10m[i]) && `background:${windBg(H.wind_gusts_10m[i])};color:#111`]) +
+      row("Dirección", i => H.wind_direction_10m[i] == null ? "" : `<span title="${DIR16[Math.round(H.wind_direction_10m[i] / 22.5) % 16]}" style="display:inline-block;transform:rotate(${(H.wind_direction_10m[i] + 180) % 360}deg)">↑</span>`) +
+      row("Isoterma 0", i => H.freezing_level_height[i] == null ? "" : fmtN(Math.round(H.freezing_level_height[i] / 50) * 50));
+    markFc();
+  };
+  // Marca en la tabla la hora elegida en la barra
+  const markFc = () => {
+    const t = (tGrid || wField)?.time?.[+wxBarHour.value]; if (!t || fcEl.hidden) return;
+    let best = null;
+    document.querySelectorAll("#fc-tab td[data-t]").forEach(td => { td.classList.remove("sel"); if (td.dataset.t <= t) best = td.dataset.t; });
+    if (!best) return;
+    const cells = document.querySelectorAll(`#fc-tab td[data-t="${best}"]`);
+    cells.forEach(td => td.classList.add("sel"));
+    const sc = document.getElementById("fc-scroll"), c0 = cells[0];
+    if (c0 && (c0.offsetLeft < sc.scrollLeft + 80 || c0.offsetLeft > sc.scrollLeft + sc.clientWidth - 40)) sc.scrollLeft = c0.offsetLeft - 120;
+  };
+  // Tocar una columna o un día mueve la barra de horas a ese momento
+  const goTime = t => {
+    const T = (tGrid || wField)?.time; if (!T) return;
+    let i = T.findIndex(x => x >= t); if (i < 0) i = T.length - 1;
+    wxBarHour.value = i; drawWx();
+  };
+  document.getElementById("fc-tab").onclick = e => { const td = e.target.closest("td[data-t],td[data-day]"); if (td) goTime(td.dataset.t || td.dataset.day + "T12:00"); };
+  document.getElementById("fc-days").onclick = e => {
+    const d = e.target.closest("[data-day]"); if (!d) return;
+    goTime(d.dataset.day + "T12:00");
+    const td = document.querySelector(`#fc-tab tr.dayrow td[data-day="${d.dataset.day}"]`);
+    if (td) document.getElementById("fc-scroll").scrollLeft = td.offsetLeft - 60;
+  };
+  const setFcOpen = open => {
+    fcEl.hidden = !open; wxBar.classList.toggle("wide", open);
+    fcToggle.textContent = open ? "▾ Ocultar previsión" : "▴ Previsión";
+    fcToggle.setAttribute("aria-expanded", open); lsSet("skimo-fc-open", open ? "1" : "0");
+    if (open) { renderFc(); if (!fcData || Date.now() - new Date(fcData.at) > 30 * 60e3 || fcData.loc.lon !== fcLoc.lon) loadFc(); }
+  };
+  fcToggle.onclick = () => setFcOpen(fcEl.hidden);
+  if ((lsGet("skimo-fc-open") ?? (window.innerWidth >= 700 ? "1" : "0")) === "1") setFcOpen(true);
+  window.__markFc = markFc;
+  // Tocar el mapa con el tiempo activo cambia el punto de la previsión
+  map.on("click", async e => {
+    if (!wxActive() || measuring || wxMode) return;
+    const c = [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)];
+    fcLoc = { name: `${c[1].toFixed(3)} N ${c[0].toFixed(3)} E`, lon: c[0], lat: c[1] };
+    // Nombre del sitio con nombre más cercano (del buscador), si está a menos de ~700 m
+    try {
+      const idx = await loadIndex(); let best = null, bd = 1e9;
+      for (const [, r] of idx) { const d = Math.hypot((r[3] - c[0]) * 0.735, r[4] - c[1]); if (d < bd && /peak|place|saddle|hut|lake|pass/.test(r[1])) { bd = d; best = r; } }
+      if (best && bd < 0.0065) fcLoc.name = `cerca de ${best[0]}`;
+    } catch {}
+    lsSet("skimo-fc-loc", JSON.stringify(fcLoc));
+    if (fcEl.hidden) setFcOpen(true); else loadFc();
+  });
+
+  // ---------- Botones de acumulación de nieve (desde ahora) ----------
+  const ACC = [["12 h", 12], ["24 h", 24], ["2 días", 48], ["4 días", 96], ["8 días", 192], ["16 días", 384]];
+  const accBtns = document.getElementById("acc-btns");
+  accBtns.innerHTML = ACC.map(([n, h]) => `<button type="button" data-h="${h}">${n}</button>`).join("");
+  accBtns.onclick = e => {
+    const b = e.target.closest("[data-h]"); if (!b || !tGrid) return;
+    const T = tGrid.time, t0 = new Date(T[nowIndex(T)]).getTime(), target = t0 + +b.dataset.h * 36e5;
+    let i = T.findIndex(t => new Date(t).getTime() >= target); if (i < 0) i = T.length - 1;
+    wxBarHour.value = i; drawWx();
+    accBtns.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+  };
+  wxBarHour.addEventListener("input", () => accBtns.querySelectorAll("button").forEach(x => x.classList.remove("on")));
+
+  // ---------- Radar de precipitación (lluvia y nieve) · RainViewer, últimas 2 horas ----------
+  const radarCtl = document.createElement("div"); radarCtl.className = "radar-ctl";
+  radarCtl.innerHTML = `<button type="button" class="radar-btn" title="Radar de lluvia y nieve" aria-label="Radar de lluvia y nieve" aria-pressed="false">📡</button>
+    <div class="radar-info" hidden><b id="radar-time">–</b> · radar <span style="color:var(--muted)">(lluvia; nieve en tonos aparte) · RainViewer</span>
+    <button type="button" id="radar-play" class="fc-toggle" style="margin-left:6px">⏸</button></div>`;
+  map.getContainer().appendChild(radarCtl);
+  const radarBtn = radarCtl.querySelector(".radar-btn"), radarInfo = radarCtl.querySelector(".radar-info");
+  let radarFrames = [], radarHost = "", radarI = 0, radarTimer = null, radarOn = false, radarPlaying = true;
+  const radarUrl = f => `${radarHost}${f.path}/256/{z}/{x}/{y}/2/1_1.png`;
+  const showRadarFrame = i => {
+    const f = radarFrames[i]; if (!f) return;
+    radarI = i;
+    const src = map.getSource("radar");
+    if (src) src.setTiles([radarUrl(f)]);
+    else map.addSource("radar", { type: "raster", tiles: [radarUrl(f)], tileSize: 256, maxzoom: 7, attribution: "Radar © RainViewer" });
+    if (!map.getLayer("radar")) map.addLayer({ id: "radar", type: "raster", source: "radar", paint: { "raster-opacity": 0.75, "raster-fade-duration": 0, "raster-resampling": "linear" } }, map.getLayer("contours-minor") ? "contours-minor" : undefined);
+    const ago = Math.round((Date.now() / 1000 - f.time) / 60);
+    document.getElementById("radar-time").textContent = `${new Date(f.time * 1000).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}${ago > 5 ? ` (hace ${ago} min)` : ""}`;
+  };
+  const radarTick = () => { if (radarPlaying && radarFrames.length) showRadarFrame((radarI + 1) % radarFrames.length); };
+  const setRadar = async on => {
+    radarOn = on; radarBtn.classList.toggle("on", on); radarBtn.setAttribute("aria-pressed", on); radarInfo.hidden = !on;
+    clearInterval(radarTimer);
+    if (!on) { if (map.getLayer("radar")) map.removeLayer("radar"); if (map.getSource("radar")) map.removeSource("radar"); return; }
+    try {
+      const j = await (await fetch("https://api.rainviewer.com/public/weather-maps.json", { cache: "no-cache" })).json();
+      radarHost = j.host; radarFrames = [...(j.radar?.past || []), ...(j.radar?.nowcast || [])];
+    } catch { document.getElementById("radar-time").textContent = "Sin conexión: el radar necesita red"; return; }
+    showRadarFrame(radarFrames.length - 1);
+    radarTimer = setInterval(radarTick, 700);
+  };
+  radarBtn.onclick = () => setRadar(!radarOn);
+  document.getElementById("radar-play").onclick = e => {
+    radarPlaying = !radarPlaying; e.target.textContent = radarPlaying ? "⏸" : "▶";
+    if (!radarPlaying) showRadarFrame(radarFrames.length - 1);
+  };
 
   // ---------- Webcams y prevision de Meteoaran (paginas externas incrustadas, con su autoria) ----------
   const SIDE = {
