@@ -1381,7 +1381,11 @@ ${pts}
     if (e.target.checked) {
       if (b3d && !b3d.classList.contains("on")) { b3d.click(); wx3dAuto = true; }
       // Enfoca Baqueira en 3D, mirando hacia el sur desde el lado de Beret
-      map.flyTo({ center: [0.9316, 42.6900], zoom: 12.6, pitch: 72, bearing: 165, duration: 2500, essential: true });
+      // En móvil (pantalla estrecha y vertical) se aleja y se inclina menos: si no, las laderas cercanas tapan todo
+      const narrow = window.innerWidth < 700;
+      map.flyTo(narrow
+        ? { center: [0.9400, 42.6760], zoom: 11.3, pitch: 58, bearing: 165, duration: 2500, essential: true }
+        : { center: [0.9316, 42.6900], zoom: 12.6, pitch: 72, bearing: 165, duration: 2500, essential: true });
     } else if (wx3dAuto) {
       wx3dAuto = false;
       if (b3d?.classList.contains("on")) b3d.click();
