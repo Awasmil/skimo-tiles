@@ -52,6 +52,10 @@
   .measure .m-stats span { color: var(--muted); font-size: 12px; display: block; }
   .measure .m-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
   .measure svg.profile { width: 100%; height: 56px; display: block; margin-top: 6px; }
+  .measure .m-mode { display: flex; gap: 4px; margin-bottom: 6px; background: rgba(127,127,127,.15); border-radius: 10px; padding: 3px; }
+  .measure .m-mode button { flex: 1; border: 0; border-radius: 8px; padding: 7px 4px; background: none; color: var(--fg);
+    font: 600 13px system-ui, -apple-system, sans-serif; cursor: pointer; }
+  .measure .m-mode button[aria-checked="true"] { background: #1e3a5f; color: #fff; }
   .measure .m-btns { display: flex; gap: 8px; margin-top: 8px; }
   .measure .m-btns button { flex: 1; min-height: 40px; border: 0; border-radius: 10px; font: 600 14px system-ui, -apple-system, sans-serif;
     background: rgba(127,127,127,.18); color: var(--fg); cursor: pointer; }
@@ -212,6 +216,12 @@
   <input type="range" id="wxbar-hour" min="0" max="71" value="0" style="width:100%" aria-label="Hora de la previsión">
 </div>
 <div class="measure" id="measure" aria-live="polite">
+  <div class="m-mode" role="radiogroup" aria-label="Modo de trazado">
+    <input type="checkbox" id="m-follow" checked hidden>
+    <button type="button" data-follow="1" role="radio">🥾 Seguir caminos</button>
+    <button type="button" data-follow="0" role="radio">✏️ Trazado libre</button>
+  </div>
+  <div class="m-sub" id="m-mode-help" style="margin:-2px 0 6px"></div>
   <div class="m-stats">
     <div><span>Distancia</span><b id="m-dist">0 m</b></div>
     <div><span>Desnivel +</span><b id="m-up">0 m</b></div>
@@ -219,9 +229,7 @@
     <div><span>Altitud</span><b id="m-ele">–</b></div>
   </div>
   <div class="m-sub" id="m-sub">Toca el mapa para añadir puntos.</div>
-  <label class="m-sub" style="display:flex;align-items:center;gap:6px;margin-top:4px;cursor:pointer">
-    <input type="checkbox" id="m-follow" checked style="width:16px;height:16px;margin:0"> Seguir senderos (si tocas cerca de uno)
-  </label>
+
   <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px">
     <span>Mín. <b id="m-hmin">–</b></span><span>Máx. <b id="m-hmax">–</b></span>
   </div>
@@ -774,8 +782,15 @@
   let mQueue = Promise.resolve();
   let pathsWarn = "";
   const followEl = document.getElementById("m-follow");
-  followEl.checked = lsGet("skimo-follow") !== "0";
-  followEl.onchange = () => lsSet("skimo-follow", followEl.checked ? "1" : "0");
+  const setFollow = on => {
+    followEl.checked = on; lsSet("skimo-follow", on ? "1" : "0");
+    document.querySelectorAll(".m-mode [data-follow]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.follow === (on ? "1" : "0"))));
+    document.getElementById("m-mode-help").textContent = on
+      ? "Si tocas cerca de un sendero o pista, la ruta lo sigue; si no, línea recta."
+      : "Línea recta entre los puntos que marques, sin seguir caminos.";
+  };
+  document.querySelectorAll(".m-mode [data-follow]").forEach(b => b.onclick = () => setFollow(b.dataset.follow === "1"));
+  setFollow(lsGet("skimo-follow") !== "0");
   const addPoint = c => (mQueue = mQueue.then(async () => {
     let s = null;
     if (followEl.checked) {
