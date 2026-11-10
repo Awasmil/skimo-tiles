@@ -492,7 +492,13 @@
   map.addControl(new maplibregl.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: true }), "top-right");
   map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
 
-  const setVis = (id, on) => map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
+  // Si la capa aun no existe (el mapa sigue cargando), se aplica cuando cargue
+  const pendingVis = {};
+  const setVis = (id, on) => {
+    if (map.getLayer(id)) { try { map.setLayoutProperty(id, "visibility", on ? "visible" : "none"); return; } catch {} }
+    pendingVis[id] = on;
+  };
+  map.on("idle", () => { for (const [id, on] of Object.entries(pendingVis)) if (map.getLayer(id)) { delete pendingVis[id]; setVis(id, on); } });
   document.querySelectorAll("input[name=base]").forEach(r => r.addEventListener("change", () => {
     setVis("pnoa", r.value === "pnoa");
     setVis("satwinter", r.value === "winter");
