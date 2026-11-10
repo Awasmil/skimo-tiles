@@ -96,9 +96,12 @@
     font: 600 13px system-ui, -apple-system, sans-serif; cursor: pointer; }
   @media (max-width: 600px) { .stcard { left: 120px; right: 56px; max-width: none; } }
   .roads { position: absolute; right: 56px; background: var(--bg); border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.25);
-    z-index: 2; max-width: min(430px, calc(100% - 330px)); font: 12px/1.35 system-ui, -apple-system, sans-serif; }
+    z-index: 4; width: min(360px, calc(100% - 76px)); font: 12px/1.35 system-ui, -apple-system, sans-serif; }
   .roads[hidden] { display: none; }
-  @media (max-width: 600px) { .roads { left: 120px; max-width: none; } }
+  .maplibregl-ctrl button.btn-roads { position: relative; font-size: 17px; line-height: 1; }
+  .maplibregl-ctrl button.btn-roads.on { background: #1e3a5f; }
+  .maplibregl-ctrl button.btn-roads .rdot { position: absolute; right: 3px; bottom: 3px; width: 9px; height: 9px; border-radius: 50%;
+    border: 1.5px solid #fff; background: #999; }
   .road-row { display: flex; flex-wrap: wrap; gap: 4px 12px; border: 0; background: none; color: var(--fg); width: 100%;
     text-align: left; padding: 6px 10px; cursor: pointer; font: inherit; }
   .road-row .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: 0; }
@@ -141,8 +144,8 @@
   <button class="st-x" id="stcard-min" type="button" aria-label="Plegar">–</button>
 </div>
 <div class="roads" id="roads" hidden>
-  <button type="button" class="road-row" id="roads-toggle" aria-expanded="false"></button>
-  <div class="road-detail" id="roads-detail" hidden></div>
+  <div class="road-row" id="roads-toggle"></div>
+  <div class="road-detail" id="roads-detail"></div>
 </div>
 <button class="stchip" id="stchip" type="button" hidden aria-label="Mostrar estación">
   <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#1e3a5f"/><rect x="10.6" y="4.5" width="2.8" height="11" rx="1.4" fill="#fff"/><circle cx="12" cy="16.5" r="3" fill="#fff"/><circle cx="12" cy="16.5" r="1.9" fill="#e31a1c"/><rect x="11.4" y="9" width="1.2" height="7" fill="#e31a1c"/></svg>
@@ -1429,12 +1432,27 @@ ${pts}
     [/DILLUNS A DIVENDRES/gi, "lunes a viernes"]];
   const caEs = t => CA_ES.reduce((s, [a, b]) => s.replace(a, b), t || "");
   const roadsBox = document.getElementById("roads"), roadsRow = document.getElementById("roads-toggle"), roadsDet = document.getElementById("roads-detail");
+  // Boton 🛣️ bajo la nube, con un punto del color del peor estado; abre el panel a su izquierda
+  const ROAD_RANK = { green: 0, yellow: 1, blue: 2, orange: 3, red: 4 };
+  let roadsBtn = null;
+  map.addControl({
+    onAdd() {
+      const div = document.createElement("div"); div.className = "maplibregl-ctrl maplibregl-ctrl-group";
+      roadsBtn = document.createElement("button"); roadsBtn.className = "btn-roads"; roadsBtn.type = "button";
+      roadsBtn.title = "Carreteras: túnel de Vielha y Port de la Bonaigua"; roadsBtn.setAttribute("aria-label", roadsBtn.title);
+      roadsBtn.innerHTML = '<span aria-hidden="true">🛣️</span><span class="rdot"></span>';
+      roadsBtn.onclick = () => { roadsBox.hidden = !roadsBox.hidden; roadsBtn.classList.toggle("on", !roadsBox.hidden); placeRoads(); };
+      div.appendChild(roadsBtn); return div;
+    }, onRemove() {}
+  }, "top-right");
   const placeRoads = () => {
-    const ref = !stCard.hidden ? stCard : stChip;
-    roadsBox.style.top = `${ref.offsetTop + ref.offsetHeight + 6}px`;
+    if (!roadsBtn) return;
+    const b = roadsBtn.getBoundingClientRect(), m = map.getContainer().getBoundingClientRect();
+    roadsBox.style.top = `${b.top - m.top}px`;
   };
   const renderRoads = (d, cached) => {
-    roadsBox.hidden = false;
+    const worst = d.roads.reduce((w, r) => (ROAD_RANK[r.color] ?? 0) > (ROAD_RANK[w] ?? 0) ? r.color : w, "green");
+    if (roadsBtn) roadsBtn.querySelector(".rdot").style.background = ROAD_COL[worst];
     roadsRow.innerHTML = d.roads.map(r => `<span><span class="dot" style="background:${ROAD_COL[r.color] || "#999"}"></span><b>${r.name}</b>: ${r.status}</span>`).join("");
     roadsDet.innerHTML = d.roads.map(r => `<div><b>${r.name}</b> (${r.road}) · ${r.status}`
       + (r.incidents.length ? `<ul>${r.incidents.map(i => `<li>PK ${i.pk.filter(x => x != null).map(x => String(x).replace(".", ",")).join("–")}: ${caEs(i.desc)}`
@@ -1450,10 +1468,6 @@ ${pts}
       lsSet("skimo-roads", JSON.stringify(d)); renderRoads(d, false);
     } catch { const c = lsGet("skimo-roads"); if (c) renderRoads(JSON.parse(c), true); }
   };
-  roadsRow.onclick = () => { roadsDet.hidden = !roadsDet.hidden; roadsRow.setAttribute("aria-expanded", !roadsDet.hidden); };
-  new ResizeObserver(placeRoads).observe(stCard);
-  document.getElementById("stcard-min").addEventListener("click", () => setTimeout(placeRoads));
-  stChip.addEventListener("click", () => setTimeout(placeRoads));
   window.addEventListener("resize", placeRoads);
   loadRoads(); setInterval(loadRoads, 10 * 60 * 1000);
 
