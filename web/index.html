@@ -273,6 +273,7 @@
       <option value="cloud_cover">Nubosidad</option>
       <option value="freezing_level_height">Isoterma 0 °C</option>
     </select>
+    <label style="padding:2px 0"><input type="checkbox" id="wxiso" checked> Isolíneas (líneas de igual valor)</label>
     <div class="ramp" id="wxramp"></div>
     <div class="ramp-ticks" id="wxticks"></div>
     <div style="color:var(--muted)" id="wxnote"></div>
@@ -1175,20 +1176,20 @@ ${pts}
   // Teselas "wxtemp://z/x/y": temperatura del punto de malla corregida a la cota real de cada pixel
   // Variables del mapa del tiempo: rampa de color [valor, [r,g,b]], umbral minimo para pintar y si se corrige por cota
   const WXF = [
-    { id: "temperature_2m", unit: "°C", lapse: true, ticks: ["−20°", "−10°", "0°", "10°", "25°"],
+    { id: "temperature_2m", unit: "°C", lapse: true, iso: 2, isoBold: 0, ticks: ["−20°", "−10°", "0°", "10°", "25°"],
       note: "Estimación: modelo (~4 km) corregido a la cota de cada punto (−6,5 °C por 1000 m). Sin el efecto del sol según la orientación.",
       stops: [[-20, [49, 54, 149]], [-10, [69, 117, 180]], [-5, [145, 191, 219]], [0, [224, 243, 248]], [3, [255, 255, 191]], [8, [254, 224, 144]], [13, [252, 141, 89]], [18, [215, 48, 39]], [25, [165, 0, 38]]] },
-    { id: "wind_speed_10m", unit: "km/h", ticks: ["0", "20", "40", "70", "100 km/h"], note: "Modelo (~4 km): no resuelve aceleraciones en crestas y collados.",
+    { id: "wind_speed_10m", unit: "km/h", iso: 10, ticks: ["0", "20", "40", "70", "100 km/h"], note: "Modelo (~4 km): no resuelve aceleraciones en crestas y collados.",
       stops: [[0, [247, 251, 255]], [10, [198, 219, 239]], [20, [107, 174, 214]], [35, [255, 255, 178]], [50, [253, 141, 60]], [70, [227, 26, 28]], [100, [128, 0, 38]]] },
-    { id: "wind_gusts_10m", unit: "km/h", ticks: ["0", "20", "40", "70", "100 km/h"], note: "Rachas del modelo (~4 km): en crestas pueden ser mayores.",
+    { id: "wind_gusts_10m", unit: "km/h", iso: 10, ticks: ["0", "20", "40", "70", "100 km/h"], note: "Rachas del modelo (~4 km): en crestas pueden ser mayores.",
       stops: [[0, [247, 251, 255]], [10, [198, 219, 239]], [20, [107, 174, 214]], [35, [255, 255, 178]], [50, [253, 141, 60]], [70, [227, 26, 28]], [100, [128, 0, 38]]] },
-    { id: "snowfall", unit: "cm/h", min: 0.05, ticks: ["0,1", "0,5", "1", "2", "4 cm/h"], note: "Nieve nueva por hora según el modelo. Sin color = no nieva.",
+    { id: "snowfall", unit: "cm/h", min: 0.05, iso: 0.5, ticks: ["0,1", "0,5", "1", "2", "4 cm/h"], note: "Nieve nueva por hora según el modelo. Sin color = no nieva.",
       stops: [[0.05, [224, 236, 244]], [0.5, [158, 188, 218]], [1, [140, 150, 198]], [2, [136, 86, 167]], [4, [129, 15, 124]]] },
-    { id: "precipitation", unit: "mm/h", min: 0.05, ticks: ["0,1", "0,5", "2", "5", "10 mm/h"], note: "Lluvia o nieve (agua equivalente) por hora. Sin color = seco.",
+    { id: "precipitation", unit: "mm/h", min: 0.05, iso: 1, ticks: ["0,1", "0,5", "2", "5", "10 mm/h"], note: "Lluvia o nieve (agua equivalente) por hora. Sin color = seco.",
       stops: [[0.05, [237, 248, 177]], [0.5, [127, 205, 187]], [2, [44, 127, 184]], [5, [37, 52, 148]], [10, [8, 29, 88]]] },
-    { id: "cloud_cover", unit: "%", min: 5, ticks: ["5 %", "25", "50", "75", "100 %"], note: "Nubosidad total del modelo.",
+    { id: "cloud_cover", unit: "%", min: 5, iso: 25, ticks: ["5 %", "25", "50", "75", "100 %"], note: "Nubosidad total del modelo.",
       stops: [[5, [255, 255, 255]], [50, [200, 200, 205]], [100, [120, 120, 130]]] },
-    { id: "freezing_level_height", unit: "m", ticks: ["1000", "1500", "2000", "2500", "3000+ m"], note: "Altura de la isoterma 0 °C según el modelo.",
+    { id: "freezing_level_height", unit: "m", iso: 200, ticks: ["1000", "1500", "2000", "2500", "3000+ m"], note: "Altura de la isoterma 0 °C según el modelo.",
       stops: [[1000, [33, 102, 172]], [1500, [103, 169, 207]], [2000, [209, 229, 240]], [2500, [253, 219, 199]], [3000, [239, 138, 98]], [3500, [178, 24, 43]]] }];
   const rampRGB = (stops, t) => {
     if (t <= stops[0][0]) return stops[0][1];
@@ -1201,10 +1202,11 @@ ${pts}
     const F = WXF.find(f => f.id === wxVarEl.value), a = F.stops[0][0], b = F.stops.at(-1)[0];
     document.getElementById("wxramp").style.background = `linear-gradient(90deg,${F.stops.map(([v, c]) => `rgb(${c}) ${Math.round(100 * (v - a) / (b - a))}%`).join(",")})`;
     document.getElementById("wxticks").innerHTML = F.ticks.map(x => `<span>${x}</span>`).join("");
-    document.getElementById("wxnote").textContent = F.note;
+    document.getElementById("wxnote").textContent = `${F.note} Isolíneas cada ${String(F.iso).replace(".", ",")} ${F.unit}${F.isoBold != null ? " (0 °C en azul)" : ""}.`;
   };
   wxLegend();
   wxVarEl.onchange = () => { lsSet("skimo-wxvar", wxVarEl.value); wxLegend(); drawWx(); };
+  document.getElementById("wxiso").onchange = () => drawWx();
   if (lsGet("skimo-wxvar")) { wxVarEl.value = lsGet("skimo-wxvar"); wxLegend(); }
   const TEMP_STOPS = [[-20, [49, 54, 149]], [-10, [69, 117, 180]], [-5, [145, 191, 219]], [0, [224, 243, 248]], [3, [255, 255, 191]],
     [8, [254, 224, 144]], [13, [252, 141, 89]], [18, [215, 48, 39]], [25, [165, 0, 38]]];
@@ -1229,7 +1231,7 @@ ${pts}
     const src = g.getImageData(0, 0, W, W).data, out = g.createImageData(W, W), o = out.data, n = 2 ** z;
     const F = WXF.find(f => f.id === wxVarEl.value) || WXF[0], arr = g0.v?.[F.id];
     if (!arr) return { data: await emptyTile };
-    const tAt = arr.map(a => a[hIdx]);
+    const tAt = arr.map(a => a[hIdx]), VAL = new Float32Array(W * W).fill(NaN);
     for (let j = 0; j < W; j++) {
       const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + (j + 0.5) / W) / n))) * 180 / Math.PI;
       for (let i = 0; i < W; i++) {
@@ -1237,9 +1239,25 @@ ${pts}
         const lon = (x + (i + 0.5) / W) / n * 360 - 180;
         const t = F.lapse ? bilinear(TG, lon, lat, q => tAt[q] == null ? null : tAt[q] + LAPSE * (g0.elev[q] - hPix))
                           : bilinear(TG, lon, lat, q => tAt[q]);
-        if (t == null || (F.min != null && t < F.min)) continue;
+        if (t == null) continue;
+        VAL[k] = t;
+        if (F.min != null && t < F.min) continue;
         const rgb = rampRGB(F.stops, t);
         o[4 * k] = rgb[0]; o[4 * k + 1] = rgb[1]; o[4 * k + 2] = rgb[2]; o[4 * k + 3] = 165;
+      }
+    }
+    // Isolineas: pixeles donde el valor cruza un multiplo del paso (0 grados mas grueso y en azul)
+    if (document.getElementById("wxiso").checked && F.iso) {
+      const band = v => Math.floor(v / F.iso);
+      for (let j = 0; j < W - 1; j++) for (let i = 0; i < W - 1; i++) {
+        const k = j * W + i, a = VAL[k], r = VAL[k + 1], d = VAL[k + W];
+        if (Number.isNaN(a) || Number.isNaN(r) || Number.isNaN(d)) continue;
+        const ba = band(a);
+        if (ba === band(r) && ba === band(d)) continue;
+        const level = Math.max(ba, band(r), band(d)) * F.iso;
+        const bold = F.isoBold != null && Math.abs(level - F.isoBold) < 1e-6;
+        const put = q => { o[4 * q] = bold ? 30 : 40; o[4 * q + 1] = bold ? 80 : 40; o[4 * q + 2] = bold ? 200 : 40; o[4 * q + 3] = bold ? 255 : 150; };
+        put(k); if (bold) { put(k + 1); put(k + W); }
       }
     }
     g.putImageData(out, 0, 0);
