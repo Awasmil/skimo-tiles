@@ -1398,7 +1398,7 @@ ${pts}
       if (arr && h != null) {
         const v = F.lapse ? bilinear(TG, c[0], c[1], q => arr[q][i] == null ? null : arr[q][i] + LAPSE * (tGrid.elev[q] - h))
                           : bilinear(TG, c[0], c[1], q => arr[q][i]);
-        if (v != null) parts.push(`<b>${(Math.round(v * (F.unit === "m" ? 0.1 : 10)) / (F.unit === "m" ? 0.1 : 10)).toLocaleString("es-ES")} ${F.unit}</b> ${wxVarEl.selectedOptions[0].text.toLowerCase()}`);
+        if (v != null) parts.push(`<b>${(Math.round(v * (F.unit === "m" ? 0.1 : 10)) / (F.unit === "m" ? 0.1 : 10)).toLocaleString("es-ES")} ${F.unit}</b> ${wxVarEl.selectedOptions[0].text.replace(/^./, ch => ch.toLowerCase())}`);
       }
     }
     if (document.getElementById("wxwind").checked && wField && windHour >= 0) {
