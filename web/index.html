@@ -95,6 +95,16 @@
   .stchip { display: flex; align-items: center; gap: 6px; border: 0; padding: 5px 10px 5px 6px; color: var(--fg);
     font: 600 13px system-ui, -apple-system, sans-serif; cursor: pointer; }
   @media (max-width: 600px) { .stcard { left: 120px; right: 56px; max-width: none; } }
+  .roads { position: absolute; right: 56px; background: var(--bg); border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.25);
+    z-index: 2; max-width: min(430px, calc(100% - 330px)); font: 12px/1.35 system-ui, -apple-system, sans-serif; }
+  .roads[hidden] { display: none; }
+  @media (max-width: 600px) { .roads { left: 120px; max-width: none; } }
+  .road-row { display: flex; flex-wrap: wrap; gap: 4px 12px; border: 0; background: none; color: var(--fg); width: 100%;
+    text-align: left; padding: 6px 10px; cursor: pointer; font: inherit; }
+  .road-row .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: 0; }
+  .road-detail { padding: 0 10px 8px; color: var(--fg); }
+  .road-detail ul { margin: 2px 0 6px; padding-left: 16px; }
+  .road-detail .src { color: var(--muted); font-size: 11px; }
   .wxbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(34px, calc(env(safe-area-inset-bottom) + 24px));
     width: min(440px, calc(100% - 20px)); box-sizing: border-box; background: var(--bg); border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,.3); padding: 6px 12px; z-index: 3; display: none; }
@@ -129,6 +139,10 @@
     </span>
   </button>
   <button class="st-x" id="stcard-min" type="button" aria-label="Plegar">–</button>
+</div>
+<div class="roads" id="roads" hidden>
+  <button type="button" class="road-row" id="roads-toggle" aria-expanded="false"></button>
+  <div class="road-detail" id="roads-detail" hidden></div>
 </div>
 <button class="stchip" id="stchip" type="button" hidden aria-label="Mostrar estación">
   <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#1e3a5f"/><rect x="10.6" y="4.5" width="2.8" height="11" rx="1.4" fill="#fff"/><circle cx="12" cy="16.5" r="3" fill="#fff"/><circle cx="12" cy="16.5" r="1.9" fill="#e31a1c"/><rect x="11.4" y="9" width="1.2" height="7" fill="#e31a1c"/></svg>
@@ -832,7 +846,8 @@ ${pts}
   // Buscador sobre el indice local (search.json: [nombre, tipo, altitud, lon, lat])
   const KIND = { peak: "Pico", saddle: "Collado", spring: "Fuente", hut: "Refugio", unguarded_hut: "Refugio libre",
     shelter: "Cabaña", lake: "Lago", river: "Río", stream: "Arroyo", place: "Lugar" };
-  const RANK = { hut: 0, unguarded_hut: 1, peak: 2, place: 3, lake: 4, saddle: 5, river: 6, shelter: 7, spring: 8, stream: 9 };
+  const RANK = { hut: 0, unguarded_hut: 1, peak: 2, place: 3, lake: 4, saddle: 5, river: 6, shelter: 7, spring: 8, stream: 9,
+    "Sendero": 10, "Pista de esquí": 10, "Pista forestal": 11, "Carretera / calle": 14, "Edificio": 15 };
   const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   let index = null, marker = null, sel = -1, hits = [];
   const q = document.getElementById("q"), list = document.getElementById("results");
@@ -1381,7 +1396,10 @@ ${pts}
     const c = map.getCenter();
     return STATIONS.reduce((best, s) => haversine([c.lng, c.lat], [s.lon, s.lat]) < haversine([c.lng, c.lat], [best.lon, best.lat]) ? s : best);
   };
-  map.on("moveend", () => { const s = nearestStation(); if (s !== stCurrent) { stCurrent = s; renderStation(); } });
+  // Al abrir: siempre Cap de Vaquèira (Baqueira). Cambia a la mas cercana solo cuando el usuario mueve el mapa.
+  let stUserMoved = false;
+  map.on("movestart", e => { if (e.originalEvent) stUserMoved = true; });
+  map.on("moveend", () => { if (!stUserMoved) return; const s = nearestStation(); if (s !== stCurrent) { stCurrent = s; renderStation(); } });
   const loadStations = async () => {
     try {
       const list = await (await fetch(ST_URL, { cache: "no-cache" })).json();
@@ -1398,8 +1416,46 @@ ${pts}
   document.getElementById("stcard-min").onclick = () => showCard(false);
   stChip.onclick = () => showCard(true);
   document.getElementById("stcard-open").onclick = () => openStation(stCurrent);
-  map.once("load", () => { stCurrent = nearestStation(); loadStations(); });
+  stCurrent = STATIONS[0];
+  loadStations();
   setInterval(loadStations, 10 * 60 * 1000);
+
+  // ---------- Estado de carreteras: tunel de Vielha y Port de la Bonaigua (Servei Catala de Transit) ----------
+  const ROAD_COL = { green: "#2ea043", yellow: "#d4a72c", orange: "#ff8c00", red: "#e31a1c", blue: "#2b8cbe" };
+  const CA_ES = [[/Calçada tallada/gi, "Calzada cortada"], [/Calçada restringida/gi, "Calzada restringida"], [/Desviaments/gi, "desvíos"],
+    [/Obres/gi, "Obras"], [/Ambdos sentits/gi, "ambos sentidos"], [/Estabilització de talús/gi, "estabilización de talud"],
+    [/Meterologia|Meteorologia/gi, "Meteorología"], [/Neu/g, "Nieve"], [/Cadenes/gi, "cadenas"], [/Gel\b/g, "Hielo"], [/Boira/gi, "Niebla"],
+    [/Circulació/gi, "Circulación"], [/Retenció|retencions/gi, "retenciones"], [/DILLUNS A DISSABTE \(FEINERS\)/gi, "lunes a sábado (laborables)"],
+    [/DILLUNS A DIVENDRES/gi, "lunes a viernes"]];
+  const caEs = t => CA_ES.reduce((s, [a, b]) => s.replace(a, b), t || "");
+  const roadsBox = document.getElementById("roads"), roadsRow = document.getElementById("roads-toggle"), roadsDet = document.getElementById("roads-detail");
+  const placeRoads = () => {
+    const ref = !stCard.hidden ? stCard : stChip;
+    roadsBox.style.top = `${ref.offsetTop + ref.offsetHeight + 6}px`;
+  };
+  const renderRoads = (d, cached) => {
+    roadsBox.hidden = false;
+    roadsRow.innerHTML = d.roads.map(r => `<span><span class="dot" style="background:${ROAD_COL[r.color] || "#999"}"></span><b>${r.name}</b>: ${r.status}</span>`).join("");
+    roadsDet.innerHTML = d.roads.map(r => `<div><b>${r.name}</b> (${r.road}) · ${r.status}`
+      + (r.incidents.length ? `<ul>${r.incidents.map(i => `<li>PK ${i.pk.filter(x => x != null).map(x => String(x).replace(".", ",")).join("–")}: ${caEs(i.desc)}`
+        + (i.cause ? ` · ${caEs(i.cause)}` : "") + (i.schedule ? ` · horario: ${caEs(i.schedule)}` : "") + (i.dir ? ` · ${caEs(i.dir)}` : "")
+        + (i.since ? ` · desde ${new Date(i.since).toLocaleDateString("es-ES", { day: "numeric", month: "short" })}` : "") + `</li>`).join("")}</ul>` : " · sin incidencias<br>")
+      + `</div>`).join("")
+      + `<div class="src">Servei Català de Trànsit · consultado ${new Date(d.updated).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}${cached ? " · sin conexión" : ""}. Comprueba antes de salir: el estado puede cambiar.</div>`;
+    placeRoads();
+  };
+  const loadRoads = async () => {
+    try {
+      const d = await (await fetch("https://raw.githubusercontent.com/Awasmil/skimo-tiles/main/data/roads.json", { cache: "no-cache" })).json();
+      lsSet("skimo-roads", JSON.stringify(d)); renderRoads(d, false);
+    } catch { const c = lsGet("skimo-roads"); if (c) renderRoads(JSON.parse(c), true); }
+  };
+  roadsRow.onclick = () => { roadsDet.hidden = !roadsDet.hidden; roadsRow.setAttribute("aria-expanded", !roadsDet.hidden); };
+  new ResizeObserver(placeRoads).observe(stCard);
+  document.getElementById("stcard-min").addEventListener("click", () => setTimeout(placeRoads));
+  stChip.addEventListener("click", () => setTimeout(placeRoads));
+  window.addEventListener("resize", placeRoads);
+  loadRoads(); setInterval(loadRoads, 10 * 60 * 1000);
 
   document.getElementById("danger").addEventListener("change", e => {
     const sa = document.getElementById("slopeaval");
