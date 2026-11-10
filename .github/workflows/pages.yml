@@ -116,3 +116,5 @@ jobs:
           path: site
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000   # el sitio pesa ~700 MB: GitHub tarda en sincronizarlo
