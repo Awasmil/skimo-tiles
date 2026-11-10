@@ -1217,7 +1217,8 @@ ${pts}
   const WXF = [
     { id: "temperature_2m", unit: "°C", lapse: true, iso: 2, isoBold: 0, ticks: ["−20°", "−10°", "0°", "10°", "25°"],
       note: "Estimación: modelo (~4 km) corregido a la cota de cada punto (−6,5 °C por 1000 m). Sin el efecto del sol según la orientación.",
-      stops: [[-20, [49, 54, 149]], [-10, [69, 117, 180]], [-5, [145, 191, 219]], [0, [224, 243, 248]], [3, [255, 255, 191]], [8, [254, 224, 144]], [13, [252, 141, 89]], [18, [215, 48, 39]], [25, [165, 0, 38]]] },
+      // 0 °C = azul; cuanto más frío, azul más oscuro. Por encima de 0, salto a tonos claros → cálidos
+      stops: [[-20, [8, 16, 70]], [-10, [20, 50, 150]], [-5, [40, 95, 200]], [0, [80, 150, 230]], [1, [190, 225, 240]], [5, [255, 250, 190]], [10, [254, 215, 130]], [15, [252, 141, 89]], [20, [215, 48, 39]], [25, [165, 0, 38]]] },
     { id: "wind_speed_10m", unit: "km/h", iso: 10, ticks: ["0", "20", "40", "70", "100 km/h"], note: "Modelo (~4 km): no resuelve aceleraciones en crestas y collados.",
       stops: [[0, [247, 251, 255]], [10, [198, 219, 239]], [20, [107, 174, 214]], [35, [255, 255, 178]], [50, [253, 141, 60]], [70, [227, 26, 28]], [100, [128, 0, 38]]] },
     { id: "wind_gusts_10m", unit: "km/h", iso: 10, ticks: ["0", "20", "40", "70", "100 km/h"], note: "Rachas del modelo (~4 km): en crestas pueden ser mayores.",
@@ -1241,14 +1242,13 @@ ${pts}
     const F = WXF.find(f => f.id === wxVarEl.value), a = F.stops[0][0], b = F.stops.at(-1)[0];
     document.getElementById("wxramp").style.background = `linear-gradient(90deg,${F.stops.map(([v, c]) => `rgb(${c}) ${Math.round(100 * (v - a) / (b - a))}%`).join(",")})`;
     document.getElementById("wxticks").innerHTML = F.ticks.map(x => `<span>${x}</span>`).join("");
-    document.getElementById("wxnote").textContent = `${F.note} Isolíneas cada ${String(F.iso).replace(".", ",")} ${F.unit}${F.isoBold != null ? " (0 °C en azul)" : ""}.`;
+    document.getElementById("wxnote").textContent = `${F.note} Isolíneas cada ${String(F.iso).replace(".", ",")} ${F.unit}${F.isoBold != null ? " (0 °C en blanco grueso)" : ""}.`;
   };
   wxLegend();
   wxVarEl.onchange = () => { lsSet("skimo-wxvar", wxVarEl.value); wxLegend(); drawWx(); };
   document.getElementById("wxiso").onchange = () => drawWx();
   if (lsGet("skimo-wxvar")) { wxVarEl.value = lsGet("skimo-wxvar"); wxLegend(); }
-  const TEMP_STOPS = [[-20, [49, 54, 149]], [-10, [69, 117, 180]], [-5, [145, 191, 219]], [0, [224, 243, 248]], [3, [255, 255, 191]],
-    [8, [254, 224, 144]], [13, [252, 141, 89]], [18, [215, 48, 39]], [25, [165, 0, 38]]];
+  const TEMP_STOPS = WXF[0].stops;
   const tempRGB = t => {
     if (t <= TEMP_STOPS[0][0]) return TEMP_STOPS[0][1];
     for (let i = 1; i < TEMP_STOPS.length; i++) { const [a, ca] = TEMP_STOPS[i - 1], [b, cb] = TEMP_STOPS[i];
@@ -1295,7 +1295,7 @@ ${pts}
         if (ba === band(r) && ba === band(d)) continue;
         const level = Math.max(ba, band(r), band(d)) * F.iso;
         const bold = F.isoBold != null && Math.abs(level - F.isoBold) < 1e-6;
-        const put = q => { o[4 * q] = bold ? 30 : 40; o[4 * q + 1] = bold ? 80 : 40; o[4 * q + 2] = bold ? 200 : 40; o[4 * q + 3] = bold ? 255 : 150; };
+        const put = q => { o[4 * q] = bold ? 255 : 40; o[4 * q + 1] = bold ? 255 : 40; o[4 * q + 2] = bold ? 255 : 40; o[4 * q + 3] = bold ? 255 : 150; };
         put(k); if (bold) { put(k + 1); put(k + W); }
       }
     }
