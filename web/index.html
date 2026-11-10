@@ -1374,6 +1374,18 @@ ${pts}
     drawWx();
   };
   document.getElementById("wxtemp").addEventListener("change", wxLayersToggle);
+  // Al activar el mapa del tiempo: vista 3D casi frontal sobre el relieve; al quitarlo, se deshace si la puso el
+  let wx3dAuto = false;
+  document.getElementById("wxtemp").addEventListener("change", e => {
+    const b3d = document.querySelector(".btn-3d");
+    if (e.target.checked) {
+      if (b3d && !b3d.classList.contains("on")) { b3d.click(); wx3dAuto = true; }
+      map.easeTo({ pitch: 72, zoom: Math.max(map.getZoom(), 12.5), duration: 1200 });
+    } else if (wx3dAuto) {
+      wx3dAuto = false;
+      if (b3d?.classList.contains("on")) b3d.click();
+    }
+  });
   document.getElementById("wxwind").addEventListener("change", wxLayersToggle);
 
   // Valor en el punto: al pasar el cursor (ordenador) o al tocar (movil) con el mapa del tiempo o el viento activos
