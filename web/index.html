@@ -124,7 +124,7 @@
   <button class="st-main" id="stcard-open" type="button" title="Ver el panel completo de la estación">
     <svg viewBox="0 0 24 24" class="st-ico" aria-hidden="true"><circle cx="12" cy="12" r="11.5" fill="#1e3a5f"/><rect x="10.6" y="4.5" width="2.8" height="11" rx="1.4" fill="#fff"/><circle cx="12" cy="16.5" r="3" fill="#fff"/><circle cx="12" cy="16.5" r="1.9" fill="#e31a1c"/><rect x="11.4" y="9" width="1.2" height="7" fill="#e31a1c"/></svg>
     <span class="st-body">
-      <span class="st-head"><b>Cap de Vaquèira</b> 2467 m · <span id="st-time">–</span></span>
+      <span class="st-head"><b id="st-name">Cap de Vaquèira</b> <span id="st-alt">2467 m</span> · <span id="st-time">–</span></span>
       <span class="st-vals" id="st-vals">Cargando…</span>
     </span>
   </button>
@@ -245,11 +245,20 @@
     <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente</div>
   </div>
   <h2>Tiempo (previsión)</h2>
-  <label><input type="checkbox" id="wxtemp"> Temperatura</label>
+  <label><input type="checkbox" id="wxtemp"> Mapa del tiempo</label>
   <div class="legend" id="legend-wxtemp">
-    <div class="ramp" style="background:linear-gradient(90deg,#313695 0%,#4575b4 22%,#91bfdb 33%,#e0f3f8 44%,#ffffbf 51%,#fee090 62%,#fc8d59 73%,#d73027 84%,#a50026 100%)"></div>
-    <div class="ramp-ticks"><span>−20°</span><span>−10°</span><span>0°</span><span>10°</span><span>25°</span></div>
-    <div style="color:var(--muted)">Estimación: modelo (~4 km) corregido a la cota de cada punto (−6,5 °C por 1000 m). No incluye el efecto del sol según la orientación.</div>
+    <select id="wxvar" aria-label="Variable del mapa del tiempo" style="width:100%;min-height:30px;margin:2px 0 4px;border-radius:8px;border:1px solid rgba(127,127,127,.4);background:transparent;color:var(--fg)">
+      <option value="temperature_2m">Temperatura</option>
+      <option value="wind_speed_10m">Viento medio</option>
+      <option value="wind_gusts_10m">Rachas</option>
+      <option value="snowfall">Nieve nueva (cm/h)</option>
+      <option value="precipitation">Precipitación (mm/h)</option>
+      <option value="cloud_cover">Nubosidad</option>
+      <option value="freezing_level_height">Isoterma 0 °C</option>
+    </select>
+    <div class="ramp" id="wxramp"></div>
+    <div class="ramp-ticks" id="wxticks"></div>
+    <div style="color:var(--muted)" id="wxnote"></div>
   </div>
   <label><input type="checkbox" id="wxwind"> Viento (partículas)</label>
   <div class="legend" id="legend-wxwind">
@@ -1139,10 +1148,11 @@ ${pts}
   let tGrid = null, tGridP = null, wField = null, wFieldP = null, tVersion = 0;
   const loadTemp = () => tGridP ??= (async () => {
     try {
-      const r = await omMulti(TG, "hourly=temperature_2m&forecast_days=3&timezone=Europe%2FMadrid");
-      tGrid = { at: new Date().toISOString(), time: r[0].hourly.time, elev: r.map(x => x.elevation), t: r.map(x => x.hourly.temperature_2m) };
-      lsSet("skimo-wx-tgrid", JSON.stringify(tGrid));
-    } catch { tGrid = JSON.parse(lsGet("skimo-wx-tgrid") || "null"); }
+      const r = await omMulti(TG, `hourly=${WXF.map(v => v.id).join(",")}&forecast_days=3&timezone=Europe%2FMadrid`);
+      tGrid = { at: new Date().toISOString(), time: r[0].hourly.time, elev: r.map(x => x.elevation),
+        v: Object.fromEntries(WXF.map(f => [f.id, r.map(x => x.hourly[f.id])])) };
+      lsSet("skimo-wx-tgrid2", JSON.stringify(tGrid));
+    } catch { tGrid = JSON.parse(lsGet("skimo-wx-tgrid2") || "null"); }
     return tGrid;
   })();
   const loadWind = () => wFieldP ??= (async () => {
@@ -1159,6 +1169,39 @@ ${pts}
   })();
 
   // Teselas "wxtemp://z/x/y": temperatura del punto de malla corregida a la cota real de cada pixel
+  // Variables del mapa del tiempo: rampa de color [valor, [r,g,b]], umbral minimo para pintar y si se corrige por cota
+  const WXF = [
+    { id: "temperature_2m", unit: "°C", lapse: true, ticks: ["−20°", "−10°", "0°", "10°", "25°"],
+      note: "Estimación: modelo (~4 km) corregido a la cota de cada punto (−6,5 °C por 1000 m). Sin el efecto del sol según la orientación.",
+      stops: [[-20, [49, 54, 149]], [-10, [69, 117, 180]], [-5, [145, 191, 219]], [0, [224, 243, 248]], [3, [255, 255, 191]], [8, [254, 224, 144]], [13, [252, 141, 89]], [18, [215, 48, 39]], [25, [165, 0, 38]]] },
+    { id: "wind_speed_10m", unit: "km/h", ticks: ["0", "20", "40", "70", "100 km/h"], note: "Modelo (~4 km): no resuelve aceleraciones en crestas y collados.",
+      stops: [[0, [247, 251, 255]], [10, [198, 219, 239]], [20, [107, 174, 214]], [35, [255, 255, 178]], [50, [253, 141, 60]], [70, [227, 26, 28]], [100, [128, 0, 38]]] },
+    { id: "wind_gusts_10m", unit: "km/h", ticks: ["0", "20", "40", "70", "100 km/h"], note: "Rachas del modelo (~4 km): en crestas pueden ser mayores.",
+      stops: [[0, [247, 251, 255]], [10, [198, 219, 239]], [20, [107, 174, 214]], [35, [255, 255, 178]], [50, [253, 141, 60]], [70, [227, 26, 28]], [100, [128, 0, 38]]] },
+    { id: "snowfall", unit: "cm/h", min: 0.05, ticks: ["0,1", "0,5", "1", "2", "4 cm/h"], note: "Nieve nueva por hora según el modelo. Sin color = no nieva.",
+      stops: [[0.05, [224, 236, 244]], [0.5, [158, 188, 218]], [1, [140, 150, 198]], [2, [136, 86, 167]], [4, [129, 15, 124]]] },
+    { id: "precipitation", unit: "mm/h", min: 0.05, ticks: ["0,1", "0,5", "2", "5", "10 mm/h"], note: "Lluvia o nieve (agua equivalente) por hora. Sin color = seco.",
+      stops: [[0.05, [237, 248, 177]], [0.5, [127, 205, 187]], [2, [44, 127, 184]], [5, [37, 52, 148]], [10, [8, 29, 88]]] },
+    { id: "cloud_cover", unit: "%", min: 5, ticks: ["5 %", "25", "50", "75", "100 %"], note: "Nubosidad total del modelo.",
+      stops: [[5, [255, 255, 255]], [50, [200, 200, 205]], [100, [120, 120, 130]]] },
+    { id: "freezing_level_height", unit: "m", ticks: ["1000", "1500", "2000", "2500", "3000+ m"], note: "Altura de la isoterma 0 °C según el modelo.",
+      stops: [[1000, [33, 102, 172]], [1500, [103, 169, 207]], [2000, [209, 229, 240]], [2500, [253, 219, 199]], [3000, [239, 138, 98]], [3500, [178, 24, 43]]] }];
+  const rampRGB = (stops, t) => {
+    if (t <= stops[0][0]) return stops[0][1];
+    for (let i = 1; i < stops.length; i++) { const [a, ca] = stops[i - 1], [b, cb] = stops[i];
+      if (t <= b) { const f = (t - a) / (b - a); return ca.map((x, k) => x + (cb[k] - x) * f); } }
+    return stops.at(-1)[1];
+  };
+  const wxVarEl = document.getElementById("wxvar");
+  const wxLegend = () => {
+    const F = WXF.find(f => f.id === wxVarEl.value), a = F.stops[0][0], b = F.stops.at(-1)[0];
+    document.getElementById("wxramp").style.background = `linear-gradient(90deg,${F.stops.map(([v, c]) => `rgb(${c}) ${Math.round(100 * (v - a) / (b - a))}%`).join(",")})`;
+    document.getElementById("wxticks").innerHTML = F.ticks.map(x => `<span>${x}</span>`).join("");
+    document.getElementById("wxnote").textContent = F.note;
+  };
+  wxLegend();
+  wxVarEl.onchange = () => { lsSet("skimo-wxvar", wxVarEl.value); wxLegend(); drawWx(); };
+  if (lsGet("skimo-wxvar")) { wxVarEl.value = lsGet("skimo-wxvar"); wxLegend(); }
   const TEMP_STOPS = [[-20, [49, 54, 149]], [-10, [69, 117, 180]], [-5, [145, 191, 219]], [0, [224, 243, 248]], [3, [255, 255, 191]],
     [8, [254, 224, 144]], [13, [252, 141, 89]], [18, [215, 48, 39]], [25, [165, 0, 38]]];
   const tempRGB = t => {
@@ -1180,15 +1223,18 @@ ${pts}
     const c = new OffscreenCanvas(W, W), g = c.getContext("2d", { willReadFrequently: true });
     g.drawImage(bmp, 0, 0);
     const src = g.getImageData(0, 0, W, W).data, out = g.createImageData(W, W), o = out.data, n = 2 ** z;
-    const tAt = g0.t.map(a => a[hIdx]);
+    const F = WXF.find(f => f.id === wxVarEl.value) || WXF[0], arr = g0.v?.[F.id];
+    if (!arr) return { data: await emptyTile };
+    const tAt = arr.map(a => a[hIdx]);
     for (let j = 0; j < W; j++) {
       const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + (j + 0.5) / W) / n))) * 180 / Math.PI;
       for (let i = 0; i < W; i++) {
         const k = j * W + i, hPix = -10000 + (src[4 * k] * 65536 + src[4 * k + 1] * 256 + src[4 * k + 2]) * 0.1;
         const lon = (x + (i + 0.5) / W) / n * 360 - 180;
-        const t = bilinear(TG, lon, lat, q => tAt[q] == null ? null : tAt[q] + LAPSE * (g0.elev[q] - hPix));
-        if (t == null) continue;
-        const rgb = tempRGB(t);
+        const t = F.lapse ? bilinear(TG, lon, lat, q => tAt[q] == null ? null : tAt[q] + LAPSE * (g0.elev[q] - hPix))
+                          : bilinear(TG, lon, lat, q => tAt[q]);
+        if (t == null || (F.min != null && t < F.min)) continue;
+        const rgb = rampRGB(F.stops, t);
         o[4 * k] = rgb[0]; o[4 * k + 1] = rgb[1]; o[4 * k + 2] = rgb[2]; o[4 * k + 3] = 165;
       }
     }
@@ -1269,13 +1315,28 @@ ${pts}
   document.getElementById("wxtemp").addEventListener("change", wxLayersToggle);
   document.getElementById("wxwind").addEventListener("change", wxLayersToggle);
 
-  // ---------- Estaciones meteorologicas (de momento: Cap de Vaqueira, AEMET 9988B) ----------
-  const STATIONS = [{ id: "9988B", name: "Cap de Vaquèira", ele: 2467, lon: 0.97389, lat: 42.69194,
-    url: "https://iot.arantec.com/app/dashboards/public/dashboard/zClCrT6DAE8-0me_YzoEohCdhhez6qfYgnUtPkFRwCI?navbar=false&contextbar=false&layersBar=false&datePicker=true&devicePicker=false&displayTitle=false&filters=false" }];
+  // ---------- Estaciones meteorologicas de AEMET (valores medidos, leidos cada hora por GitHub Actions) ----------
+  const ARANTEC_9988B = "https://iot.arantec.com/app/dashboards/public/dashboard/zClCrT6DAE8-0me_YzoEohCdhhez6qfYgnUtPkFRwCI?navbar=false&contextbar=false&layersBar=false&datePicker=true&devicePicker=false&displayTitle=false&filters=false";
+  const STATIONS = [
+    { id: "9988B", name: "Cap de Vaquèira", ele: 2467, lat: 42.6919, lon: 0.9739 },
+    { id: "9677", name: "Port Ainé", ele: 2410, lat: 42.4100, lon: 1.2147 },
+    { id: "9990X", name: "Arties", ele: 1161, lat: 42.7003, lon: 0.8769 },
+    { id: "9994X", name: "Bossòst", ele: 722, lat: 42.7761, lon: 0.6897 },
+    { id: "9657X", name: "Esterri d'Àneu", ele: 952, lat: 42.6250, lon: 1.1261 },
+    { id: "9744B", name: "Vall de Boí", ele: 1089, lat: 42.5033, lon: 0.7989 }];
+  const ST_URL = "https://raw.githubusercontent.com/Awasmil/skimo-tiles/main/data/stations/index.json";
   const stPanel = document.getElementById("station");
+  let stData = {}, stFromCache = false, stCurrent = STATIONS[0];
+  const DIR16 = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"];
+  const num = (v, d = 1) => v == null ? "–" : (Math.round(v * 10 ** d) / 10 ** d).toLocaleString("es-ES");
+  const stFeatures = () => ({ type: "FeatureCollection", features: STATIONS.map(s => {
+    const d = stData[s.id];
+    return { type: "Feature", properties: { id: s.id, label: `${s.name} · ${s.ele} m${d?.ta != null ? `\n${num(d.ta)} °C` : ""}` },
+      geometry: { type: "Point", coordinates: [s.lon, s.lat] } };
+  }) });
+
   map.on("load", () => {
-    map.addSource("stations", { type: "geojson", data: { type: "FeatureCollection", features: STATIONS.map(s => ({
-      type: "Feature", properties: { id: s.id, label: `${s.name}\n${s.ele} m · estación` }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } })) } });
+    map.addSource("stations", { type: "geojson", data: stFeatures() });
     // Icono de termometro dibujado aqui (sin depender de fuentes de emoji)
     const S = 64, cv = document.createElement("canvas"); cv.width = cv.height = S;
     const g = cv.getContext("2d");
@@ -1292,55 +1353,67 @@ ${pts}
     map.addImage("thermometer", g.getImageData(0, 0, S, S), { pixelRatio: 2 });
     map.addLayer({ id: "stations-dot", type: "symbol", source: "stations",
       layout: { "icon-image": "thermometer", "icon-allow-overlap": true, "icon-ignore-placement": true } });
-    map.addLayer({ id: "stations-label", type: "symbol", source: "stations", minzoom: 10,
+    map.addLayer({ id: "stations-label", type: "symbol", source: "stations", minzoom: 9,
       layout: { "text-field": ["get", "label"], "text-font": ["Noto Sans Medium"], "text-size": 11, "text-anchor": "top", "text-offset": [0, 1.4] },
       paint: { "text-color": "#1e3a5f", "text-halo-color": "#fff", "text-halo-width": 1.5 } });
+    // Tocar un termometro: centrar el mapa en esa estacion (la tarjeta pasa a mostrarla)
     map.on("click", "stations-dot", e => {
       if (measuring || wxMode) return;
       const s = STATIONS.find(x => x.id === e.features[0].properties.id);
-      document.getElementById("st-frame").src = s.url;
-      document.getElementById("st-open").href = s.url;
-      stPanel.classList.add("on");
+      stCurrent = s; renderStation(); map.easeTo({ center: [s.lon, s.lat] });
     });
     map.on("mouseenter", "stations-dot", () => { if (!measuring) map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "stations-dot", () => { if (!measuring) map.getCanvas().style.cursor = ""; });
   });
   document.getElementById("st-close").onclick = () => { stPanel.classList.remove("on"); document.getElementById("st-frame").src = "about:blank"; };
+  // Detalle: panel de Arantec para Cap de Vaqueira; para las demas, la pagina de AEMET de la estacion
   const openStation = s => {
-    document.getElementById("st-frame").src = s.url; document.getElementById("st-open").href = s.url; stPanel.classList.add("on");
+    if (s.id === "9988B") {
+      document.getElementById("st-frame").src = ARANTEC_9988B; document.getElementById("st-open").href = ARANTEC_9988B; stPanel.classList.add("on");
+    } else window.open(`https://www.aemet.es/es/eltiempo/observacion/ultimosdatos?l=${s.id}`, "_blank", "noopener");
   };
 
-  // Tarjeta flotante: ultimos valores medidos (AEMET OpenData, leidos cada hora por GitHub Actions)
-  const DIR16 = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"];
-  const num = (v, d = 1) => v == null ? "–" : (Math.round(v * 10 ** d) / 10 ** d).toLocaleString("es-ES");
+  // Tarjeta flotante: la estacion mas cercana al centro del mapa
   const stCard = document.getElementById("stcard"), stChip = document.getElementById("stchip");
   const showCard = open => { stCard.hidden = !open; stChip.hidden = open; lsSet("skimo-stcard", open ? "1" : "0"); };
-  const renderStation = (d, fromCache) => {
-    const t = new Date(d.time.replace(/\+0000$/, "Z")), hrs = d.series?.length || 24;
-    const ageH = (Date.now() - t) / 36e5;
+  const renderStation = () => {
+    const s = stCurrent, d = stData[s.id];
+    document.getElementById("st-name").textContent = s.name;
+    document.getElementById("st-alt").textContent = `${s.ele} m`;
+    if (!d) { document.getElementById("st-time").textContent = ""; document.getElementById("st-vals").textContent = stFromCache ? "Sin datos guardados" : "Cargando…"; return; }
+    const t = new Date(d.time.replace(/\+0000$/, "Z")), ageH = (Date.now() - t) / 36e5;
     document.getElementById("st-time").textContent = t.toLocaleString("es-ES", { weekday: "short", hour: "2-digit", minute: "2-digit" })
-      + (ageH > 3 ? ` (hace ${Math.round(ageH)} h)` : "") + (fromCache ? " · sin conexión" : "");
+      + (ageH > 3 ? ` (hace ${Math.round(ageH)} h)` : "") + (stFromCache ? " · sin conexión" : "");
     const dir = d.wind_dir == null ? "" : ` ${DIR16[Math.round(d.wind_dir / 22.5) % 16]}`;
+    const snow = d.snow_depth == null ? "" : ` · nieve ${num(d.snow_depth, 0)} cm` + (d.snow_new24 ? ` (+${num(d.snow_new24, 0)} cm)` : " (+0)");
     document.getElementById("st-vals").innerHTML =
-      `<b>${num(d.ta)} °C</b> · mín ${num(d.tamin24)}° (${hrs} h) · nieve ${num(d.snow_depth, 0)} cm`
-      + (d.snow_new24 ? ` (+${num(d.snow_new24, 0)} cm 24 h)` : " (+0 en 24 h)")
-      + ` · viento <b>${num(d.wind, 0)} km/h${dir}</b>${d.gust != null ? `, rachas ${num(d.gust, 0)}` : ""}`;
+      `<b>${num(d.ta)} °C</b> · mín ${num(d.tamin24)}°${d.n_obs ? ` (${d.n_obs} h)` : ""}${snow}`
+      + (d.wind != null ? ` · viento <b>${num(d.wind, 0)} km/h${dir}</b>${d.gust != null ? `, rachas ${num(d.gust, 0)}` : ""}` : "");
     document.getElementById("stchip-t").textContent = `${num(d.ta)} °C`;
   };
-  const loadStation = async () => {
+  const nearestStation = () => {
+    const c = map.getCenter();
+    return STATIONS.reduce((best, s) => haversine([c.lng, c.lat], [s.lon, s.lat]) < haversine([c.lng, c.lat], [best.lon, best.lat]) ? s : best);
+  };
+  map.on("moveend", () => { const s = nearestStation(); if (s !== stCurrent) { stCurrent = s; renderStation(); } });
+  const loadStations = async () => {
     try {
-      const d = await (await fetch("https://raw.githubusercontent.com/Awasmil/skimo-tiles/main/data/stations/9988B/latest.json", { cache: "no-cache" })).json();
-      lsSet("skimo-st-9988B", JSON.stringify(d)); renderStation(d, false);
+      const list = await (await fetch(ST_URL, { cache: "no-cache" })).json();
+      stData = Object.fromEntries(list.map(d => [d.station, d])); stFromCache = false;
+      lsSet("skimo-stations", JSON.stringify(list));
     } catch {
-      const c = lsGet("skimo-st-9988B");
-      if (c) renderStation(JSON.parse(c), true); else document.getElementById("st-vals").textContent = "Sin conexión";
+      const c = lsGet("skimo-stations");
+      stData = c ? Object.fromEntries(JSON.parse(c).map(d => [d.station, d])) : {}; stFromCache = true;
     }
+    map.getSource("stations")?.setData(stFeatures());
+    renderStation();
   };
   showCard(lsGet("skimo-stcard") !== "0");
   document.getElementById("stcard-min").onclick = () => showCard(false);
   stChip.onclick = () => showCard(true);
-  document.getElementById("stcard-open").onclick = () => openStation(STATIONS[0]);
-  loadStation(); setInterval(loadStation, 10 * 60 * 1000);
+  document.getElementById("stcard-open").onclick = () => openStation(stCurrent);
+  map.once("load", () => { stCurrent = nearestStation(); loadStations(); });
+  setInterval(loadStations, 10 * 60 * 1000);
 
   document.getElementById("danger").addEventListener("change", e => {
     const sa = document.getElementById("slopeaval");
