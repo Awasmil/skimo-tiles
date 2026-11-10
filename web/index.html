@@ -1140,39 +1140,19 @@ ${pts}
     }
     return w ? sum / w : null;
   };
-  const omMulti = async (L, params) => {
-    const out = [];
-    for (let i = 0; i < L.pts.length; i += 400) {     // varias peticiones (limite de puntos por llamada)
-      const part = L.pts.slice(i, i + 400);
-      const j = await (await fetch(`${OM}?latitude=${part.map(p => p[1]).join(",")}&longitude=${part.map(p => p[0]).join(",")}&${params}`)).json();
-      if (j.error) throw new Error(j.reason);
-      out.push(...(Array.isArray(j) ? j : [j]));
-    }
-    return out;
-  };
 
   let tGrid = null, tGridP = null, wField = null, wFieldP = null, tVersion = 0;
-  const loadTemp = () => tGridP ??= (async () => {
+  // Mallas precalculadas cada 3 h por GitHub Actions (data/wx), para no chocar con el limite de Open-Meteo
+  const WX_DATA = "https://raw.githubusercontent.com/Awasmil/skimo-tiles/main/data/wx/";
+  const getWx = async (name, cacheKey) => {
     try {
-      const r = await omMulti(TG, `hourly=${WXF.map(v => v.id).join(",")}&forecast_days=3&timezone=Europe%2FMadrid`);
-      tGrid = { at: new Date().toISOString(), time: r[0].hourly.time, elev: r.map(x => x.elevation),
-        v: Object.fromEntries(WXF.map(f => [f.id, r.map(x => x.hourly[f.id])])) };
-      lsSet("skimo-wx-tgrid2", JSON.stringify(tGrid));
-    } catch { tGrid = JSON.parse(lsGet("skimo-wx-tgrid2") || "null"); }
-    return tGrid;
-  })();
-  const loadWind = () => wFieldP ??= (async () => {
-    try {
-      const r = await omMulti(WG, "hourly=wind_speed_10m,wind_direction_10m&models=meteofrance_arome_france_hd&forecast_days=2&timezone=Europe%2FMadrid&wind_speed_unit=ms");
-      const time = r[0].hourly.time;
-      // u (hacia el este) y v (hacia el norte) en m/s; la direccion meteorologica es de donde VIENE el viento
-      const comp = (h, fn) => r.map(x => { const sp = x.hourly.wind_speed_10m[h], d = x.hourly.wind_direction_10m[h];
-        return sp == null || d == null ? null : fn(sp, d * Math.PI / 180); });
-      wField = { at: new Date().toISOString(), time,
-        u: time.map((_, h) => comp(h, (sp, d) => -sp * Math.sin(d))), v: time.map((_, h) => comp(h, (sp, d) => -sp * Math.cos(d))) };
-    } catch (e) { console.warn("Viento AROME no disponible:", e); wField = null; }
-    return wField;
-  })();
+      const j = await (await fetch(WX_DATA + name, { cache: "no-cache" })).json();
+      try { localStorage.setItem(cacheKey, JSON.stringify(j)); } catch { /* sin espacio: solo en memoria */ }
+      return j;
+    } catch { return JSON.parse(lsGet(cacheKey) || "null"); }
+  };
+  const loadTemp = () => tGridP ??= (async () => { tGrid = await getWx("grid.json", "skimo-wx-grid3"); return tGrid; })();
+  const loadWind = () => wFieldP ??= (async () => { wField = await getWx("wind.json", "skimo-wx-wind3"); return wField; })();
 
   // Teselas "wxtemp://z/x/y": temperatura del punto de malla corregida a la cota real de cada pixel
   // Variables del mapa del tiempo: rampa de color [valor, [r,g,b]], umbral minimo para pintar y si se corrige por cota
