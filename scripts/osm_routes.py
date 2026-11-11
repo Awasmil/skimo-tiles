@@ -50,5 +50,23 @@ for r in rels:
         for part in (clip_line(cov, coords) if cov else [coords]):
             feats.append({"type": "Feature", "geometry": {"type": "LineString", "coordinates": part}, "properties": props})
 
+# Todos los caminos (no solo los senalizados): sendas, pistas, caminos de herradura, escaleras
+SAC = {"hiking": "T1", "mountain_hiking": "T2", "demanding_mountain_hiking": "T3", "alpine_hiking": "T4",
+       "demanding_alpine_hiking": "T5", "difficult_alpine_hiking": "T6"}
+ways = overpass(f"""[out:json][timeout:180];(
+  way["highway"~"^(path|footway|track|bridleway|steps)$"]({bbox});
+);out tags geom;""")
+npaths = 0
+for w in ways:
+    t, g = w.get("tags", {}), w.get("geometry") or []
+    if len(g) < 2 or t.get("access") in ("private", "no"): continue
+    hw = t["highway"]
+    props = {"kind": "track" if hw == "track" else "path", "name": t.get("name", ""), "sac": SAC.get(t.get("sac_scale", ""), "")}
+    coords = [[p["lon"], p["lat"]] for p in g if p]
+    for part in (clip_line(cov, coords) if cov else [coords]):
+        feats.append({"type": "Feature", "geometry": {"type": "LineString", "coordinates": part}, "properties": props}); npaths += 1
+print(npaths, "tramos de caminos")
+for f in feats: f["properties"].setdefault("kind", "route")
+
 json.dump({"type": "FeatureCollection", "features": feats}, open(out, "w", encoding="utf-8"), ensure_ascii=False)
 print(len(rels), "rutas,", len(feats), "tramos")
