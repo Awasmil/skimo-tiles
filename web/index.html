@@ -1555,10 +1555,10 @@ ${pts}
     const b3d = document.querySelector(".btn-3d");
     if (e.target.checked) {
       if (b3d && !b3d.classList.contains("on")) { b3d.click(); wx3dAuto = true; }
-      // Cámara encima de Gessa (a 4000 m) mirando de frente al Cap de Vaquèira.
-      // MapLibre 4 sitúa el punto de mira a nivel del mar: se prolonga la línea Gessa → cima del Cap hasta la cota 0.
+      // Cámara alta encima de Vielha (a 5500 m) mirando hacia Baqueira / Cap de Vaquèira (pedido por Jorge 2026-11-11).
+      // MapLibre 4 sitúa el punto de mira a nivel del mar: se prolonga la línea cámara → cima del Cap hasta la cota 0.
       map.setMaxPitch(85);
-      const ex = map.getTerrain()?.exaggeration || 1, G = [0.88994, 42.70579], C = [0.97424, 42.6919], H = 4000;
+      const ex = map.getTerrain()?.exaggeration || 1, G = [0.7953, 42.7023], C = [0.97424, 42.6919], H = 5500;
       const kx = 111320 * Math.cos(42.7 * Math.PI / 180), ky = 110574;
       const dx = (C[0] - G[0]) * kx, dy = (C[1] - G[1]) * ky, f = H / (H - 2469 * ex);
       const cam = map.calculateCameraOptionsFromTo(new maplibregl.LngLat(...G), H,
