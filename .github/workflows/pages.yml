@@ -82,15 +82,44 @@ jobs:
           ogr2ogr -f PMTiles -nln aludes -dsco MINZOOM=9 -dsco MAXZOOM=15             "site/$TILES_DIR/aran-aludes.pmtiles" aludes.geojson
           ls -lh "site/$TILES_DIR/aran-aludes.pmtiles"
 
+      - name: Zona de trabajo del mapa (donde hay relieve MDT02 propio)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Lee solo las vistas reducidas de las hojas MDT02 (COG) por HTTP, sin descargarlas enteras,
+          # y saca el contorno de los pixeles con dato. Sirve para no pintar nombres ni senderos fuera del mapa.
+          sudo apt-get install -y -qq gdal-bin python3-gdal > /dev/null
+          REL=$(gh release list --repo "$GITHUB_REPOSITORY" -L 100 --json tagName -q '[.[]|select(.tagName|startswith("aran-dem-source"))][0].tagName')
+          i=0
+          for a in $(gh release view "$REL" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets[].name' | grep -i '\.tif$'); do
+            gdalwarp -q -t_srs EPSG:4326 -tr 0.0008 0.0008 -r near -dstnodata -9999               "/vsicurl/https://github.com/$GITHUB_REPOSITORY/releases/download/$REL/$a" "cov_$i.tif" && i=$((i+1))
+          done
+          gdalbuildvrt -q -srcnodata -9999 cov.vrt cov_*.tif
+          gdal_calc.py --quiet -A cov.vrt --calc "(A>-100)*1" --NoDataValue=0 --type=Byte --outfile cov_mask.tif
+          gdal_polygonize.py -q cov_mask.tif -f GeoJSON cov_raw.geojson cov DN
+          ogr2ogr -f GeoJSON -where "DN=1" -simplify 0.0004 coverage.geojson cov_raw.geojson
+          cp coverage.geojson "site/$TILES_DIR/coverage.json"
+          python3 -c "import json;f=json.load(open('coverage.geojson'))['features'];print(len(f),'poligonos de cobertura')"
+
       - name: Nombres de OpenStreetMap (picos, collados, fuentes, refugios, lagos, rios)
         continue-on-error: true
         run: |
-          python3 scripts/osm_labels.py "42.50,0.40,42.92,1.40" osm.geojson
+          COV=""; test -s coverage.geojson && COV=coverage.geojson
+          python3 scripts/osm_labels.py "42.50,0.40,42.92,1.40" osm.geojson $COV
           ogr2ogr -f PMTiles -nln osm -dsco MINZOOM=9 -dsco MAXZOOM=15             "site/$TILES_DIR/aran-osm.pmtiles" osm.geojson
           ls -lh "site/$TILES_DIR/aran-osm.pmtiles"
           # Buscador: todo lo que tiene nombre en OSM (si Overpass falla, el indice reducido de las etiquetas)
           python3 scripts/search_all.py "42.50,0.40,42.92,1.40" "site/$TILES_DIR/search.json" \n            || python3 scripts/search_index.py osm.geojson "site/$TILES_DIR/search.json"
           python3 scripts/paths_graph.py "42.50,0.40,42.92,1.40" "site/$TILES_DIR/paths.json"
+
+      - name: Senderos senalizados de OpenStreetMap (GR, PR, SL...)
+        continue-on-error: true
+        run: |
+          COV=""; test -s coverage.geojson && COV=coverage.geojson
+          python3 scripts/osm_routes.py "42.50,0.40,42.92,1.40" routes.geojson $COV
+          ogr2ogr -f PMTiles -nln routes -dsco MINZOOM=9 -dsco MAXZOOM=15 "site/$TILES_DIR/aran-routes.pmtiles" routes.geojson
+          ls -lh "site/$TILES_DIR/aran-routes.pmtiles"
 
       - name: Tipografias para las etiquetas (alojadas aqui para que funcionen sin depender de terceros)
         run: |
