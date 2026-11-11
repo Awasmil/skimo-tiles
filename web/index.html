@@ -350,6 +350,12 @@
     <div><span style="background:#7b3294;height:4px;vertical-align:3px"></span>Otros itinerarios</div>
     <div style="color:var(--muted)">Según OpenStreetMap: puede faltar alguno o no coincidir con las marcas del terreno.</div>
   </div>
+  <label><input type="checkbox" id="paths" checked> Caminos y sendas (todos)</label>
+  <div class="legend on" id="legend-paths">
+    <div><span style="background:#5b3a1e;height:2px;vertical-align:3px"></span>Senda o camino</div>
+    <div><span style="background:#8c6d46;height:3px;vertical-align:3px"></span>Pista</div>
+    <div style="color:var(--muted)">Todos los de OpenStreetMap, señalizados o no (desde zoom 12). No indica si está transitable con nieve.</div>
+  </div>
   <label><input type="checkbox" id="water" checked> Puntos de agua</label>
   <div class="legend on" id="legend-water">
     <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente (manantial)</div>
@@ -538,14 +544,26 @@
           paint: { "text-color": "#6b3f16", "text-halo-color": "rgba(255,255,255,0.85)", "text-halo-width": 1.2 } },
 
         // Senderos senalizados (relaciones de OSM), color por tipo (GR, PR, SL...)
-        { id: "routes-casing", type: "line", source: "routes", "source-layer": "routes", minzoom: 10,
+        // Todos los caminos de OSM (sendas y pistas), por debajo de los senderos senalizados
+        { id: "paths-line", type: "line", source: "routes", "source-layer": "routes", minzoom: 12,
+          filter: ["match", ["get", "kind"], ["path", "track"], true, false],
+          layout: { "line-cap": "butt", "line-join": "round" },
+          paint: { "line-color": ["match", ["get", "kind"], "track", "#8c6d46", "#5b3a1e"],
+            "line-width": ["interpolate", ["linear"], ["zoom"], 12, ["match", ["get", "kind"], "track", 1.2, 0.9], 16, ["match", ["get", "kind"], "track", 2.6, 2]],
+            "line-dasharray": [2.5, 1.5], "line-opacity": 0.9 } },
+        { id: "paths-label", type: "symbol", source: "routes", "source-layer": "routes", minzoom: 14,
+          filter: ["all", ["match", ["get", "kind"], ["path", "track"], true, false], ["!=", ["get", "name"], ""]],
+          layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-font": ["Noto Sans Italic"],
+            "text-size": 10.5, "symbol-spacing": 400, "text-max-angle": 30 },
+          paint: { "text-color": "#5b3a1e", "text-halo-color": "rgba(255,255,255,0.95)", "text-halo-width": 1.4 } },
+        { id: "routes-casing", type: "line", source: "routes", "source-layer": "routes", minzoom: 10, filter: ["!", ["match", ["get", "kind"], ["path", "track"], true, false]],
           layout: { "line-cap": "round", "line-join": "round" },
           paint: { "line-color": "#ffffff", "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 15, 6], "line-opacity": 0.9 } },
-        { id: "routes-line", type: "line", source: "routes", "source-layer": "routes", minzoom: 10,
+        { id: "routes-line", type: "line", source: "routes", "source-layer": "routes", minzoom: 10, filter: ["!", ["match", ["get", "kind"], ["path", "track"], true, false]],
           layout: { "line-cap": "round", "line-join": "round" },
           paint: { "line-color": ["coalesce", ["get", "col"], "#7b3294"], "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.3, 15, 3.5],
             "line-dasharray": [3, 1.5] } },
-        { id: "routes-label", type: "symbol", source: "routes", "source-layer": "routes", minzoom: 12,
+        { id: "routes-label", type: "symbol", source: "routes", "source-layer": "routes", minzoom: 12, filter: ["!", ["match", ["get", "kind"], ["path", "track"], true, false]],
           layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-font": ["Noto Sans Medium"],
             "text-size": 11, "symbol-spacing": 500, "text-max-angle": 30 },
           paint: { "text-color": ["coalesce", ["get", "col"], "#7b3294"], "text-halo-color": "rgba(255,255,255,0.95)", "text-halo-width": 1.6 } },
@@ -656,7 +674,7 @@
     contours: ["contours-minor", "contours-major", "contours-label"], danger: ["danger"],
     labels: ["osm-river", "osm-stream", "osm-hut", "osm-peak-dot",
       "osm-label-detail", "osm-label-lake", "osm-label-peak", "osm-label-hut"],
-    routes: ["routes-casing", "routes-line", "routes-label"], water: ["osm-spring", "osm-label-water"]
+    routes: ["routes-casing", "routes-line", "routes-label"], paths: ["paths-line", "paths-label"], water: ["osm-spring", "osm-label-water"]
   };
   for (const [id, layers] of Object.entries(groups)) {
     document.getElementById(id).addEventListener("change", e => {
