@@ -335,12 +335,26 @@
     <div style="color:var(--muted)">Mapa histórico del ICGC. No indica el peligro de hoy.</div>
   </div>
   <label><input type="checkbox" id="contours" checked> Curvas de nivel</label>
-  <label><input type="checkbox" id="labels" checked> Nombres y refugios</label>
+  <label><input type="checkbox" id="labels" checked> Nombres</label>
   <div class="legend on" id="legend-labels">
     <div><span style="background:#c0392b;border-radius:50%"></span>Refugio guardado</div>
     <div><span style="background:#e67e22;border-radius:50%"></span>Refugio libre</div>
     <div><span style="background:#8d6e63;border-radius:50%"></span>Cabaña / abrigo</div>
-    <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente</div>
+  </div>
+  <h2>Tracks</h2>
+  <label><input type="checkbox" id="routes" checked> Senderos señalizados</label>
+  <div class="legend on" id="legend-routes">
+    <div><span style="background:#d7191c;height:4px;vertical-align:3px"></span>GR (rojo y blanco)</div>
+    <div><span style="background:#e6a800;height:4px;vertical-align:3px"></span>PR (amarillo y blanco)</div>
+    <div><span style="background:#2ca25f;height:4px;vertical-align:3px"></span>SL (verde y blanco)</div>
+    <div><span style="background:#7b3294;height:4px;vertical-align:3px"></span>Otros itinerarios</div>
+    <div style="color:var(--muted)">Según OpenStreetMap: puede faltar alguno o no coincidir con las marcas del terreno.</div>
+  </div>
+  <label><input type="checkbox" id="water" checked> Puntos de agua</label>
+  <div class="legend on" id="legend-water">
+    <div><span style="background:#2b8cbe;border-radius:50%"></span>Fuente (manantial)</div>
+    <div><span style="background:#08306b;border-radius:50%"></span>Agua potable (grifo, fuente)</div>
+    <div style="color:var(--muted)">No garantiza que lleve agua ni que sea potable.</div>
   </div>
   <h2>Tiempo (previsión)</h2>
   <label><input type="checkbox" id="wxtemp"> Mapa del tiempo</label>
@@ -354,6 +368,11 @@
       <option value="cloud_cover">Nubosidad</option>
       <option value="freezing_level_height">Isoterma 0 °C</option>
       <option value="snow_acc">Nieve acumulada (hasta 16 días)</option>
+    </select>
+    <select id="wxmodel" aria-label="Modelo del mapa del tiempo" style="width:100%;min-height:30px;margin:0 0 4px;border-radius:8px;border:1px solid rgba(127,127,127,.4);background:transparent;color:var(--fg)">
+      <option value="grid.json">Modelo: mejor combinación (16 días)</option>
+      <option value="grid-arome.json">Modelo: AROME 1,3 km (~2 días)</option>
+      <option value="grid-ecmwf.json">Modelo: ECMWF IFS (~25 km, 15 días)</option>
     </select>
     <label style="padding:2px 0"><input type="checkbox" id="wxiso" checked> Isolíneas (líneas de igual valor)</label>
     <div class="ramp" id="wxramp"></div>
@@ -402,7 +421,7 @@
   // sin pasar por la red. Si hay una copia guardada, se usa siempre (aunque haya version nueva).
   const OFFLINE_CACHE = "skimo-offline";
   const PM_FILES = ["aran-base", "aran-terrain", "aran-slope", "aran-slope-aval", "aran-aspect", "aran-contours",
-    "aran-osm", "aran-aludes", "aran-sat-winter"].map(n => n + ".pmtiles");
+    "aran-osm", "aran-routes", "aran-aludes", "aran-sat-winter"].map(n => n + ".pmtiles");
   const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
   const lsSet = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
   const offlineCache = "caches" in window ? await caches.open(OFFLINE_CACHE).catch(() => null) : null;
@@ -453,6 +472,8 @@
         base: { type: "vector", url: pm("aran-base.pmtiles"),
           attribution: "Mapa base © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> · <a href='https://protomaps.com'>Protomaps</a>" },
         contours: { type: "vector", url: pm("aran-contours.pmtiles") },
+        routes: { type: "vector", url: pm("aran-routes.pmtiles"),
+          attribution: "Senderos © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> (ODbL)" },
         osmlabels: { type: "vector", url: pm("aran-osm.pmtiles"),
           attribution: "Nombres © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> (ODbL)" },
         pnoa: { type: "raster", tileSize: 256, maxzoom: 19,
@@ -516,6 +537,19 @@
             "text-font": ["Noto Sans Regular"], "text-size": 10, "symbol-spacing": 350 },
           paint: { "text-color": "#6b3f16", "text-halo-color": "rgba(255,255,255,0.85)", "text-halo-width": 1.2 } },
 
+        // Senderos senalizados (relaciones de OSM), color por tipo (GR, PR, SL...)
+        { id: "routes-casing", type: "line", source: "routes", "source-layer": "routes", minzoom: 10,
+          layout: { "line-cap": "round", "line-join": "round" },
+          paint: { "line-color": "#ffffff", "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2.5, 15, 6], "line-opacity": 0.9 } },
+        { id: "routes-line", type: "line", source: "routes", "source-layer": "routes", minzoom: 10,
+          layout: { "line-cap": "round", "line-join": "round" },
+          paint: { "line-color": ["coalesce", ["get", "col"], "#7b3294"], "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.3, 15, 3.5],
+            "line-dasharray": [3, 1.5] } },
+        { id: "routes-label", type: "symbol", source: "routes", "source-layer": "routes", minzoom: 12,
+          layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-font": ["Noto Sans Medium"],
+            "text-size": 11, "symbol-spacing": 500, "text-max-angle": 30 },
+          paint: { "text-color": ["coalesce", ["get", "col"], "#7b3294"], "text-halo-color": "rgba(255,255,255,0.95)", "text-halo-width": 1.6 } },
+
         // Nombres de OpenStreetMap
         { id: "osm-river", type: "symbol", source: "osmlabels", "source-layer": "osm", minzoom: 11,
           filter: ["==", ["get", "kind"], "river"],
@@ -528,8 +562,9 @@
             "text-size": 11, "symbol-spacing": 400 },
           paint: { "text-color": "#1f5f9e", "text-halo-color": "rgba(255,255,255,0.9)", "text-halo-width": 1.3 } },
         { id: "osm-spring", type: "circle", source: "osmlabels", "source-layer": "osm", minzoom: 13,
-          filter: ["==", ["get", "kind"], "spring"],
-          paint: { "circle-radius": 3.5, "circle-color": "#2b8cbe", "circle-stroke-color": "#fff", "circle-stroke-width": 1 } },
+          filter: ["match", ["get", "kind"], ["spring", "water"], true, false],
+          paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 13, 3.5, 16, 5.5],
+            "circle-color": ["match", ["get", "kind"], "water", "#08306b", "#2b8cbe"], "circle-stroke-color": "#fff", "circle-stroke-width": 1.2 } },
         { id: "osm-hut", type: "circle", source: "osmlabels", "source-layer": "osm", minzoom: 10,
           filter: ["match", ["get", "kind"], ["hut", "unguarded_hut", "shelter"], true, false],
           paint: { "circle-radius": ["match", ["get", "kind"], "hut", 6, "unguarded_hut", 4.5, 3.5],
@@ -539,7 +574,8 @@
           filter: ["==", ["get", "kind"], "peak"],
           paint: { "circle-radius": 2.5, "circle-color": "#3b2a1a" } },
         ...[
-          ["osm-label-detail", 13, ["spring", "saddle", "shelter"]],
+          ["osm-label-detail", 13, ["saddle", "shelter"]],
+          ["osm-label-water", 14, ["spring", "water"]],
           ["osm-label-lake", 12, ["lake", "unguarded_hut"]],
           ["osm-label-peak", 11, ["peak"]],
           ["osm-label-hut", 10, ["hut"]]
@@ -552,7 +588,7 @@
               ["format", ["get", "name"], {}, "\n", {}, ["concat", ["to-string", ["get", "ele"]], " m"], { "font-scale": 0.85 }],
               ["get", "name"]],
             "text-font": ["match", ["get", "kind"],
-              ["lake", "saddle", "spring"], ["literal", ["Noto Sans Italic"]],
+              ["lake", "saddle", "spring", "water"], ["literal", ["Noto Sans Italic"]],
               ["hut", "peak"], ["literal", ["Noto Sans Medium"]],
               ["literal", ["Noto Sans Regular"]]],
             "text-size": ["match", ["get", "kind"], ["peak", "hut", "lake"], 12, 11],
@@ -562,7 +598,7 @@
             "symbol-sort-key": ["-", 10000, ["coalesce", ["get", "ele"], 0]]
           },
           paint: {
-            "text-color": ["match", ["get", "kind"], ["lake", "spring"], "#1f5f9e", "hut", "#8e1b10",
+            "text-color": ["match", ["get", "kind"], ["lake", "spring", "water"], "#1f5f9e", "hut", "#8e1b10",
               "unguarded_hut", "#a0520f", "saddle", "#5a4a3a", "#2b1d10"],
             "text-halo-color": "rgba(255,255,255,0.9)", "text-halo-width": 1.4
           }
@@ -618,8 +654,9 @@
     hillshade: ["hillshade"], slope: ["slope"], slopeaval: ["slopeaval"], aspect: ["aspect"],
     avalanche: ["avalanche", "avalanche-line", "avalanche-line-dash"],
     contours: ["contours-minor", "contours-major", "contours-label"], danger: ["danger"],
-    labels: ["osm-river", "osm-stream", "osm-spring", "osm-hut", "osm-peak-dot",
-      "osm-label-detail", "osm-label-lake", "osm-label-peak", "osm-label-hut"]
+    labels: ["osm-river", "osm-stream", "osm-hut", "osm-peak-dot",
+      "osm-label-detail", "osm-label-lake", "osm-label-peak", "osm-label-hut"],
+    routes: ["routes-casing", "routes-line", "routes-label"], water: ["osm-spring", "osm-label-water"]
   };
   for (const [id, layers] of Object.entries(groups)) {
     document.getElementById(id).addEventListener("change", e => {
@@ -1268,7 +1305,25 @@ ${pts}
       return j;
     } catch { return JSON.parse(lsGet(cacheKey) || "null"); }
   };
-  const loadTemp = () => tGridP ??= (async () => { tGrid = await getWx("grid.json", "skimo-wx-grid3"); return tGrid; })();
+  // Modelo del mapa: una malla por modelo (mejor combinación, AROME, ECMWF), todas con la misma rejilla
+  const wxModelEl = document.getElementById("wxmodel");
+  wxModelEl.value = lsGet("skimo-wxmodel") || "grid.json"; if (!wxModelEl.value) wxModelEl.value = "grid.json";
+  const WX_MODEL_NAME = { "grid.json": "mejor combinación de Open-Meteo", "grid-arome.json": "AROME 1,3 km", "grid-ecmwf.json": "ECMWF IFS" };
+  const loadTemp = () => tGridP ??= (async () => {
+    const f = wxModelEl.value;
+    tGrid = await getWx(f, f === "grid.json" ? "skimo-wx-grid3" : "skimo-wx-" + f);
+    if (!tGrid && f !== "grid.json") { wxModelEl.value = "grid.json"; tGridP = null; return loadTemp(); }   // aun no generada: la de siempre
+    return tGrid;
+  })();
+  wxModelEl.onchange = async () => {
+    lsSet("skimo-wxmodel", wxModelEl.value);
+    const T0 = tGrid?.time, t0 = T0?.[+wxBarHour.value];
+    tGridP = null; await loadTemp();
+    const T = tGrid?.time; if (!T) return;
+    wxBarHour.max = T.length - 1;
+    let i = t0 ? T.findIndex(x => x >= t0) : -1; if (i < 0) i = Math.min(+wxBarHour.value, T.length - 1);
+    wxBarHour.value = i; drawWx();
+  };
   const loadWind = () => wFieldP ??= (async () => { wField = await getWx("wind.json", "skimo-wx-wind3"); return wField; })();
 
   // Teselas "wxtemp://z/x/y": temperatura del punto de malla corregida a la cota real de cada pixel
@@ -1409,8 +1464,10 @@ ${pts}
     document.getElementById("wxbar-at").textContent = fmtHour(T[i]);
     windHour = windHourIdx();
     const windMsg = windOn && windHour < 0 ? " · viento AROME solo cubre ~2 días" : "";
-    const mapModel = (arrowsWanted() || windOn) ? "viento: AROME 1,3 km" : "mapa: mejor combinación de Open-Meteo";
-    document.getElementById("wxbar-src").textContent = `${mapModel} · consultado ${new Date(g0.at).toLocaleString("es-ES", { hour: "2-digit", minute: "2-digit" })}${windMsg}`;
+    const mapModel = (windOn && !tGrid) ? "viento: AROME 1,3 km"
+      : `mapa: ${WX_MODEL_NAME[wxModelEl.value] || "Open-Meteo"}${arrowsWanted() ? " · flechas: AROME 1,3 km" : ""}`;
+    const noVar = tGrid && document.getElementById("wxtemp").checked && !tGrid.v?.[wxVarEl.value] ? " · ⚠ este modelo no da esta variable: elige otro" : "";
+    document.getElementById("wxbar-src").textContent = `${mapModel}${noVar} · consultado ${new Date(g0.at).toLocaleString("es-ES", { hour: "2-digit", minute: "2-digit" })}${windMsg}`;
     tVersion++;
     if (document.getElementById("wxtemp").checked) map.getSource("wxtemp")?.setTiles([`wxtemp://{z}/{x}/{y}?v=${tVersion}`]);
     drawArrows();
