@@ -369,11 +369,11 @@
       <option value="temperature_2m">Temperatura</option>
       <option value="wind_speed_10m">Viento medio</option>
       <option value="wind_gusts_10m">Rachas</option>
-      <option value="snowfall">Nieve nueva (cm/h)</option>
+      <option value="snow_acc">Nieve acumulada desde ahora (se suma al avanzar)</option>
+      <option value="snowfall">Nieve que cae en esa hora (cm/h)</option>
       <option value="precipitation">Precipitación (mm/h)</option>
       <option value="cloud_cover">Nubosidad</option>
       <option value="freezing_level_height">Isoterma 0 °C</option>
-      <option value="snow_acc">Nieve acumulada (hasta 16 días)</option>
     </select>
     <select id="wxmodel" aria-label="Modelo del mapa del tiempo" style="width:100%;min-height:30px;margin:0 0 4px;border-radius:8px;border:1px solid rgba(127,127,127,.4);background:transparent;color:var(--fg)">
       <option value="grid.json">Modelo: mejor combinación (16 días)</option>
@@ -1358,7 +1358,7 @@ ${pts}
     { id: "snow_acc", unit: "cm", min: 0.5, iso: 10, even: true, ticks: ["cm", "2", "5", "10", "50", "1 m", "3 m"],
       note: "Nieve nueva acumulada desde ahora (elige 12 h … 16 días abajo, o mueve la barra). Más allá de 3–5 días es poco fiable. Sin color = nada.",
       stops: [[0.5, [80, 80, 190]], [2, [60, 100, 210]], [5, [40, 150, 200]], [10, [40, 175, 150]], [50, [140, 190, 50]], [100, [215, 160, 50]], [300, [190, 50, 140]]] },
-    { id: "snowfall", unit: "cm/h", min: 0.05, iso: 0.5, ticks: ["0,1", "0,5", "1", "2", "4 cm/h"], note: "Nieve nueva por hora según el modelo. Sin color = no nieva.",
+    { id: "snowfall", unit: "cm/h", min: 0.05, iso: 0.5, ticks: ["0,1", "0,5", "1", "2", "4 cm/h"], note: "Nieve que cae en esa hora según el modelo (para el total sumado, elige «Nieve acumulada»). Sin color = no nieva.",
       stops: [[0.05, [224, 236, 244]], [0.5, [158, 188, 218]], [1, [140, 150, 198]], [2, [136, 86, 167]], [4, [129, 15, 124]]] },
     { id: "precipitation", unit: "mm/h", min: 0.05, iso: 1, ticks: ["0,1", "0,5", "2", "5", "10 mm/h"], note: "Lluvia o nieve (agua equivalente) por hora. Sin color = seco.",
       stops: [[0.05, [237, 248, 177]], [0.5, [127, 205, 187]], [2, [44, 127, 184]], [5, [37, 52, 148]], [10, [8, 29, 88]]] },
@@ -1581,7 +1581,10 @@ ${pts}
       if (arr && h != null) {
         const v = F.lapse ? bilinear(TG, c[0], c[1], q => arr[q][i] == null ? null : arr[q][i] + LAPSE * (tGrid.elev[q] - h))
                           : bilinear(TG, c[0], c[1], q => arr[q][i]);
-        if (v != null) parts.push(`<b>${(Math.round(v * (F.unit === "m" ? 0.1 : 10)) / (F.unit === "m" ? 0.1 : 10)).toLocaleString("es-ES")} ${F.unit}</b> ${wxVarEl.selectedOptions[0].text.replace(/^./, ch => ch.toLowerCase())}`);
+        if (v != null) parts.push(`<b>${(Math.round(v * (F.unit === "m" ? 0.1 : 10)) / (F.unit === "m" ? 0.1 : 10)).toLocaleString("es-ES")} ${F.unit}</b> ${wxVarEl.selectedOptions[0].text.replace(/ \(.*\)$/, "").replace(/^./, ch => ch.toLowerCase())}`);
+        // Con "nieve que cae", dar tambien el total sumado desde ahora hasta la hora de la barra
+        const acc = tGrid.v?.snow_acc;
+        if (F.id === "snowfall" && acc) { const a = bilinear(TG, c[0], c[1], q => acc[q][i]); if (a != null) parts.push(`<b>${(Math.round(a * 10) / 10).toLocaleString("es-ES")} cm</b> acumulados desde ahora`); }
       }
     }
     if ((document.getElementById("wxwind").checked || arrowsWanted()) && wField && windHour >= 0) {
