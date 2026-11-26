@@ -1,0 +1,125 @@
+{
+ "bulletins": [
+  {
+   "avalancheActivity": {
+    "comment": "La nieve reciente y la nieve venteada de los últimos dos días pueden, de manera aislada, desencadenarse en todas las orientaciones y generalmente en altitud. Los lugares peligrosos se encuentran sobre todo cerca de cordales, cubetas y canales de todas las orientaciones y en los lugares umbríos y protegidos del viento. En las laderas muy inclinadas solanas en cotas medias y altas: A consecuencia de la radiación solar, en el transcurso de la jornada son posibles purgas.",
+    "highlights": "Nieve reciente y nieve venteada en altitud."
+   },
+   "avalancheProblems": [
+    {
+     "aspects": [
+      "SW",
+      "E",
+      "W",
+      "NW",
+      "N",
+      "SE",
+      "NE",
+      "S"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "slab"
+      }
+     },
+     "dangerRatingValue": "low",
+     "elevation": {
+      "lowerBound": "2400"
+     },
+     "frequency": "few",
+     "problemType": "wind_slab",
+     "snowpackStability": "poor",
+     "validTimePeriod": "all_day"
+    },
+    {
+     "aspects": [
+      "SW",
+      "E",
+      "W",
+      "NW",
+      "N",
+      "SE",
+      "NE",
+      "S"
+     ],
+     "avalancheSize": 1,
+     "customData": {
+      "ALBINA": {
+       "avalancheType": "loose"
+      }
+     },
+     "dangerRatingValue": "low",
+     "elevation": {
+      "lowerBound": "2000"
+     },
+     "frequency": "few",
+     "problemType": "new_snow",
+     "snowpackStability": "very_poor",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "bulletinID": "a4f934f1-1d9b-4436-9157-c7f49cd1dafc",
+   "customData": {
+    "ALBINA": {
+     "mainDate": "2026-11-27"
+    },
+    "LWD_Tyrol": {
+     "dangerPatterns": []
+    }
+   },
+   "dangerRatings": [
+    {
+     "mainValue": "low",
+     "validTimePeriod": "all_day"
+    }
+   ],
+   "lang": "es",
+   "publicationTime": "2026-11-26T16:00:00+00:00",
+   "regions": [
+    {
+     "name": "Límite sur de Aran",
+     "regionID": "ES-CT-L-02"
+    },
+    {
+     "name": "Vertiente sur de Aran",
+     "regionID": "ES-CT-L-03"
+    },
+    {
+     "name": "Norte y centro de Aran",
+     "regionID": "ES-CT-L-01"
+    }
+   ],
+   "snowpackStructure": {
+    "comment": "En cotas medias y altas están presentes de 5 a 20 cm de nieve, localmente aún más. El viento del noroeste ha transportado la nieve reciente. Con el enfriamiento, en el transcurso de la noche el manto de nieve se facetará, debilitándose."
+   },
+   "source": {
+    "provider": {
+     "name": "Centre de Lauegi d'Aran",
+     "website": "https://lauegi.report/es"
+    }
+   },
+   "tendency": [
+    {
+     "highlights": "El peligro de purgas de nieve húmeda aumentará ligeramente durante el día. El peligro de aludes de nieve seca disminuirá progresivamente.",
+     "tendencyType": "steady",
+     "validTime": {
+      "endTime": "2026-11-28T16:00:00+00:00",
+      "startTime": "2026-11-27T16:00:00+00:00"
+     }
+    }
+   ],
+   "travelAdvisory": {
+    "highlights": "Actualmente, el servicio de predicción de aludes tiene información limitada. Por lo tanto, debe evaluarse detenidamente el peligro de aludes local."
+   },
+   "unscheduled": false,
+   "validTime": {
+    "endTime": "2026-11-27T16:00:00+00:00",
+    "startTime": "2026-11-26T16:00:00+00:00"
+   },
+   "weatherForecast": {
+    "comment": "El viernes será soleado. El viento soplará débil."
+   }
+  }
+ ]
+}
