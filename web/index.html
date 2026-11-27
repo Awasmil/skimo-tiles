@@ -366,6 +366,13 @@
     <div><span style="background:#08306b;border-radius:50%"></span>Agua potable (grifo, fuente)</div>
     <div style="color:var(--muted)">No garantiza que lleve agua ni que sea potable.</div>
   </div>
+  <label><input type="checkbox" id="acts" checked> Mis actividades (Garmin)</label>
+  <div class="legend on" id="legend-acts">
+    <label style="padding:1px 0"><input type="checkbox" class="act-sport" value="skimo" checked><span style="background:#1565c0;height:4px;vertical-align:3px"></span>Skimo <b id="act-n-skimo" style="color:var(--muted);font-weight:400"></b></label>
+    <label style="padding:1px 0"><input type="checkbox" class="act-sport" value="trail" checked><span style="background:#e65100;height:4px;vertical-align:3px"></span>Trail <b id="act-n-trail" style="color:var(--muted);font-weight:400"></b></label>
+    <label style="padding:1px 0"><input type="checkbox" class="act-sport" value="btt" checked><span style="background:#2e7d32;height:4px;vertical-align:3px"></span>BTT <b id="act-n-btt" style="color:var(--muted);font-weight:400"></b></label>
+    <div style="color:var(--muted)" id="act-note">Las que empiezan en el Valle de Aran. Toca una para ver sus datos.</div>
+  </div>
   </section><section class="sec" data-sec="tiempo"><h2>Tiempo (previsión)</h2>
   <label><input type="checkbox" id="wxtemp"> Mapa del tiempo</label>
   <div class="legend" id="legend-wxtemp">
@@ -687,6 +694,67 @@
       document.getElementById("legend-" + id)?.classList.toggle("on", e.target.checked);
     });
   }
+  // ---------- Mis actividades (Garmin, API personal oficial) ----------
+  // Las publica garmin-sync.yml a las 15:00 y 22:00 en skimo-tiles/data/activities/aran.geojson.
+  // Se guarda la ultima copia en la Cache API para verlas sin red.
+  const ACT_URL = "https://raw.githubusercontent.com/Awasmil/skimo-tiles/main/data/activities/aran.geojson";
+  const ACT_COL = { skimo: "#1565c0", trail: "#e65100", btt: "#2e7d32" };
+  const ACT_NAME = { skimo: "Skimo", trail: "Trail", btt: "BTT" };
+  const loadActs = async () => {
+    let cache = null; try { cache = await caches.open("skimo-data"); } catch {}
+    try {
+      const r = await fetch(ACT_URL, { cache: "no-cache" });
+      if (!r.ok) throw new Error(r.status);
+      if (cache) try { await cache.put(ACT_URL, r.clone()); } catch {}
+      return await r.json();
+    } catch {
+      const r = cache && await cache.match(ACT_URL);
+      return r ? await r.json() : null;
+    }
+  };
+  const actFilter = () => {
+    const on = [...document.querySelectorAll(".act-sport:checked")].map(x => x.value);
+    return ["match", ["get", "sport"], on.length ? on : ["-"], true, false];
+  };
+  loadActs().then(gj => {
+    if (!gj) { document.getElementById("act-note").textContent = "Aún no hay actividades publicadas (o no hay red)."; return; }
+    const n = {}; gj.features.forEach(f => n[f.properties.sport] = (n[f.properties.sport] || 0) + 1);
+    for (const s of Object.keys(ACT_COL)) document.getElementById("act-n-" + s).textContent = n[s] ? `(${n[s]})` : "(0)";
+    onStyle(() => {
+      map.addSource("acts", { type: "geojson", data: gj });
+      const before = map.getLayer("osm-river") ? "osm-river" : undefined;
+      map.addLayer({ id: "acts-casing", type: "line", source: "acts", filter: actFilter(),
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": "#fff", "line-width": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 6.5], "line-opacity": 0.85 } }, before);
+      map.addLayer({ id: "acts-line", type: "line", source: "acts", filter: actFilter(),
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: { "line-color": ["match", ["get", "sport"], "skimo", ACT_COL.skimo, "trail", ACT_COL.trail, ACT_COL.btt],
+          "line-width": ["interpolate", ["linear"], ["zoom"], 10, 1.6, 15, 3.8], "line-opacity": 0.9 } }, before);
+      const on = document.getElementById("acts").checked;
+      setVis("acts-casing", on); setVis("acts-line", on);
+    });
+  });
+  document.getElementById("acts").addEventListener("change", e => {
+    setVis("acts-casing", e.target.checked); setVis("acts-line", e.target.checked);
+    document.getElementById("legend-acts").classList.toggle("on", e.target.checked);
+  });
+  document.querySelectorAll(".act-sport").forEach(x => x.addEventListener("change", () => {
+    for (const id of ["acts-casing", "acts-line"]) if (map.getLayer(id)) map.setFilter(id, actFilter());
+  }));
+  const hms = s => { const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60); return h ? `${h} h ${String(m).padStart(2, "0")}` : `${m} min`; };
+  map.on("click", "acts-line", e => {
+    if (measuring || wxMode || wxActive()) return;
+    const p = e.features[0].properties, d = new Date(p.start.replace(" ", "T"));
+    new maplibregl.Popup({ maxWidth: "280px" }).setLngLat(e.lngLat).setHTML(
+      `<div style="font:12px/1.4 system-ui,sans-serif"><b style="color:${ACT_COL[p.sport]}">${ACT_NAME[p.sport]}</b> · ${d.toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short", year: "numeric" })} ${d.toTimeString().slice(0, 5)}<br>
+       <b>${String(p.name).replace(/[<&]/g, "")}</b><br>
+       ${String(p.km).replace(".", ",")} km · ${p.dplus} m D+ · ${hms(p.mov || p.dur)}${p.hmax ? ` · máx. ${p.hmax} m` : ""}<br>
+       <a href="https://connect.garmin.com/modern/activity/${+p.id}" target="_blank" rel="noopener">Abrir en Garmin Connect</a><br>
+       <span style="color:var(--muted)">Traza histórica. No es una recomendación para hoy.</span></div>`).addTo(map);
+  });
+  map.on("mouseenter", "acts-line", () => { map.getCanvas().style.cursor = "pointer"; });
+  map.on("mouseleave", "acts-line", () => { map.getCanvas().style.cursor = ""; });
+
   // ---------- Medidor de distancia y desnivel ----------
   // Altitud leida de las teselas de relieve (terrain-RGB, z13 ~ 14 m); estimacion, no medida.
   const TZ = 13;
