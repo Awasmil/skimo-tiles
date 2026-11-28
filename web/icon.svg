@@ -1,14 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Logo de Skimo: una cumbre alpina afilada con nieve, sobre el azul de la app -->
+  <!-- Logo de Skimo: esquís cruzados con sus bastones (dibujo propio), sobre el azul de la app -->
   <clipPath id="r"><rect width="64" height="64" rx="14"/></clipPath>
   <g clip-path="url(#r)">
     <rect width="64" height="64" fill="#1e3a5f"/>
-    <!-- cordal del fondo -->
-    <path d="M0 54 L14 38 L22 45 L33 33 L46 44 L54 37 L64 46 L64 64 L0 64 Z" fill="#3f6a9c"/>
-    <!-- cumbre principal: cara al sol y cara en sombra -->
-    <path d="M9 64 L31 12 L36 19 L39 15 L60 64 Z" fill="#cfdcea"/>
-    <path d="M39 15 L60 64 L43 64 L35 31 Z" fill="#8eabca"/>
-    <!-- nieve de la cima, con el borde irregular -->
-    <path d="M31 12 L36 19 L39 15 L43 24.5 L39.5 22 L36.5 28 L33 23 L29 28.5 L25.6 24.5 Z" fill="#ffffff"/>
+    <!-- bastones -->
+    <g stroke="#bcd6f5" stroke-width="3.4" stroke-linecap="round">
+      <line x1="7" y1="50" x2="57" y2="17"/>
+      <line x1="57" y1="50" x2="7" y2="17"/>
+      <line x1="7.6" y1="42.9" x2="13.6" y2="51.9"/>
+      <line x1="50.4" y1="51.9" x2="56.4" y2="42.9"/>
+    </g>
+    <g stroke="#ffffff" stroke-width="5" stroke-linecap="round">
+      <line x1="57" y1="17" x2="52.4" y2="20"/>
+      <line x1="7" y1="17" x2="11.6" y2="20"/>
+    </g>
+    <!-- esquís -->
+    <g transform="translate(32 33) rotate(-27)">
+      <path d="M-4 -24 Q0 -32 4 -24 L4 26 Q4 28.5 1.5 28.5 L-1.5 28.5 Q-4 28.5 -4 26 Z" fill="#ffffff"/>
+      <path d="M-2.6 -15 L0 -18 L2.6 -15 M-2.6 -11 L0 -14 L2.6 -11" stroke="#e8a33d" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="-4.6" y="9" width="9.2" height="6" rx="1.2" fill="#e8a33d"/>
+    </g>
+    <g transform="translate(32 33) rotate(27)">
+      <path d="M-4 -24 Q0 -32 4 -24 L4 26 Q4 28.5 1.5 28.5 L-1.5 28.5 Q-4 28.5 -4 26 Z" fill="#ffffff"/>
+      <path d="M-2.6 -15 L0 -18 L2.6 -15 M-2.6 -11 L0 -14 L2.6 -11" stroke="#e8a33d" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="-4.6" y="9" width="9.2" height="6" rx="1.2" fill="#e8a33d"/>
+    </g>
   </g>
 </svg>

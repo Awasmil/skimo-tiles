@@ -171,6 +171,21 @@
   .wx-ext { display: inline-flex; gap: 10px; align-items: center; font-size: 12px; white-space: nowrap; }
   .wx-ext label { display: inline-flex; gap: 4px; align-items: center; padding: 0; cursor: pointer; }
   .wx-ext input { width: 15px; height: 15px; margin: 0; accent-color: #e8a33d; }
+  .panel:has(.sec[data-sec="recom"].on) { width: min(430px, calc(100% - 76px)); }
+  .rc-head { font-size: 12px; margin: 2px 0 6px; }
+  .rc-warn { font-size: 12px; color: #c0392b; margin: 0 0 6px; }
+  table.rc { width: 100%; border-collapse: separate; border-spacing: 2px; font-size: 11.5px; }
+  table.rc th { font-weight: 600; color: var(--muted); text-align: center; padding: 2px; }
+  table.rc tr > th:first-child { text-align: left; width: 28px; color: var(--fg); }
+  table.rc td { text-align: center; padding: 4px 2px; border-radius: 6px; line-height: 1.2; }
+  .rc-ok { background: #d8f0d4; color: #1f5f1f; font-weight: 600; }
+  .rc-cold { background: #e0ecf8; color: #2d4f75; }
+  .rc-wet { background: #fde3c8; color: #8a4a05; }
+  .rc-warn { }
+  td.rc-warn { background: #f8d4d0; color: #8e1b10; font-weight: 600; }
+  /* Cursor del mapa: esquís cruzados (Jorge 2026-11-28); punto activo en el centro */
+  .maplibregl-canvas-container.maplibregl-interactive { cursor: url("cursor-skis.svg") 16 16, grab; }
+  .maplibregl-canvas-container.maplibregl-interactive:active { cursor: url("cursor-skis.svg") 16 16, grabbing; }
   .fc-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; }
   .fc-inline #fc-place { font-weight: 600; }
   .fc-inline #fc-meta { color: var(--muted); font-size: 11px; }
@@ -633,6 +648,7 @@
     <div><span class="hatch" style="--c:#ff0000"></span>4 Fuerte <span class="hatch" style="--c:#800000;margin-left:6px"></span>5 Muy fuerte</div>
     <div style="color:var(--muted)"><b>Interpretación de Skimo, no del Lauegi:</b> el boletín da caras y cotas para todo Aran; aquí se rayan las laderas ≥30° que coinciden. Límite del bosque estimado en 2200 m.</div>
   </div>
+  </section><section class="sec" data-sec="recom"><h2>Caras y horas</h2><div id="recom">–</div>
   </section><section class="sec" data-sec="offline"><h2>Sin conexión</h2>
   <div class="note" id="off-status" style="margin-top:0">Comprobando…</div>
   <div class="offbar" id="off-bar"><div></div></div>
@@ -1330,7 +1346,7 @@ ${pts}
   // Se abre un apartado cada vez; el mismo icono o la ✕ lo cierran.
   const panel = document.getElementById("panel"), panelTitle = document.getElementById("panel-title");
   const SECS = [["base", "🗺️", "Mapa base"], ["capas", "⛰️", "Capas del terreno"], ["tracks", "🥾", "Tracks"],
-    ["tiempo", "🌦️", "Mapa del tiempo"], ["aludes", "⚠️", "Aludes · Lauegi"], ["offline", "📥", "Sin conexión"]];
+    ["tiempo", "🌦️", "Mapa del tiempo"], ["recom", "🧭", "Caras y horas"], ["aludes", "⚠️", "Aludes · Lauegi"], ["offline", "📥", "Sin conexión"]];
   const secBtns = {};
   let openSec = null;
   const setSec = id => {
@@ -1338,7 +1354,8 @@ ${pts}
     panel.querySelectorAll(".sec").forEach(s => s.classList.toggle("on", s.dataset.sec === openSec));
     for (const [k, b] of Object.entries(secBtns)) { b.classList.toggle("on", k === openSec); b.setAttribute("aria-expanded", k === openSec); }
     if (openSec) { panelTitle.textContent = SECS.find(s => s[0] === openSec)[2]; panel.scrollTop = 0; }
-    document.body.classList.toggle("panel-open", !!openSec);   // con el panel abierto se ocultan los nombres de los botones (se solapaban)
+    document.body.classList.toggle("panel-open", !!openSec);
+    if (openSec === "recom") window.__recomRender?.();   // con el panel abierto se ocultan los nombres de los botones (se solapaban)
   };
   document.getElementById("panel-x").onclick = () => setSec(null);
   const mkSecBtn = (id, ico, name) => {
@@ -1501,6 +1518,7 @@ ${pts}
     renderBulletin(day, res, isToday);
     bulVersion++;
     map.getSource("danger")?.setTiles([`danger://{z}/{x}/{y}?v=${bulVersion}`]);
+    window.__recomRender?.();
   };
 
   // Hoy (o manana, si ya se ha publicado por la tarde)
@@ -2822,7 +2840,7 @@ ${pts}
   const MB = b => `${Math.round(b / 2 ** 20)} MB`;
   const fmtDate = s => new Date(s).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   const EXTRA = [  // lo minimo para que la pagina arranque sin red
-    "./", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png", "data/aran-regions.geojson",
+    "./", "manifest.webmanifest", "icon.svg", "cursor-skis.svg", "icon-180.png", "icon-192.png", "icon-512.png", "data/aran-regions.geojson",
     "sprites/light.json", "sprites/light.png", "sprites/light@2x.json", "sprites/light@2x.png",
     ...["Noto Sans Regular", "Noto Sans Medium", "Noto Sans Italic"].flatMap(f => ["0-255", "256-511", "8192-8447"].map(r => `fonts/${f}/${r}.pbf`)),
     "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css", "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js",
@@ -2897,6 +2915,69 @@ ${pts}
   };
   refreshOffline();
 
+  // ---------- Caras y horas (paso 3 del recomendador, estimación) ----------
+  // Para el día de la barra del tiempo: por orientación × franja de cota, ventana en que la nieve se transforma.
+  // Ladera tipo de 30° (sin sombras de montañas), temperatura y nubes de la zona de Baqueira (malla ~4 km),
+  // mismos umbrales que «Estado de la nieve». PRINCIPIO 1: donde el boletín marca un problema, no hay ventana: se avisa.
+  const RC_BANDS = [[1800, 2200], [2200, 2600], [2600, 3000]];
+  const RC_ASP = [["N", 0], ["NE", 45], ["E", 90], ["SE", 135], ["S", 180], ["SW", 225], ["W", 270], ["NW", 315]];
+  const RC_P = [0.90, 42.70];   // zona de Baqueira
+  const recomRender = () => {
+    const el = document.getElementById("recom"); if (!el || openSec !== "recom") return;
+    const g0 = tGrid;
+    if (!g0?.v?.temperature_2m) { el.textContent = "Cargando la previsión…"; loadTemp().then(() => tGrid && recomRender()); return; }
+    const T = g0.time, hIdx = Math.min(+wxBarHour.value, T.length - 1), day = T[hIdx].slice(0, 10);
+    const temp = g0.v.temperature_2m, cc = g0.v.cloud_cover;
+    const tAt = (k, h) => bilinear(TG, RC_P[0], RC_P[1], q => temp[q][k] == null ? null : temp[q][k] + LAPSE * (g0.elev[q] - h));
+    const ccAt = k => cc ? bilinear(TG, RC_P[0], RC_P[1], q => cc[q][k]) : null;
+    const idx = T.map((t, k) => t.slice(0, 10) === day ? k : -1).filter(k => k >= 0);
+    const prev = new Date(new Date(day + "T12:00") - 864e5).toISOString().slice(0, 10);
+    const night = T.map((t, k) => (t.slice(0, 10) === day && +t.slice(11, 13) <= 8) || (t.slice(0, 10) === prev && +t.slice(11, 13) >= 20) ? k : -1).filter(k => k >= 0);
+    const slope = 30 * Math.PI / 180, bulDay = document.getElementById("bul-date")?.value || "";
+    const overlap = (lo, hi, e) => !e || ((elevOf(e.lowerBound) ?? -1e9) < hi && lo < (elevOf(e.upperBound) ?? 1e9));
+    const cell = (sec, aAz, lo, hi) => {
+      // Principio 1: el boletín manda
+      for (const b of bulletins || []) for (const q of b.avalancheProblems || [])
+        if (inPeriod(q, bulPeriod) && (q.aspects || []).includes(sec) && overlap(lo, hi, q.elevation)
+            && !["favourable_situation", "no_distinct_avalanche_problem"].includes(q.problemType))
+          return { cls: "warn", txt: `⚠ ${PROBLEM_NAME[q.problemType] || q.problemType}` };
+      const mid = (lo + hi) / 2;
+      let tmin = null; for (const k of night) { const v = tAt(k, mid); if (v != null) tmin = tmin == null ? v : Math.min(tmin, v); }
+      const noRe = tmin != null && tmin > 0.5;
+      let E = 0, start = null, wet = null;
+      idx.forEach((k, n) => {
+        const hr = +T[k].slice(11, 13), ta = tAt(k, mid);
+        if (ta != null && hr >= 7 && hr <= 18) {
+          const c = noRe && ta > 0 ? 3 : (ta >= 4 || (E >= 3 && ta > 0)) ? 2 : (E >= 1 && ta > -4) ? 1 : 0;
+          if (c === 1 && start == null) start = hr;
+          if (c >= 2 && wet == null) wet = hr;
+        }
+        const { alt, az } = sunPos(new Date(T[k]).getTime(), RC_P[1], RC_P[0]);
+        const w = n + 1 < idx.length ? (new Date(T[idx[n + 1]]) - new Date(T[k])) / 36e5 : 1;
+        if (alt > 0) {
+          let v = Math.cos(slope) * Math.sin(alt) + Math.sin(slope) * Math.cos(alt) * Math.cos(az - aAz * Math.PI / 180);
+          const c = ccAt(k); if (c != null) v *= 1 - 0.75 * c / 100;
+          if (v > 0) E += v * w;
+        }
+      });
+      if (noRe) return { cls: "wet", txt: "sin rehielo: húmeda" };
+      if (start != null && wet != null && wet > start) return { cls: "ok", txt: `${start}–${wet} h` };
+      if (start != null && wet == null) return { cls: "ok", txt: `desde ${start} h` };
+      if (wet != null) return { cls: "wet", txt: `húmeda desde ${wet} h` };
+      return { cls: "cold", txt: "dura todo el día" };
+    };
+    const ahead = Math.round((new Date(day + "T12:00") - new Date(isoDay(new Date()) + "T12:00")) / 864e5);
+    const conf = ahead <= 1 ? "media" : ahead <= 3 ? "baja-media" : "baja";
+    const dayTxt = new Date(day + "T12:00").toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "short" });
+    el.innerHTML = `<div class="rc-head"><b>${dayTxt}</b> · estimación · confianza ${conf}</div>`
+      + (bulDay && bulDay !== day ? `<div class="rc-warn">⚠ El boletín cargado es del ${new Date(bulDay + "T12:00").toLocaleDateString("es-ES", { day: "numeric", month: "short" })}: para este día puede no valer.</div>` : "")
+      + (!bulletins ? `<div class="rc-warn">⚠ Sin boletín cargado: sin máscara de aludes. Consulta el parte del Lauegi.</div>` : "")
+      + `<table class="rc"><tr><th></th>${RC_BANDS.map(([a, b]) => `<th>${a}–${b} m</th>`).join("")}</tr>`
+      + RC_ASP.map(([sec, az]) => `<tr><th>${SECTOR_ES[sec]}</th>${RC_BANDS.map(([lo, hi]) => { const c = cell(sec, az, lo, hi); return `<td class="rc-${c.cls}">${c.txt}</td>`; }).join("")}</tr>`).join("")
+      + `</table><div class="note">Ventana = horas en que la nieve se transforma (ni dura ni húmeda). Ladera tipo de 30° sin sombras de montañas; temperatura y nubes de la zona de Baqueira. <b>⚠ = el boletín marca un problema en esa cara y cota: no se recomienda.</b> No es una evaluación del peligro de aludes.</div>`;
+  };
+  window.__recomRender = recomRender;
+  wxBarHour.addEventListener("input", () => { if (openSec === "recom") recomRender(); });
   // ---------- Vista al entrar (pedido por Jorge 2026-11-28): SIEMPRE solo sombreado + rayado y parte del Lauegi
   // + mapa de temperatura. Todo lo demas apagado (se puede encender con los iconos, pero no se recuerda).
   const START_ON = new Set(["hillshade", "danger", "wxtemp"]);
