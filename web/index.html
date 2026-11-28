@@ -243,6 +243,12 @@
   /* Si la barra del tiempo llega hasta el bloque (pantallas de menos de ~1550 px), el bloque sube por encima de ella */
   /* Siempre en la esquina (Jorge 2026-11-28); solo en el movil, donde no hay sitio, sube por encima de la barra */
   @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: var(--wxbar-h, 240px); } }
+  /* Punto naranja en el icono: ese apartado tiene algo encendido sobre el mapa */
+  .maplibregl-ctrl-group button.lit::after { content: ""; position: absolute; top: 3px; right: 3px; width: 8px; height: 8px;
+    border-radius: 50%; background: #e8a33d; box-shadow: 0 0 0 1.5px #fff; }
+  .maplibregl-ctrl-group button { position: relative; }
+  .maplibregl-ctrl-group button.btn-emoji.on, .maplibregl-ctrl-group button.btn-measure.on { box-shadow: inset 0 0 0 2px #e8a33d; }
+  body.panel-open .ctl-label { opacity: 0; }
   .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
   .maplibregl-ctrl-group button.btn-var:disabled { opacity: .35; }
   .wx-vars-ctl[hidden] { display: none !important; }
@@ -595,7 +601,7 @@
     <div class="ramp-ticks"><span>0</span><span>20</span><span>40</span><span>70</span><span>100 km/h</span></div>
     <div style="color:var(--muted)">AROME 1,3 km (~2 días). Ve el flujo de los valles grandes y las crestas anchas; <b>no</b> resuelve canales, collados ni aceleraciones locales. Actívalo con 3D para verlo sobre el relieve.</div>
   </div>
-  <div class="note" style="margin-top:2px">Para comparar modelos en un punto, usa el botón de la nube.</div>
+  <div class="note" style="margin-top:2px">Para comparar modelos en un punto: abre la previsión (tarjeta de arriba a la izquierda) → «Comparar modelos».</div>
   </section><section class="sec" data-sec="aludes"><h2>Aludes · Lauegi</h2>
   <div class="bul-ctrls">
     <input type="hidden" id="bul-date">
@@ -1315,11 +1321,23 @@ ${pts}
     panel.querySelectorAll(".sec").forEach(s => s.classList.toggle("on", s.dataset.sec === openSec));
     for (const [k, b] of Object.entries(secBtns)) { b.classList.toggle("on", k === openSec); b.setAttribute("aria-expanded", k === openSec); }
     if (openSec) { panelTitle.textContent = SECS.find(s => s[0] === openSec)[2]; panel.scrollTop = 0; }
+    document.body.classList.toggle("panel-open", !!openSec);   // con el panel abierto se ocultan los nombres de los botones (se solapaban)
   };
   document.getElementById("panel-x").onclick = () => setSec(null);
+  const mkSecBtn = (id, ico, name) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "btn-emoji btn-sec"; b.title = name;
+    b.setAttribute("aria-label", name); b.setAttribute("aria-expanded", "false");
+    b.innerHTML = `<span aria-hidden="true">${ico}</span>`;
+    b.onclick = () => setSec(openSec === id ? null : id);
+    return secBtns[id] = b;
+  };
+  // «Sin conexión» va abajo, junto a la ubicación (Jorge 2026-11-28)
+  const offlineControl = { onAdd() { const d = document.createElement("div"); d.className = "maplibregl-ctrl maplibregl-ctrl-group";
+    d.appendChild(mkSecBtn(...SECS.find(s => s[0] === "offline"))); return d; }, onRemove() {} };
   const secControl = { onAdd() {
     const d = document.createElement("div"); d.className = "maplibregl-ctrl maplibregl-ctrl-group";
     for (const [id, ico, name] of SECS) {
+      if (id === "offline") continue;
       const b = document.createElement("button"); b.type = "button"; b.className = "btn-emoji btn-sec"; b.title = name;
       b.setAttribute("aria-label", name); b.setAttribute("aria-expanded", "false");
       b.innerHTML = `<span aria-hidden="true">${ico}</span>`;
@@ -2512,7 +2530,19 @@ ${pts}
   }, "top-right");
   map.addControl(radarControl, "top-right");
   map.addControl(secControl, "top-right");
-  map.addControl(varsControl, "top-right");   // variables del tiempo: al final, solo con el mapa del tiempo
+  map.addControl(varsControl, "top-right");
+  map.addControl(offlineControl, "bottom-right");   // fila de arriba del bloque de la esquina: [Sin conexión][ubicación][3D]
+
+  // Marca en el icono de cada apartado si tiene algo encendido sobre el mapa (Jorge 2026-11-28)
+  const ACTIVE = {
+    base: () => document.querySelector("input[name=base]:checked")?.value !== "map",
+    capas: () => ["hillshade", "slopeaval", "slope", "aspect", "avalanche", "contours", "labels"].some(i => document.getElementById(i)?.checked),
+    tracks: () => ["routes", "paths", "water", "acts"].some(i => document.getElementById(i)?.checked),
+    tiempo: () => ["wxtemp", "wxwind"].some(i => document.getElementById(i)?.checked),
+    aludes: () => document.getElementById("danger")?.checked,
+  };
+  const updBadges = () => { for (const [k, f] of Object.entries(ACTIVE)) secBtns[k]?.classList.toggle("lit", !!f()); };
+  panel.addEventListener("change", () => setTimeout(updBadges), true);   // en captura: también los cambios hechos por código   // variables del tiempo: al final, solo con el mapa del tiempo
 
   // Nombre flotante a la izquierda de cada botón de la columna derecha (Jorge 2026-11-28, como Windy)
   const SHORT = { "Medir distancia y desnivel": "Medir", "Webcams y previsión de Meteoaran": "Webcams · Meteoaran",
@@ -2717,6 +2747,7 @@ ${pts}
   // Siempre al entrar: Salardú en el centro de la pantalla, en 2D
   map.jumpTo({ center: [0.9005, 42.7077], zoom: 12.5, pitch: 0, bearing: 0 });
   setSec("aludes");   // el parte del Lauegi abierto (en el movil se cierra tocando el mapa)
+  updBadges();
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 })();
