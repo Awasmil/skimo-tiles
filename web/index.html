@@ -20,7 +20,7 @@
   :root { --bg: rgba(255,255,255,.94); --fg: #1b2430; --muted: #5b6573; --accent: #1e3a5f; }
   @media (prefers-color-scheme: dark) { :root { --bg: rgba(24,28,34,.94); --fg: #e8ecf1; --muted: #9aa4b2; --accent: #8fb6e8; } }
   html, body { margin: 0; height: 100%; background: #1e3a5f; font: 14px/1.35 system-ui, -apple-system, sans-serif; color: var(--fg); }
-  #map { position: absolute; inset: 0; }
+  #map { position: fixed; inset: 0; }   /* fixed: en la app de pantalla de inicio del iPhone no queda franja abajo */
   .search { position: absolute; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left));
     right: 56px; max-width: 420px; z-index: 3; }
   .search input { box-sizing: border-box; width: 100%; height: 44px; border: 0; border-radius: 12px; padding: 0 14px;
@@ -201,7 +201,7 @@
   .wx-legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
   /* Columna derecha armonizada (Jorge 2026-11-28): una sola columna, todos los botones iguales (34 px),
      separación pequeña y constante; si no cabe, se desliza */
-  .maplibregl-ctrl-top-right { max-height: calc(100% - 128px);   /* deja la esquina libre para el bloque de zoom/3D */
+  .maplibregl-ctrl-top-right { top: env(safe-area-inset-top); max-height: calc(100% - 128px - env(safe-area-inset-top));   /* deja la esquina libre para el bloque de zoom/3D */
     overflow-y: auto; overflow-x: hidden; scrollbar-width: none;
     padding: 0 0 8px 8px; overscroll-behavior: contain; }
   .maplibregl-ctrl-top-right::-webkit-scrollbar { display: none; }
@@ -229,11 +229,11 @@
   /* Con el mapa del tiempo, por encima de su barra (en el móvil la barra ocupa todo el ancho) */
   /* Si la barra del tiempo llega hasta el bloque (pantallas de menos de ~1550 px), el bloque sube por encima de ella */
   /* Siempre en la esquina (Jorge 2026-11-28); solo en el movil, donde no hay sitio, sube por encima de la barra */
-  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: calc(var(--wxbar-h, 240px) - 10px); } }
+  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: var(--wxbar-h, 240px); } }
   .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
   .maplibregl-ctrl-group button.btn-var:disabled { opacity: .35; }
   .wx-vars-ctl[hidden] { display: none !important; }
-  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-top-right { max-height: calc(100% - var(--wxbar-h, 240px) - 90px); } }
+  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-top-right { max-height: calc(100% - var(--wxbar-h, 240px) - 84px - env(safe-area-inset-top)); } }
   .wx-vars-old { position: absolute; right: 56px; bottom: 210px; z-index: 3; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
   .wx-vars[hidden] { display: none; }
   .wx-vars button { display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; cursor: pointer; font: 600 14px system-ui, sans-serif;
@@ -1939,6 +1939,7 @@ ${pts}
   document.getElementById("wxtemp").addEventListener("change", e => {
     const b3d = document.querySelector(".btn-3d");
     if (e.target.checked) {
+      if (window.__wxStartup) return;   // al entrar: Salardú en 2D (Jorge 2026-11-28), sin la cámara 3D
       if (b3d && !b3d.classList.contains("on")) { b3d.click(); wx3dAuto = true; }
       // Cámara alta encima de Vielha (a 5500 m) mirando hacia Baqueira / Cap de Vaquèira (pedido por Jorge 2026-11-11).
       // MapLibre 4 sitúa el punto de mira a nivel del mar: se prolonga la línea cámara → cima del Cap hasta la cota 0.
@@ -2268,7 +2269,8 @@ ${pts}
     wxModelEl.value = b.dataset.f; wxModelEl.dispatchEvent(new Event("change"));
   };
   // En el movil la barra del tiempo ocupa todo el ancho: la columna de botones termina encima de ella (y se desliza)
-  new ResizeObserver(() => document.body.style.setProperty("--wxbar-h", (wxBar.offsetHeight + 50) + "px")).observe(wxBar);
+  const setBarH = () => { const r = wxBar.getBoundingClientRect(); document.body.style.setProperty("--wxbar-h", (r.height ? innerHeight - r.top + 8 : 50) + "px"); };
+  new ResizeObserver(setBarH).observe(wxBar); window.addEventListener("resize", setBarH);
   const wxUi = () => {
     const on = document.getElementById("wxtemp").checked;
     varsEl.hidden = false; cardEl.hidden = !on; document.body.classList.toggle("wx-on", on);   // variables siempre visibles
@@ -2665,7 +2667,10 @@ ${pts}
     el.checked = START_ON.has(id); el.dispatchEvent(new Event("change"));
   }
   wxVarEl.value = "temperature_2m"; lsSet("skimo-wxvar", "temperature_2m"); wxLegend();
-  const wxEl = document.getElementById("wxtemp"); wxEl.checked = true; wxEl.dispatchEvent(new Event("change"));
+  const wxEl = document.getElementById("wxtemp"); wxEl.checked = true;
+  window.__wxStartup = true; wxEl.dispatchEvent(new Event("change")); window.__wxStartup = false;
+  // Siempre al entrar: Salardú en el centro de la pantalla, en 2D
+  map.jumpTo({ center: [0.9005, 42.7077], zoom: 12.5, pitch: 0, bearing: 0 });
   setSec("aludes");   // el parte del Lauegi abierto (en el movil se cierra tocando el mapa)
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
