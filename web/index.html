@@ -1645,26 +1645,72 @@ ${pts}
   // Tesela vacia (PNG transparente de 1 px); el canvas necesita contexto antes de exportarlo
   const blankPng = async () => { const c = new OffscreenCanvas(1, 1); c.getContext("2d"); return (await c.convertToBlob({ type: "image/png" })).arrayBuffer(); };
   const emptyTile = blankPng();
+  // Malla regional gruesa (Pirineos y Alpes, ~25 km, cada 3 h): se pinta fuera de la malla fina de Aran.
+  // Se guarda en la Cache API (no en localStorage: pesa unos MB).
+  let rGrid = null, rGridP = null;
+  const REG_URL = WX_DATA + "grid-region.json";
+  const loadRegion = () => rGridP ??= (async () => {
+    let cache = null; try { cache = await caches.open("skimo-data"); } catch {}
+    try {
+      const r = await fetch(REG_URL, { cache: "no-cache" }); if (!r.ok) throw 0;
+      if (cache) try { await cache.put(REG_URL, r.clone()); } catch {}
+      rGrid = await r.json();
+    } catch { const r = cache && await cache.match(REG_URL); rGrid = r ? await r.json() : null; }
+    return rGrid;
+  })();
+  const inLat = (L, lon, lat) => lon >= L.lo0 && lon <= L.lo0 + (L.nc - 1) * L.dlo && lat >= L.la0 && lat <= L.la0 + (L.nr - 1) * L.dla;
+  // Altitud de cada pixel: nuestro relieve de Aran (2 m) si existe esa tesela; si no, el mundial (Terrain Tiles, terrarium)
+  const tileElev = async (z, x, y) => {
+    let r = z <= 13 ? await terrainFile.getZxy(z, x, y) : null, enc = "mapbox", blob;
+    if (r) blob = new Blob([r.data]);
+    else {
+      try { const res = await fetch(`https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`); if (!res.ok) return null; blob = await res.blob(); enc = "terrarium"; }
+      catch { return null; }
+    }
+    const bmp = await createImageBitmap(blob), W = bmp.width;
+    const c = new OffscreenCanvas(W, W), g = c.getContext("2d", { willReadFrequently: true });
+    g.drawImage(bmp, 0, 0);
+    const d = g.getImageData(0, 0, W, W).data, H = new Float32Array(W * W);
+    for (let k = 0; k < W * W; k++) H[k] = enc === "mapbox" ? -10000 + (d[4 * k] * 65536 + d[4 * k + 1] * 256 + d[4 * k + 2]) * 0.1
+                                                         : d[4 * k] * 256 + d[4 * k + 1] + d[4 * k + 2] / 256 - 32768;
+    return { W, H };
+  };
   maplibregl.addProtocol("wxtemp", async params => {
     const [z, x, y] = params.url.match(/wxtemp:\/\/(\d+)\/(\d+)\/(\d+)/).slice(1).map(Number);
     const g0 = tGrid, hIdx = +wxBarHour.value;
     if (!g0) return { data: await emptyTile };
-    const r = await terrainFile.getZxy(z, x, y);
-    if (!r) return { data: await emptyTile };
-    const bmp = await createImageBitmap(new Blob([r.data])), W = bmp.width;
-    const c = new OffscreenCanvas(W, W), g = c.getContext("2d", { willReadFrequently: true });
-    g.drawImage(bmp, 0, 0);
-    const src = g.getImageData(0, 0, W, W).data, out = g.createImageData(W, W), o = out.data, n = 2 ** z;
-    const F = WXF.find(f => f.id === wxVarEl.value) || WXF[0], arr = g0.v?.[F.id];
-    if (!arr) return { data: await emptyTile };
-    const tAt = arr.map(a => a[hIdx]), VAL = new Float32Array(W * W).fill(NaN);
+    const n = 2 ** z, F = WXF.find(f => f.id === wxVarEl.value) || WXF[0], arr = g0.v?.[F.id];
+    // Caja de la tesela: ¿toca Aran (malla fina) o hace falta la regional?
+    const lonW = x / n * 360 - 180, lonE = (x + 1) / n * 360 - 180;
+    const latN = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) * 180 / Math.PI, latS = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + 1) / n))) * 180 / Math.PI;
+    const tgE = TG.lo0 + (TG.nc - 1) * TG.dlo, tgN = TG.la0 + (TG.nr - 1) * TG.dla;
+    const insideAran = lonW >= TG.lo0 && lonE <= tgE && latS >= TG.la0 && latN <= tgN;
+    let reg = null, rIdx = -1;
+    if (!insideAran) {
+      reg = await loadRegion();
+      if (reg) { const t = g0.time[hIdx]; rIdx = reg.time.findLastIndex(q => q <= t); if (rIdx < 0) reg = null; }
+    }
+    const boxes = reg ? reg.boxes.filter(b => b.v[F.id] && !(lonE < b.lattice.lo0 || lonW > b.lattice.lo0 + (b.lattice.nc - 1) * b.lattice.dlo
+      || latN < b.lattice.la0 || latS > b.lattice.la0 + (b.lattice.nr - 1) * b.lattice.dla)) : [];
+    const aranTouch = !(lonE < TG.lo0 || lonW > tgE || latN < TG.la0 || latS > tgN) && arr;
+    if (!aranTouch && !boxes.length) return { data: await emptyTile };
+    const el = await tileElev(z, x, y);
+    if (!el) return { data: await emptyTile };
+    const W = el.W, c = new OffscreenCanvas(W, W), g = c.getContext("2d");
+    const out = g.createImageData(W, W), o = out.data;
+    const tAt = arr ? arr.map(a => a[hIdx]) : null, VAL = new Float32Array(W * W).fill(NaN);
+    const bAt = boxes.map(b => ({ L: b.lattice, elev: b.elev, v: b.v[F.id].map(a => a[rIdx]) }));
     for (let j = 0; j < W; j++) {
       const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + (j + 0.5) / W) / n))) * 180 / Math.PI;
       for (let i = 0; i < W; i++) {
-        const k = j * W + i, hPix = -10000 + (src[4 * k] * 65536 + src[4 * k + 1] * 256 + src[4 * k + 2]) * 0.1;
+        const k = j * W + i, hPix = el.H[k];
         const lon = (x + (i + 0.5) / W) / n * 360 - 180;
-        const t = F.lapse ? bilinear(TG, lon, lat, q => tAt[q] == null ? null : tAt[q] + LAPSE * (g0.elev[q] - hPix))
-                          : bilinear(TG, lon, lat, q => tAt[q]);
+        let L = null, vv = null, ee = null;
+        if (tAt && inLat(TG, lon, lat)) { L = TG; vv = tAt; ee = g0.elev; }
+        else for (const b of bAt) if (inLat(b.L, lon, lat)) { L = b.L; vv = b.v; ee = b.elev; break; }
+        if (!L) continue;
+        const t = F.lapse ? bilinear(L, lon, lat, q => vv[q] == null ? null : vv[q] + LAPSE * (ee[q] - hPix))
+                          : bilinear(L, lon, lat, q => vv[q]);
         if (t == null) continue;
         VAL[k] = t;
         if (F.min != null && t < F.min) continue;
@@ -1759,7 +1805,8 @@ ${pts}
   };
   wxBarHour.oninput = drawWx;
   onStyle(() => {
-    map.addSource("wxtemp", { type: "raster", tiles: ["wxtemp://{z}/{x}/{y}?v=0"], tileSize: 256, minzoom: 8, maxzoom: 13, bounds: [0.40, 42.50, 1.40, 42.92] });
+    // Aran (malla fina) y, fuera, Pirineos y Alpes (malla regional gruesa)
+    map.addSource("wxtemp", { type: "raster", tiles: ["wxtemp://{z}/{x}/{y}?v=0"], tileSize: 256, minzoom: 5, maxzoom: 13, bounds: [-2.0, 42.0, 16.0, 48.0] });
     map.addLayer({ id: "wxtemp", type: "raster", source: "wxtemp", layout: { visibility: "none" },
       paint: { "raster-opacity": 0.75, "raster-resampling": "linear", "raster-fade-duration": 0 } }, "contours-minor");
     wxLegend();   // aplica la opacidad propia de la variable elegida (la nieve de Windy va mas opaca)
@@ -1824,17 +1871,35 @@ ${pts}
   // Valor en el punto: al pasar el cursor (ordenador) o al tocar (movil) con el mapa del tiempo o el viento activos
   const wxTip = document.createElement("div"); wxTip.className = "wxtip"; wxTip.hidden = true; map.getContainer().appendChild(wxTip);
   const wxActive = () => document.getElementById("wxtemp").checked || document.getElementById("wxwind").checked;
+  // Altitud en cualquier sitio: la nuestra en Aran; fuera, la mundial (Terrain Tiles a z12, ~30 m)
+  const elevTiles = new Map();
+  const elevWorld = async c => {
+    const z = 12, n = 2 ** z, fx = (c[0] + 180) / 360 * n, ly = Math.log(Math.tan(Math.PI / 4 + c[1] * Math.PI / 360));
+    const fy = (1 - ly / Math.PI) / 2 * n, x = Math.floor(fx), y = Math.floor(fy), key = x + "/" + y;
+    if (!elevTiles.has(key)) { if (elevTiles.size > 24) elevTiles.delete(elevTiles.keys().next().value); elevTiles.set(key, tileElev(z, x, y)); }
+    const t = await elevTiles.get(key); if (!t) return null;
+    return t.H[Math.min(t.W - 1, Math.floor((fy - y) * t.W)) * t.W + Math.min(t.W - 1, Math.floor((fx - x) * t.W))];
+  };
   const wxValueAt = async c => {
-    const h = await elevation(c), parts = [];
+    let h = await elevation(c); const parts = [];
     if (document.getElementById("wxtemp").checked && tGrid) {
       const F = WXF.find(f => f.id === wxVarEl.value) || WXF[0], arr = tGrid.v?.[F.id], i = +wxBarHour.value;
-      if (arr && h != null) {
-        const v = F.lapse ? bilinear(TG, c[0], c[1], q => arr[q][i] == null ? null : arr[q][i] + LAPSE * (tGrid.elev[q] - h))
-                          : bilinear(TG, c[0], c[1], q => arr[q][i]);
+      // Malla fina de Aran o, fuera de ella, la regional (Pirineos, Alpes)
+      let L = TG, val = arr && (q => arr[q][i]), ee = tGrid.elev, accF = tGrid.v?.snow_acc && (q => tGrid.v.snow_acc[q][i]);
+      if (!inLat(TG, c[0], c[1])) {
+        const reg = await loadRegion(), ri = reg ? reg.time.findLastIndex(q => q <= tGrid.time[i]) : -1;
+        const b = ri >= 0 && reg.boxes.find(b => inLat(b.lattice, c[0], c[1]));
+        if (b && b.v[F.id]) { L = b.lattice; val = q => b.v[F.id][q][ri]; ee = b.elev; accF = b.v.snow_acc && (q => b.v.snow_acc[q][ri]); }
+        else val = null;
+        if (val && h == null) h = await elevWorld(c);
+      }
+      if (val && h != null) {
+        const v = F.lapse ? bilinear(L, c[0], c[1], q => val(q) == null ? null : val(q) + LAPSE * (ee[q] - h))
+                          : bilinear(L, c[0], c[1], val);
         if (v != null) parts.push(`<b>${(Math.round(v * (F.unit === "m" ? 0.1 : 10)) / (F.unit === "m" ? 0.1 : 10)).toLocaleString("es-ES")} ${F.unit}</b> ${wxVarEl.selectedOptions[0].text.replace(/ \(.*\)$/, "").replace(/^./, ch => ch.toLowerCase())}`);
         // Con "nieve que cae", dar tambien el total sumado desde ahora hasta la hora de la barra
-        const acc = tGrid.v?.snow_acc;
-        if (F.id === "snowfall" && acc) { const a = bilinear(TG, c[0], c[1], q => acc[q][i]); if (a != null) parts.push(`<b>${(Math.round(a * 10) / 10).toLocaleString("es-ES")} cm</b> acumulados desde ahora`); }
+        if (F.id === "snowfall" && accF) { const a = bilinear(L, c[0], c[1], accF); if (a != null) parts.push(`<b>${(Math.round(a * 10) / 10).toLocaleString("es-ES")} cm</b> acumulados desde ahora`); }
+        if (L !== TG) parts.push(`<span style="color:var(--muted)">malla gruesa ~25 km</span>`);
       }
     }
     if ((document.getElementById("wxwind").checked || arrowsWanted()) && wField && windHour >= 0) {
@@ -1990,10 +2055,10 @@ ${pts}
     if (fcBusy) return; fcBusy = true;
     document.getElementById("fc-meta").textContent = "Cargando…";
     try {
-      const h = Math.round(await elevation([fcLoc.lon, fcLoc.lat]) ?? 0);
+      const h0 = await elevation([fcLoc.lon, fcLoc.lat]) ?? await elevWorld([fcLoc.lon, fcLoc.lat]), h = h0 == null ? null : Math.round(h0);   // fuera de Aran: relieve mundial
       const hv = "temperature_2m,apparent_temperature,precipitation,snowfall,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,freezing_level_height,is_day";
       const model = fcModelEl.value;
-      const url = `${OM}?latitude=${fcLoc.lat}&longitude=${fcLoc.lon}&elevation=${h}&hourly=${hv}&models=${model}` +
+      const url = `${OM}?latitude=${fcLoc.lat}&longitude=${fcLoc.lon}${h == null ? "" : `&elevation=${h}`}&hourly=${hv}&models=${model}` +
         `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum&forecast_days=16&timezone=Europe%2FMadrid`;
       const j = await (await fetch(url)).json();
       if (!j.hourly) throw new Error(j.reason || "sin datos");
@@ -2002,7 +2067,7 @@ ${pts}
       for (const k in H) H[k] = H[k].slice(0, last + 1);
       const lastDay = (H.time[last] || "").slice(0, 10), D = j.daily, nd = D.time.findIndex(d => d > lastDay);
       if (nd > 0) for (const k in D) D[k] = D[k].slice(0, nd);
-      fcData = { ...j, loc: fcLoc, elev: h, model, at: new Date().toISOString() };
+      fcData = { ...j, loc: fcLoc, elev: h ?? Math.round(j.elevation), model, at: new Date().toISOString() };
       lsSet("skimo-fc", JSON.stringify(fcData));
     } catch (e) { if (!fcData) document.getElementById("fc-meta").textContent = "Sin conexión y sin previsión guardada"; }
     fcBusy = false; renderFc();
