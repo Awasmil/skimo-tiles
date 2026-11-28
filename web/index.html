@@ -150,7 +150,8 @@
   .wxbar.wide { width: min(980px, calc(100% - 20px)); }
   /* ---- Mapa del tiempo con disposición tipo Windy (pedido por Jorge 2026-11-28): barra ancha abajo con días,
      ▶, modelos y leyenda; botones redondos de variables a la derecha; tarjeta del punto arriba a la izquierda ---- */
-  .wxbar.windy, .wxbar.windy.wide { left: 50%; right: auto; transform: translateX(-50%); width: min(1200px, calc(100% - 210px)); }
+  /* Centrada en el hueco que deja libre el bloque de zoom/3D de la esquina derecha */
+  .wxbar.windy, .wxbar.windy.wide { left: 10px; right: 180px; width: auto; max-width: 1200px; margin: 0 auto; transform: none; }
   /* Orden tipo Windy: arriba el botón y la hora, luego la barra de horas, modelos/leyenda y, al final, la tabla de previsión */
   .wxbar.windy.on { display: flex; flex-direction: column; }
   .wxbar.windy .wx-top { order: 1; } .wxbar.windy .acc { order: 2; } .wxbar.windy .wx-tl { order: 3; }
@@ -205,7 +206,8 @@
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button + button { border-top: 0; border-left: 1px solid #ddd; }
   /* Con el mapa del tiempo, por encima de su barra (en el móvil la barra ocupa todo el ancho) */
   /* Si la barra del tiempo llega hasta el bloque (pantallas de menos de ~1550 px), el bloque sube por encima de ella */
-  @media (max-width: 1550px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: calc(var(--wxbar-h, 240px) - 10px); } }
+  /* Siempre en la esquina (Jorge 2026-11-28); solo en el movil, donde no hay sitio, sube por encima de la barra */
+  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: calc(var(--wxbar-h, 240px) - 10px); } }
   .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
   .maplibregl-ctrl-group button.btn-var:disabled { opacity: .35; }
   .wx-vars-ctl[hidden] { display: none !important; }
