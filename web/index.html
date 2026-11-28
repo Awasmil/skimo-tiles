@@ -799,7 +799,8 @@
   map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
   map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
   // Créditos plegados al abrir (se ven tocando la «i»)
-  map.once("idle", () => { const a = document.querySelector(".maplibregl-ctrl-attrib"); a?.classList.remove("maplibregl-compact-show"); a?.removeAttribute("open"); });
+  const foldAttrib = () => { const a = document.querySelector(".maplibregl-ctrl-attrib"); a?.classList.remove("maplibregl-compact-show"); a?.removeAttribute("open"); };
+  map.once("idle", foldAttrib); setTimeout(foldAttrib, 4000);
 
   // Si la capa aun no existe (el mapa sigue cargando), se aplica cuando cargue
   const pendingVis = {};
