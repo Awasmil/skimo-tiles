@@ -159,6 +159,16 @@
   .wxbar.windy .wx-foot { order: 4; } .wxbar.windy .fc { order: 5; margin: 8px 0 0; border-top: 1px solid rgba(127,127,127,.3); padding-top: 6px; }
   /* Con la previsión abierta (ordenador): a la izquierda lugar, modelo y días; a la derecha, en el hueco que quedaba,
      la barra de horas, los modelos y la leyenda; debajo, la tabla a todo el ancho (Jorge 2026-11-28) */
+  /* Formato reducido (ordenador): «Acumular» y la barra de horas en la misma línea (Jorge 2026-11-28) */
+  @media (min-width: 700px) {
+    .wxbar.windy.on:not(.wide) { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; align-items: center; }
+    .wxbar.windy:not(.wide) .wx-top { grid-column: 1 / 3; grid-row: 1; }
+    .wxbar.windy:not(.wide) .acc { grid-column: 1; grid-row: 2; margin: 14px 0 0; white-space: nowrap; }
+    .wxbar.windy:not(.wide) .wx-tl { grid-column: 1 / 3; grid-row: 2; }
+    .wxbar.windy:not(.wide):has(.acc:not([hidden])) .wx-tl { grid-column: 2; }
+    .wxbar.windy:not(.wide) .wx-foot { grid-column: 1 / 3; grid-row: 3; }
+    .wxbar.windy:not(.wide) .fc { display: none; }
+  }
   @media (min-width: 700px) {
     .wxbar.windy.on.wide { display: grid; grid-template-columns: minmax(300px, 40%) minmax(0, 1fr); column-gap: 18px; align-items: center; }
     .wxbar.windy.wide .fc { display: contents; }
