@@ -189,7 +189,8 @@
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { width: 34px; height: 34px; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button + button { border-top: 0; border-left: 1px solid #ddd; }
   /* Con el mapa del tiempo, por encima de su barra (en el móvil la barra ocupa todo el ancho) */
-  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: calc(var(--wxbar-h, 240px) - 40px); } }
+  /* Si la barra del tiempo llega hasta el bloque (pantallas de menos de ~1550 px), el bloque sube por encima de ella */
+  @media (max-width: 1550px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: calc(var(--wxbar-h, 240px) - 10px); } }
   .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
   .maplibregl-ctrl-group button.btn-var:disabled { opacity: .35; }
   .wx-vars-ctl[hidden] { display: none !important; }
@@ -797,6 +798,8 @@
   // Zoom, orientación, 3D y ubicación: segunda columna abajo a la derecha, hacia dentro (Jorge 2026-11-28: no cabían)
   map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
   map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
+  // Créditos plegados al abrir (se ven tocando la «i»)
+  map.once("idle", () => { const a = document.querySelector(".maplibregl-ctrl-attrib"); a?.classList.remove("maplibregl-compact-show"); a?.removeAttribute("open"); });
 
   // Si la capa aun no existe (el mapa sigue cargando), se aplica cuando cargue
   const pendingVis = {};
