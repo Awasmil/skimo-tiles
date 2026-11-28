@@ -259,6 +259,19 @@
   }
   /* (antiguo) Ordenador: la tarjeta del tiempo arriba, a la derecha del buscador */
   @media (min-width: 1200px) { body .wx-card { top: max(10px, env(safe-area-inset-top)); left: 442px; max-width: 400px; } body .stcard { max-width: min(430px, calc(100% - 1070px)); } }
+  /* Medidor en el móvil (Jorge 2026-11-28): recuadro mínimo para ver el mapa al trazar; «Perfil» despliega el resto */
+  #m-more-btn { display: none; }
+  @media (max-width: 600px) {
+    #m-more-btn { display: block; }
+    .measure:not(.more) .m-more, .measure:not(.more) #m-mode-help, .measure:not(.more) #m-sub { display: none; }
+    .measure { padding: 6px 8px; bottom: max(10px, calc(env(safe-area-inset-bottom) + 4px)); }
+    .measure .m-mode { margin-bottom: 4px; }
+    .measure .m-mode button { padding: 4px; font-size: 12px; }
+    .measure .m-stats { font-size: 14px; gap: 10px; }
+    .measure .m-btns { margin-top: 6px; gap: 5px; }
+    .measure .m-btns button { min-height: 32px; font-size: 12px; }
+    body.measuring .wxbar, body.measuring .maplibregl-ctrl-bottom-right { visibility: hidden; }
+  }
   .fc-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; }
   .fc-inline #fc-place { font-weight: 600; }
   .fc-inline #fc-meta { color: var(--muted); font-size: 11px; }
@@ -620,6 +633,7 @@
   </div>
   <div class="m-sub" id="m-sub">Toca el mapa para añadir puntos.</div>
 
+  <div class="m-more">
   <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px">
     <span>Mín. <b id="m-hmin">–</b></span><span>Máx. <b id="m-hmax">–</b></span>
   </div>
@@ -628,7 +642,9 @@
   <div style="height:8px;border-radius:3px;margin-top:2px;background:linear-gradient(90deg,#2ea043 0%,#c8dc3c 33%,#ffe628 50%,#ff9600 67%,#e63228 83%,#9a1466 100%)"></div>
   <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)"><span>0°</span><span>10°</span><span>15°</span><span>20°</span><span>25°</span><span>30°+</span></div>
   <div class="m-sub">Desnivel estimado con el modelo de terreno (~15 m), no medido.</div>
+  </div>
   <div class="m-btns">
+    <button id="m-more-btn" type="button" aria-expanded="false">Perfil ▴</button>
     <button id="m-undo" disabled>Deshacer</button>
     <button id="m-clear" disabled>Borrar</button>
     <button id="m-gpx" disabled>GPX</button>
@@ -1394,8 +1410,10 @@
     mPoints.push({ c, h: await elevation(c), snap: s });
     renderMeasure();
   }).catch(e => console.error("Medidor:", e)));
+  // «Perfil»: despliega/pliega el perfil y las notas del medidor (en el móvil empieza plegado)
+  document.getElementById("m-more-btn").onclick = e => { const o = mPanel.classList.toggle("more"); e.target.textContent = o ? "Perfil ▾" : "Perfil ▴"; e.target.setAttribute("aria-expanded", o); };
   const setMeasuring = on => {
-    measuring = on;
+    measuring = on; document.body.classList.toggle("measuring", on);
     if (on && wxMode) setWxMode(false);
     mPanel.classList.toggle("on", on);
     document.querySelector(".btn-measure")?.classList.toggle("on", on);
