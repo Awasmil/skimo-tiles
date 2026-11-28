@@ -197,6 +197,25 @@
   .fc-mini .tt b { font-weight: 700; }
   .fc-mini .tt span { color: var(--muted); }
   .fc-mini .sn { color: #2b6cb0; font-weight: 600; min-height: 14px; white-space: nowrap; }
+  .fc-mini { overflow-x: auto; scrollbar-width: thin; }
+  @media (max-width: 600px) {
+    /* Buscador y tarjeta del tiempo en la misma línea (Jorge 2026-11-28) */
+    .search { right: auto; width: calc(50% - 22px); }
+    .search input { font-size: 15px; padding: 0 10px; }
+    .wx-card { top: calc(max(10px, env(safe-area-inset-top)) + 24px); margin-top: 0 !important; left: calc(50% - 6px); right: 52px; max-width: none;
+      height: 44px; padding: 2px 8px; gap: 6px; border-radius: 12px; overflow: hidden; }
+    .wx-card .now { font-size: 26px; }
+    .wx-card .now sup { font-size: 13px; }
+    .wx-card .pl { display: none; }
+    .wx-card .d { min-width: 0; flex: 1; font-size: 10px; line-height: 1.1; }
+    .wx-card .d .ic { font-size: 14px; line-height: 1.1; }
+    .wx-card .d b { font-size: 10px; }
+    .wx-card .d:nth-child(n+4) { display: none; }
+    /* Previsión abierta: que siempre se pueda cerrar y que no tape el buscador */
+    body.fc-open .wx-card, body.fc-open .maplibregl-ctrl-bottom-right { display: none; }
+    .wxbar.windy.wide { max-height: calc(100dvh - 140px); overflow-y: auto; }
+    .wxbar.windy.wide .wx-top { position: sticky; top: -6px; background: var(--bg); z-index: 2; padding: 2px 0; }
+  }
   .fc-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; }
   .fc-inline #fc-place { font-weight: 600; }
   .fc-inline #fc-meta { color: var(--muted); font-size: 11px; }
@@ -2475,10 +2494,11 @@ ${pts}
       const zero = lo < 0 && hi > 0 ? `<line x1="0" x2="1000" y1="${Y(0)}" y2="${Y(0)}" stroke="#2166ac" stroke-dasharray="6 5" stroke-opacity=".5" vector-effect="non-scaling-stroke"/>` : "";
       const seps = D.time.slice(1).map((_, i) => `<line x1="${X(i + 1)}" x2="${X(i + 1)}" y1="0" y2="30" stroke="currentColor" stroke-opacity=".12" vector-effect="non-scaling-stroke"/>`).join("");
       const cells = f => `<div class="mrow" style="--nd:${n}">${D.time.map((d, i) => `<div class="md" data-day="${d}">${f(d, i)}</div>`).join("")}</div>`;
-      mini.innerHTML = cells(d => `<div class="dn">${new Date(d + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric" })}</div>`)
+      mini.innerHTML = `<div class="mwrap" style="min-width:${n * 46}px">` + cells(d => `<div class="dn">${new Date(d + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric" })}</div>`)
         + cells((d, i) => `<div class="ic">${wmoIcon(D.weather_code[i])}</div>`)
         + `<svg viewBox="0 0 1000 30" preserveAspectRatio="none" aria-hidden="true">${seps}${zero}<polygon points="0,30 ${line} ${X(pts.at(-1)[0])},30" fill="rgba(110,190,110,.28)"/><polyline points="${line}" fill="none" stroke="#4f9e4f" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`
         + cells((d, i) => `<div class="tt"><b>${fmtN(D.temperature_2m_max[i])}°</b> <span>${fmtN(D.temperature_2m_min[i])}°</span></div><div class="sn">${D.snowfall_sum[i] >= 0.5 ? `❄ ${fmtN(D.snowfall_sum[i])} cm` : D.precipitation_sum[i] >= 0.5 ? `<span style="color:#5b7fa6">💧${fmtN(D.precipitation_sum[i])}</span>` : ""}</div>`);
+      mini.innerHTML += "</div>";
       mini.onclick = e => { const c = e.target.closest("[data-day]"); if (c) goTime(c.dataset.day + "T12:00"); };
     }
   };
@@ -2507,7 +2527,7 @@ ${pts}
     if (td) document.getElementById("fc-scroll").scrollLeft = td.offsetLeft - 60;
   };
   const setFcOpen = open => {
-    fcEl.hidden = !open; wxBar.classList.toggle("wide", open);
+    fcEl.hidden = !open; wxBar.classList.toggle("wide", open); document.body.classList.toggle("fc-open", open);
     fcToggle.textContent = open ? "▾ Ocultar previsión" : "▴ Previsión";
     fcToggle.setAttribute("aria-expanded", open); lsSet("skimo-fc-open", open ? "1" : "0");
     if (open) { renderFc(); if (!fcData || Date.now() - new Date(fcData.at) > 30 * 60e3 || fcData.loc.lon !== fcLoc.lon || (fcData.model || "best_match") !== fcModelEl.value) loadFc(); }
