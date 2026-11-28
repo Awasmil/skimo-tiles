@@ -2224,7 +2224,11 @@ ${pts}
   varsEl.innerHTML = WXV.map(([v, ic, n]) => `<button type="button" class="btn-emoji btn-var" data-v="${v}" title="${n}" aria-label="${n}"><span aria-hidden="true">${ic}</span></button>`).join("");
   varsEl.onclick = e => {
     const b = e.target.closest("[data-v]"); if (!b || b.disabled) return;
+    // Como en Windy: tocar la variable que ya está activa apaga el mapa del tiempo; cualquier otra lo enciende con ella
+    const wt = document.getElementById("wxtemp");
+    if (wt.checked && wxVarEl.value === b.dataset.v) { wt.checked = false; wt.dispatchEvent(new Event("change")); return; }
     wxVarEl.value = b.dataset.v; wxVarEl.dispatchEvent(new Event("change"));
+    if (!wt.checked) { wt.checked = true; wt.dispatchEvent(new Event("change")); }
   };
   modelsEl.innerHTML = [["grid.json", "Mejor"], ["grid-arome.json", "AROME"], ["grid-ecmwf.json", "ECMWF"]]
     .map(([f, n]) => `<button type="button" data-f="${f}">${n}</button>`).join("");
@@ -2236,12 +2240,12 @@ ${pts}
   new ResizeObserver(() => document.body.style.setProperty("--wxbar-h", (wxBar.offsetHeight + 50) + "px")).observe(wxBar);
   const wxUi = () => {
     const on = document.getElementById("wxtemp").checked;
-    varsEl.hidden = !on; cardEl.hidden = !on; document.body.classList.toggle("wx-on", on);
-    if (!on) return;
+    varsEl.hidden = false; cardEl.hidden = !on; document.body.classList.toggle("wx-on", on);   // variables siempre visibles
     varsEl.querySelectorAll("button").forEach(b => {
-      b.classList.toggle("on", b.dataset.v === wxVarEl.value);
-      b.disabled = !!tGrid && !tGrid.v?.[b.dataset.v];   // este modelo no da esa variable
+      b.classList.toggle("on", on && b.dataset.v === wxVarEl.value);
+      b.disabled = on && !!tGrid && !tGrid.v?.[b.dataset.v];   // este modelo no da esa variable
     });
+    if (!on) return;
     modelsEl.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.f === wxModelEl.value));
     if (!fcData || Date.now() - new Date(fcData.at) > 30 * 60e3) loadFc(); else if (!cardEl.innerHTML) renderCard();
     const T = (tGrid || wField)?.time; if (!T) return;
