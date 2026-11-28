@@ -178,6 +178,9 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+      # GitHub a veces tarda en registrar el artefacto recien subido ("No artifacts named github-pages"): breve espera
+      - name: Esperar a que GitHub registre el sitio subido
+        run: sleep 20
       - id: deployment
         uses: actions/deploy-pages@v4
         with:
