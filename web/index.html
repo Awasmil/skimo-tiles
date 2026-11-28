@@ -2053,7 +2053,7 @@ ${pts}
     if (open) { renderFc(); if (!fcData || Date.now() - new Date(fcData.at) > 30 * 60e3 || fcData.loc.lon !== fcLoc.lon || (fcData.model || "best_match") !== fcModelEl.value) loadFc(); }
   };
   fcToggle.onclick = () => { if (wxMode) setWxMode(false); setFcOpen(fcEl.hidden); };
-  if ((lsGet("skimo-fc-open") ?? (window.innerWidth >= 700 ? "1" : "0")) === "1") setFcOpen(true);
+  // Como en Windy: la tabla completa empieza cerrada; se abre tocando la tarjeta del punto o «Previsión»
   window.__markFc = markFc;
 
   // ---------- Mapa del tiempo con disposición tipo Windy ----------
