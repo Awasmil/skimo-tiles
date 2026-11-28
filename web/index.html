@@ -182,10 +182,12 @@
   .maplibregl-ctrl-top-right .maplibregl-ctrl-group button.btn-emoji { font-size: 17px; line-height: 1; }
   .maplibregl-ctrl-top-right .maplibregl-ctrl-group button svg { width: 18px; height: 18px; }
   /* Segunda columna, abajo a la derecha y hacia dentro: zoom, orientación, 3D y ubicación */
-  .maplibregl-ctrl-bottom-right { right: 52px; }
-  .maplibregl-ctrl-bottom-right .maplibregl-ctrl { margin: 6px 0 0 0; }
-  .maplibregl-ctrl-bottom-right .maplibregl-ctrl:last-child { margin-bottom: 10px; }
+  /* Bloque de 2 filas (Jorge 2026-11-28): arriba [3D][ubicación], abajo [+][−][orientación] */
+  .maplibregl-ctrl-bottom-right { right: 52px; bottom: 10px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; width: 114px; }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl { margin: 0; float: none; }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group { display: flex; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { width: 34px; height: 34px; }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button + button { border-top: 0; border-left: 1px solid #ddd; }
   /* Con el mapa del tiempo, por encima de su barra (en el móvil la barra ocupa todo el ancho) */
   @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: calc(var(--wxbar-h, 240px) - 40px); } }
   .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
@@ -617,7 +619,7 @@
     container: "map",
     bounds, fitBoundsOptions: { padding: 20 },
     maxPitch: 75,
-    attributionControl: { compact: true },
+    attributionControl: false,   // se pone abajo a la izquierda (abajo a la derecha va el bloque de zoom/3D)
     style: {
       version: 8,
       glyphs: new URL("fonts/", location.href).href + "{fontstack}/{range}.pbf",
@@ -794,6 +796,7 @@
   map.addControl(new maplibregl.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: true }), "bottom-right");
   // Zoom, orientación, 3D y ubicación: segunda columna abajo a la derecha, hacia dentro (Jorge 2026-11-28: no cabían)
   map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
+  map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
 
   // Si la capa aun no existe (el mapa sigue cargando), se aplica cuando cargue
   const pendingVis = {};
@@ -809,6 +812,9 @@
     const run = () => { try { fn(); } catch (e) { console.error(e); } applyPending(); };
     if (map.style?._loaded) run(); else map.once("style.load", run);
   };
+  // Cielo y bruma en 3D (antes se veia el fondo azul oscuro de la pagina por encima del horizonte)
+  onStyle(() => map.setSky?.({ "sky-color": "#7fb2e5", "horizon-color": "#dfeaf5", "fog-color": "#eef3f8",
+    "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.6, "fog-ground-blend": 0.75, "atmosphere-blend": 0.6 }));
   document.querySelectorAll("input[name=base]").forEach(r => r.addEventListener("change", () => {
     setVis("pnoa", r.value === "pnoa");
     setVis("satwinter", r.value === "winter");
