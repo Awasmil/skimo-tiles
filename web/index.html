@@ -193,6 +193,14 @@
   .maplibregl-ctrl-top-right { max-height: calc(100% - 4px); overflow-y: auto; overflow-x: hidden; scrollbar-width: none;
     padding: 0 0 8px 8px; overscroll-behavior: contain; }
   .maplibregl-ctrl-top-right::-webkit-scrollbar { display: none; }
+  /* Nombres flotantes a la izquierda: la columna reserva sitio a su izquierda (sin tapar los toques al mapa) */
+  .maplibregl-ctrl-top-right { padding-left: 150px; pointer-events: none; }
+  .maplibregl-ctrl-top-right .maplibregl-ctrl { pointer-events: auto; overflow: visible; }
+  .maplibregl-ctrl-top-right button { position: relative; overflow: visible; }
+  .ctl-label { position: absolute; right: calc(100% + 8px); top: 50%; transform: translateY(-50%); white-space: nowrap;
+    font: 600 13px system-ui, -apple-system, sans-serif; color: #fff; pointer-events: none;
+    text-shadow: 0 1px 3px rgba(0,0,0,.95), 0 0 2px rgba(0,0,0,.9), 0 0 6px rgba(0,0,0,.6); }
+  @media (max-width: 600px) { .maplibregl-ctrl-top-right { padding-left: 110px; } .ctl-label { font-size: 11px; } }
   .maplibregl-ctrl-top-right .maplibregl-ctrl { margin: 6px 10px 0 0; }
   .maplibregl-ctrl-top-right .maplibregl-ctrl:first-child { margin-top: 10px; }
   .maplibregl-ctrl-top-right .maplibregl-ctrl-group button { width: 34px; height: 34px; }
@@ -638,6 +646,8 @@
     container: "map",
     bounds, fitBoundsOptions: { padding: 20 },
     maxPitch: 75,
+    locale: { "NavigationControl.ZoomIn": "Acercar", "NavigationControl.ZoomOut": "Alejar", "NavigationControl.ResetBearing": "Orientar al norte",
+      "GeolocateControl.FindMyLocation": "Mi ubicación", "GeolocateControl.LocationNotAvailable": "Ubicación no disponible" },
     attributionControl: false,   // se pone abajo a la izquierda (abajo a la derecha va el bloque de zoom/3D)
     style: {
       version: 8,
@@ -2419,7 +2429,17 @@ ${pts}
   }, "top-right");
   map.addControl(radarControl, "top-right");
   map.addControl(secControl, "top-right");
-  map.addControl(varsControl, "top-right");   // variables del tiempo: al final, solo con el mapa del tiempo   // iconos de capas: debajo de todo en la columna derecha
+  map.addControl(varsControl, "top-right");   // variables del tiempo: al final, solo con el mapa del tiempo
+
+  // Nombre flotante a la izquierda de cada botón de la columna derecha (Jorge 2026-11-28, como Windy)
+  const SHORT = { "Medir distancia y desnivel": "Medir", "Webcams y previsión de Meteoaran": "Webcams · Meteoaran",
+    "Carreteras: túnel de Vielha y Port de la Bonaigua": "Carreteras", "Radar de lluvia y nieve": "Radar",
+    "Capas del terreno": "Terreno", "Aludes · Lauegi": "Aludes" };
+  document.querySelectorAll(".maplibregl-ctrl-top-right button").forEach(b => {
+    const t = b.title || b.getAttribute("aria-label"); if (!t || b.querySelector(".ctl-label")) return;
+    const s = document.createElement("span"); s.className = "ctl-label"; s.setAttribute("aria-hidden", "true");
+    s.textContent = SHORT[t] || t; b.appendChild(s); b.removeAttribute("title");   // sin el globo del navegador encima
+  });   // iconos de capas: debajo de todo en la columna derecha
   const placeRoads = () => {
     if (!roadsBtn) return;
     const b = roadsBtn.getBoundingClientRect(), m = map.getContainer().getBoundingClientRect();
