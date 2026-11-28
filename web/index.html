@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Skimo Pirineo</title>
-<meta name="theme-color" content="#1e3a5f">
+<meta name="theme-color" content="#eef1ec">   <!-- claro: Safari tiñe sus barras con este color (en azul oscuro quedaba una franja abajo) -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -19,7 +19,7 @@
 <style>
   :root { --bg: rgba(255,255,255,.94); --fg: #1b2430; --muted: #5b6573; --accent: #1e3a5f; }
   @media (prefers-color-scheme: dark) { :root { --bg: rgba(24,28,34,.94); --fg: #e8ecf1; --muted: #9aa4b2; --accent: #8fb6e8; } }
-  html, body { margin: 0; height: 100%; background: #1e3a5f; font: 14px/1.35 system-ui, -apple-system, sans-serif; color: var(--fg); }
+  html, body { margin: 0; height: 100%; background: #eef1ec; font: 14px/1.35 system-ui, -apple-system, sans-serif; color: var(--fg); }
   #map { position: fixed; inset: 0; }   /* fixed: en la app de pantalla de inicio del iPhone no queda franja abajo */
   .search { position: absolute; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left));
     right: 56px; max-width: 420px; z-index: 3; }
@@ -242,6 +242,13 @@
   /* Con el mapa del tiempo, por encima de su barra (en el móvil la barra ocupa todo el ancho) */
   /* Si la barra del tiempo llega hasta el bloque (pantallas de menos de ~1550 px), el bloque sube por encima de ella */
   /* Siempre en la esquina (Jorge 2026-11-28); solo en el movil, donde no hay sitio, sube por encima de la barra */
+  /* Móvil: todo lo de arriba baja 24 px para salir de la franja difuminada que pone iOS bajo la hora (Jorge 2026-11-28) */
+  @media (max-width: 600px) {
+    .search { top: calc(max(10px, env(safe-area-inset-top)) + 24px); }
+    .panel, .stcard, .stchip, .wx-card, .sidepanel:not([hidden]) { margin-top: 24px; }
+    .maplibregl-ctrl-top-right { top: calc(env(safe-area-inset-top) + 24px); }
+    .wxbar.windy #wxbar-src:not(.warn) { display: none; }   /* «mapa: … consultado» ocupaba una línea entera */
+  }
   @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: var(--wxbar-h, 240px); } }
   /* Punto naranja en el icono: ese apartado tiene algo encendido sobre el mapa */
   .maplibregl-ctrl-group button.lit::after { content: ""; position: absolute; top: 3px; right: 3px; width: 8px; height: 8px;
@@ -2746,7 +2753,7 @@ ${pts}
   window.__wxStartup = true; wxEl.dispatchEvent(new Event("change")); window.__wxStartup = false;
   // Siempre al entrar: Salardú en el centro de la pantalla, en 2D
   map.jumpTo({ center: [0.9005, 42.7077], zoom: 12.5, pitch: 0, bearing: 0 });
-  setSec("aludes");   // el parte del Lauegi abierto (en el movil se cierra tocando el mapa)
+  // El detalle del boletín ya no se abre al entrar (Jorge 2026-11-28); el rayado sigue en el mapa
   updBadges();
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
