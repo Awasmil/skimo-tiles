@@ -299,17 +299,17 @@
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group { display: flex; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { width: 34px; height: 34px; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button + button { border-top: 0; border-left: 1px solid #ddd; }
-  /* Bloque de la esquina 4 × 2 (Jorge 2026-11-28): [Medir][Carreteras][Sin conexión][Ubicación] / [3D][Orientación][+][−] */
+  /* Bloque de la esquina 4 × 2 (Jorge 2026-11-28): [+][−][Orientación][3D] / [Ubicación][Medir][Carreteras][Sin conexión] */
   .maplibregl-ctrl-bottom-right { width: 136px !important; gap: 0 !important; border-radius: 6px; box-shadow: 0 0 0 2px rgba(0,0,0,.1); overflow: hidden; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group { border-radius: 0 !important; box-shadow: none !important; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { box-shadow: inset 1px 0 0 #ddd, inset 0 1px 0 #ddd !important; border: 0 !important; }
-  .maplibregl-ctrl-bottom-right > :has(.btn-measure) { order: 1; }
-  .maplibregl-ctrl-bottom-right > :has(.btn-roads) { order: 2; }
-  .maplibregl-ctrl-bottom-right > :has(.btn-sec) { order: 3; }
-  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-geolocate) { order: 4; }
-  .maplibregl-ctrl-bottom-right > :has(.btn-3d) { order: 5; }
-  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-compass) { order: 6; }
-  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-zoom-in) { order: 7; }
+  .maplibregl-ctrl-bottom-right > :has(.btn-measure) { order: 6; }
+  .maplibregl-ctrl-bottom-right > :has(.btn-roads) { order: 7; }
+  .maplibregl-ctrl-bottom-right > :has(.btn-sec) { order: 8; }
+  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-geolocate) { order: 5; }
+  .maplibregl-ctrl-bottom-right > :has(.btn-3d) { order: 4; }
+  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-compass) { order: 3; }
+  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-zoom-in) { order: 1; }
   /* (antiguo) */
   .maplibregl-ctrl-bottom-right { column-gap: 0; row-gap: 6px; width: 102px; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(1) { border-radius: 4px 0 0 4px; }
