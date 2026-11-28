@@ -2287,7 +2287,17 @@ ${pts}
     wxModelEl.value = b.dataset.f; wxModelEl.dispatchEvent(new Event("change"));
   };
   // En el movil la barra del tiempo ocupa todo el ancho: la columna de botones termina encima de ella (y se desliza)
-  const setBarH = () => { const r = wxBar.getBoundingClientRect(); document.body.style.setProperty("--wxbar-h", (r.height ? innerHeight - r.top + 8 : 50) + "px"); };
+  // La vista del mapa se centra en el hueco que queda encima de la barra del tiempo: al abrir la previsión,
+  // Baqueira (o lo que se mire) sube y no queda tapado (Jorge 2026-11-28)
+  let padT = null;
+  const padForBar = () => {
+    const r = wxBar.getBoundingClientRect(), shown = r.height > 0 && getComputedStyle(wxBar).display !== "none";
+    const bottom = shown ? Math.max(0, Math.round(innerHeight - r.top)) : 0;
+    if ((map.getPadding().bottom || 0) === bottom) return;
+    if (map.isMoving()) { clearTimeout(padT); padT = setTimeout(padForBar, 300); return; }   // no cortar el vuelo de la cámara
+    map.easeTo({ padding: { top: 0, bottom, left: 0, right: 0 }, duration: 400 });
+  };
+  const setBarH = () => { const r = wxBar.getBoundingClientRect(); document.body.style.setProperty("--wxbar-h", (r.height ? innerHeight - r.top + 8 : 50) + "px"); padForBar(); };
   new ResizeObserver(setBarH).observe(wxBar); window.addEventListener("resize", setBarH);
   const wxUi = () => {
     const on = document.getElementById("wxtemp").checked;
