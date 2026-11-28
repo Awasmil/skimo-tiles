@@ -434,7 +434,8 @@
         <option value="meteofrance_arpege_europe">ARPEGE (Météo-France, ~4 días)</option>
         <option value="icon_eu">ICON-EU (DWD, ~5 días)</option>
         <option value="ukmo_global_deterministic_10km">UKMO (Met Office, ~7 días)</option>
-        <option value="ecmwf_ifs025">ECMWF IFS (15 días)</option>
+        <option value="ecmwf_ifs">ECMWF IFS 9 km (15 días)</option>
+        <option value="ecmwf_ifs025">ECMWF IFS 0,25° (~25 km, 15 días)</option>
         <option value="ecmwf_aifs025_single">ECMWF AIFS (IA, 15 días)</option>
         <option value="gfs_seamless">GFS (NOAA, 16 días)</option>
       </select></div>
@@ -2171,6 +2172,19 @@ ${pts}
       const lastDay = (H.time[last] || "").slice(0, 10), D = j.daily, nd = D.time.findIndex(d => d > lastDay);
       if (nd > 0) for (const k in D) D[k] = D[k].slice(0, nd);
       fcData = { ...j, loc: fcLoc, elev: h ?? Math.round(j.elevation), model, at: new Date().toISOString() };
+      // "Mejor combinación": qué modelo da cada día. Open-Meteo no lo dice: se compara hora a hora con cada candidato
+      // (mismo punto y cota) y se queda el que coincide exactamente (Jorge 2026-11-28)
+      if (model === "best_match") try {
+        const C = ["meteofrance_arome_france_hd", "meteofrance_arome_france", "meteofrance_arpege_europe", "ecmwf_ifs", "ecmwf_ifs025", "icon_eu", "icon_global", "ukmo_global_deterministic_10km", "gfs_seamless"];
+        const u2 = `${OM}?latitude=${fcLoc.lat}&longitude=${fcLoc.lon}${h == null ? "" : `&elevation=${h}`}&hourly=temperature_2m,wind_speed_10m&models=${C.join(",")}&forecast_days=16&timezone=Europe%2FMadrid`;
+        const k = await (await fetch(u2)).json(), K = k.hourly, HH = fcData.hourly, per = {};
+        HH.time.forEach((t, q) => {
+          const tv = HH.temperature_2m[q], wv = HH.wind_speed_10m[q]; if (tv == null) return;
+          const m = C.find(c => K["temperature_2m_" + c]?.[q] === tv && K["wind_speed_10m_" + c]?.[q] === wv); if (!m) return;
+          const d = t.slice(0, 10); (per[d] ??= {})[m] = (per[d][m] || 0) + 1;
+        });
+        fcData.src = Object.fromEntries(Object.entries(per).map(([d, o]) => [d, Object.entries(o).sort((a, b) => b[1] - a[1]).filter(([, n]) => n >= 3).map(([m]) => m)]));
+      } catch {}
       lsSet("skimo-fc", JSON.stringify(fcData));
     } catch (e) { if (!fcData) document.getElementById("fc-meta").textContent = "Sin conexión y sin previsión guardada"; }
     fcBusy = false; renderFc();
@@ -2182,7 +2196,7 @@ ${pts}
     const nDays = fcData.daily.time.length, mOpt = [...fcModelEl.options].find(o => o.value === (fcData.model || "best_match"));
     document.getElementById("fc-meta").textContent = `consultado ${new Date(fcData.at).toLocaleString("es-ES", { weekday: "short", hour: "2-digit", minute: "2-digit" })} · ${nDays} días`;
     document.getElementById("fc-note").textContent = `Modelo: ${mOpt ? mOpt.text.replace(/\s*\(.*$/, "") : "mejor combinación"}`
-      + ((fcData.model || "best_match") === "best_match" ? " (Open-Meteo elige el mejor disponible para cada plazo: AROME los primeros días, luego ARPEGE, ICON, ECMWF…)" : "")
+      + ((fcData.model || "best_match") === "best_match" ? " (Open-Meteo usa el mejor disponible para cada plazo; el modelo de cada día va junto a la fecha)" : "")
       + ". A la cota del punto. Estimación. Toca el mapa para cambiar de punto.";
     document.getElementById("fc-days").innerHTML = D.time.map((d, i) => {
       const wd = new Date(d + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric" });
@@ -2205,9 +2219,12 @@ ${pts}
       // Cabecera del dia con su resumen (maxima/minima y nieve o lluvia del dia): sustituye a la fila de dias de arriba, que repetia lo mismo
       if (last) {
         const day = H.time[i].slice(0, 10), di = D.time.indexOf(day);
+        const SRC = { meteofrance_arome_france_hd: "AROME 1,3 km", meteofrance_arome_france: "AROME 2,5 km", meteofrance_arpege_europe: "ARPEGE",
+          ecmwf_ifs: "ECMWF IFS 9 km", ecmwf_ifs025: "ECMWF IFS 25 km", icon_eu: "ICON-EU", icon_global: "ICON", ukmo_global_deterministic_10km: "UKMO", gfs_seamless: "GFS" };
+        const src = (fcData.src?.[day] || []).map(m => SRC[m] || m).join(" → ");
         const sum = di < 0 ? "" : ` <span style="font-weight:400;color:var(--muted)">${fmtN(D.temperature_2m_max[di])}° / ${fmtN(D.temperature_2m_min[di])}°</span>`
           + (D.snowfall_sum[di] >= 0.5 ? ` <span class="sn" style="color:#2b6cb0">❄ ${fmtN(D.snowfall_sum[di])} cm</span>` : D.precipitation_sum[di] >= 0.5 ? ` <span style="color:#2b6cb0">💧 ${fmtN(D.precipitation_sum[di], 1)} mm</span>` : "");
-        dayRow += `<td colspan="${span}" data-day="${day}">${new Date(H.time[i]).toLocaleDateString("es-ES", { weekday: "long", day: "numeric" })}${span >= 6 ? sum : ""}</td>`; span = 0;
+        dayRow += `<td colspan="${span}" data-day="${day}">${new Date(H.time[i]).toLocaleDateString("es-ES", { weekday: "long", day: "numeric" })}${span >= 6 ? sum : ""}${src && span >= 4 ? ` <span style="font-weight:400;font-size:10px;color:#8a5a00;background:#fff1d6;border-radius:4px;padding:0 4px">${src}</span>` : ""}</td>`; span = 0;
       }
     });
     document.getElementById("fc-tab").innerHTML = dayRow + "</tr>" +
