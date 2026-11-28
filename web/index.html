@@ -192,10 +192,11 @@
 
     .wxbar.windy.on.wide { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 4px; align-items: center; }
     .wxbar.windy.wide .wx-top { grid-column: 1 / -1; grid-row: 1; justify-content: flex-start !important; gap: 12px !important; flex-wrap: wrap; }
-    .wxbar.windy.wide #wxbar-src { margin-left: auto; font-size: 11px; }
+    .wxbar.windy.wide #wxbar-src:not(.warn) { display: none; }   /* repetía el modelo y la hora de consulta */
+    .wxbar.windy.wide #wxbar-src.warn { margin-left: auto; font-size: 11px; color: #c0392b; }
     .wxbar.windy.wide .wx-tl { grid-column: 1; grid-row: 2; margin: 0; }
-    .wxbar.windy.wide .wx-foot { grid-column: 2; grid-row: 2; margin: 0; flex-wrap: nowrap; align-self: start; }
-    .wxbar.windy.wide .wx-legend { width: 300px; flex: none; min-width: 0; }
+    .wxbar.windy.wide .wx-foot { grid-column: 2; grid-row: 2; margin: 0; flex-wrap: nowrap; align-self: center; }
+    .wxbar.windy.wide .wx-legend { width: 220px; flex: none; min-width: 0; }
     .wxbar.windy.wide .acc { grid-column: 1 / -1; grid-row: 3; margin: 0; }
     .wxbar.windy.wide .fc { display: contents; }
     .wxbar.windy.wide .fc > .fc-scroll { grid-column: 1 / -1; grid-row: 4; border-top: 1px solid rgba(127,127,127,.3); padding-top: 2px; }
@@ -896,7 +897,7 @@
   };
   // Cielo y bruma en 3D (antes se veia el fondo azul oscuro de la pagina por encima del horizonte)
   onStyle(() => map.setSky?.({ "sky-color": "#7fb2e5", "horizon-color": "#dfeaf5", "fog-color": "#eef3f8",
-    "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.6, "fog-ground-blend": 0.75, "atmosphere-blend": 0.6 }));
+    "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.3, "fog-ground-blend": 0.92, "atmosphere-blend": 0.6 }));
   document.querySelectorAll("input[name=base]").forEach(r => r.addEventListener("change", () => {
     setVis("pnoa", r.value === "pnoa");
     setVis("satwinter", r.value === "winter");
@@ -2476,11 +2477,13 @@ ${pts}
   let padT = null;
   const padForBar = () => {
     const r = wxBar.getBoundingClientRect(), shown = r.height > 0 && getComputedStyle(wxBar).display !== "none";
-    const bottom = shown ? Math.max(0, Math.round(innerHeight - r.top)) : 0;
+    // En 3D, subir del todo el punto de mira llena la vista de horizonte y bruma (se veía en blanco): solo una parte
+    const full = shown ? Math.max(0, Math.round(innerHeight - r.top)) : 0, bottom = map.getPitch() > 40 ? Math.round(full * 0.45) : full;
     if ((map.getPadding().bottom || 0) === bottom) return;
     if (map.isMoving()) { clearTimeout(padT); padT = setTimeout(padForBar, 300); return; }   // no cortar el vuelo de la cámara
     map.easeTo({ padding: { top: 0, bottom, left: 0, right: 0 }, duration: 400 });
   };
+  map.on("pitchend", () => padForBar());   // al pasar a 3D o a 2D se recalcula cuánto sube la vista
   const setBarH = () => { const r = wxBar.getBoundingClientRect(); document.body.style.setProperty("--wxbar-h", (r.height ? innerHeight - r.top + 8 : 50) + "px"); padForBar(); };
   new ResizeObserver(setBarH).observe(wxBar); window.addEventListener("resize", setBarH);
   const wxUi = () => {
