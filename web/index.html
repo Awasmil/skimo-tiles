@@ -200,17 +200,17 @@
   .fc-mini { overflow-x: auto; scrollbar-width: thin; }
   @media (max-width: 600px) {
     /* Buscador y tarjeta del tiempo en la misma línea (Jorge 2026-11-28) */
-    .search { right: auto; width: calc(50% - 22px); }
-    .search input { font-size: 15px; padding: 0 10px; }
-    .wx-card { top: calc(max(10px, env(safe-area-inset-top)) + 24px); margin-top: 0 !important; left: calc(50% - 6px); right: 52px; max-width: none;
+    body .search { right: auto; width: calc(50% - 22px); }
+    body .search input { font-size: 15px; padding: 0 10px; }
+    body .wx-card { top: calc(max(10px, env(safe-area-inset-top)) + 24px); margin-top: 0 !important; left: calc(50% - 6px); right: 52px; max-width: none;
       height: 44px; padding: 2px 8px; gap: 6px; border-radius: 12px; overflow: hidden; }
-    .wx-card .now { font-size: 26px; }
-    .wx-card .now sup { font-size: 13px; }
-    .wx-card .pl { display: none; }
-    .wx-card .d { min-width: 0; flex: 1; font-size: 10px; line-height: 1.1; }
-    .wx-card .d .ic { font-size: 14px; line-height: 1.1; }
-    .wx-card .d b { font-size: 10px; }
-    .wx-card .d:nth-child(n+4) { display: none; }
+    body .wx-card .now { font-size: 26px; }
+    body .wx-card .now sup { font-size: 13px; }
+    body .wx-card .pl { display: none; }
+    body .wx-card .d { min-width: 0; flex: 1; font-size: 10px; line-height: 1.1; }
+    body .wx-card .d .ic { font-size: 14px; line-height: 1.1; }
+    body .wx-card .d b { font-size: 10px; }
+    body .wx-card .d:nth-child(n+4) { display: none; }
     /* Previsión abierta: que siempre se pueda cerrar y que no tape el buscador */
     body.fc-open .wx-card, body.fc-open .maplibregl-ctrl-bottom-right { display: none; }
     .wxbar.windy.wide { max-height: calc(100dvh - 140px); overflow-y: auto; }
