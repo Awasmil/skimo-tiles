@@ -2396,9 +2396,10 @@ ${pts}
   const SIDE = {
     // Un solo boton para webcams y la prevision de Meteoaran (antes eran dos: 📷 y ⛅; Jorge 2026-11-28 "demasiados iconos")
     webcams: { icon: "📷", title: "Webcams y previsión de Meteoaran", tabs: [
+      ["Previsión Meteoaran", "https://meteoaran.com/es/forecast", "Previsión de Meteoaran para la Val d'Aran (meteorólogos locales) · meteoaran.com"],
       ["Webcams Baqueira", "https://www.baqueira.es/webcams", "Webcams oficiales de Baqueira Beret · baqueira.es"],
-      ["Webcams Meteoaran", "https://meteoaran.com/es/webcams", "Webcams de Aran y del Pirineo · meteoaran.com"],
-      ["Previsión Meteoaran", "https://meteoaran.com/es/forecast", "Previsión de Meteoaran para la Val d'Aran (meteorólogos locales) · meteoaran.com"]] }
+      ["Webcams Meteoaran", "https://meteoaran.com/es/webcams", "Webcams de Aran y del Pirineo · meteoaran.com"]
+] }
   };
   const sidePanel = document.getElementById("sidepanel"), spFrame = document.getElementById("sp-frame"), sideBtns = {};
   let sideOpen = null;
