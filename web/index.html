@@ -1500,7 +1500,9 @@ ${pts}
       stops: [[0, [247, 251, 255]], [10, [198, 219, 239]], [20, [107, 174, 214]], [35, [255, 255, 178]], [50, [253, 141, 60]], [70, [227, 26, 28]], [100, [128, 0, 38]]] },
     { id: "snow_acc", unit: "cm", min: 0.5, iso: 10, even: true, ticks: ["cm", "2", "5", "10", "50", "1 m", "3 m"],
       note: "Nieve nueva acumulada desde ahora (elige 12 h … 16 días abajo, o mueve la barra). Más allá de 3–5 días es poco fiable. Sin color = nada.",
-      stops: [[0.5, [80, 80, 190]], [2, [60, 100, 210]], [5, [40, 150, 200]], [10, [40, 175, 150]], [50, [140, 190, 50]], [100, [215, 160, 50]], [300, [190, 50, 140]]] },
+      // Escala de Windy ("Nieve nueva"), colores medidos sobre su leyenda (pedido por Jorge 2026-11-28)
+      stops: [[0.5, [70,83,151]], [2, [68,86,152]], [3.8, [66,100,163]], [5, [65,113,163]], [7.4, [61,137,163]], [10, [66,161,165]], [17, [74,160,131]], [23.9, [86,157,91]], [30.9, [97,153,56]], [37.9, [124,160,60]], [44.8, [147,165,63]], [50, [162,166,64]], [60.9, [168,154,65]], [69.5, [170,143,64]], [78.2, [170,129,63]], [86.8, [167,114,60]], [95.5, [170,101,60]], [100, [170,95,63]], [116.7, [170,88,66]], [151.5, [174,79,75]], [186.4, [174,67,83]], [221.2, [176,62,95]], [256.1, [176,60,105]], [290.9, [178,61,113]], [300, [177,60,115]]],
+      bar: "rgb(70,83,151) 0%,rgb(68,86,152) 16.7%,rgb(66,100,163) 26.6%,rgb(65,113,163) 33.3%,rgb(61,137,163) 41.2%,rgb(66,161,165) 49.9%,rgb(74,160,131) 52.8%,rgb(86,157,91) 55.7%,rgb(97,153,56) 58.6%,rgb(124,160,60) 61.5%,rgb(147,165,63) 64.4%,rgb(162,166,64) 66.5%,rgb(168,154,65) 70.2%,rgb(170,143,64) 73.1%,rgb(170,129,63) 76%,rgb(167,114,60) 78.9%,rgb(170,101,60) 81.8%,rgb(170,95,63) 83.3%,rgb(170,88,66) 84.7%,rgb(174,79,75) 87.6%,rgb(174,67,83) 90.5%,rgb(176,62,95) 93.4%,rgb(176,60,105) 96.3%,rgb(178,61,113) 99.2%,rgb(177,60,115) 100%" },
     { id: "snowfall", unit: "cm/h", min: 0.05, iso: 0.5, ticks: ["0,1", "0,5", "1", "2", "4 cm/h"], note: "Nieve que cae en esa hora según el modelo (para el total sumado, elige «Nieve acumulada»). Sin color = no nieva.",
       stops: [[0.05, [224, 236, 244]], [0.5, [158, 188, 218]], [1, [140, 150, 198]], [2, [136, 86, 167]], [4, [129, 15, 124]]] },
     { id: "precipitation", unit: "mm/h", min: 0.05, iso: 1, ticks: ["0,1", "0,5", "2", "5", "10 mm/h"], note: "Lluvia o nieve (agua equivalente) por hora. Sin color = seco.",
@@ -1518,7 +1520,7 @@ ${pts}
   const wxVarEl = document.getElementById("wxvar");
   const wxLegend = () => {
     const F = WXF.find(f => f.id === wxVarEl.value), a = F.stops[0][0], b = F.stops.at(-1)[0];
-    document.getElementById("wxramp").style.background = `linear-gradient(90deg,${F.stops.map(([v, c], i) => `rgb(${c}) ${F.even ? Math.round(100 * i / (F.stops.length - 1)) : Math.round(100 * (v - a) / (b - a))}%`).join(",")})`;
+    document.getElementById("wxramp").style.background = F.bar ? `linear-gradient(90deg,${F.bar})` : `linear-gradient(90deg,${F.stops.map(([v, c], i) => `rgb(${c}) ${F.even ? Math.round(100 * i / (F.stops.length - 1)) : Math.round(100 * (v - a) / (b - a))}%`).join(",")})`;
     document.getElementById("acc").hidden = F.id !== "snow_acc";
     document.getElementById("wxticks").innerHTML = F.ticks.map(x => `<span>${x}</span>`).join("");
     document.getElementById("wxnote").textContent = `${F.note} Isolíneas cada ${String(F.iso).replace(".", ",")} ${F.unit}${F.isoBold != null ? " (0 °C en blanco grueso)" : ""}.`;
