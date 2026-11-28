@@ -269,7 +269,8 @@
   .fc[hidden], .acc[hidden] { display: none; }
   .fc-head { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
   .fc-head span, .fc-note { color: var(--muted); font-size: 11px; }
-  .fc-days { display: flex; overflow-x: auto; gap: 2px; padding-bottom: 4px; scrollbar-width: thin; }
+  .fc-days { display: none !important; }   /* repetia lo de la tabla (Jorge 2026-11-28): el resumen va en la cabecera de cada dia */
+  .fc-days-old { display: flex; overflow-x: auto; gap: 2px; padding-bottom: 4px; scrollbar-width: thin; }
   .fc-day { flex: 0 0 auto; min-width: 58px; text-align: center; border-radius: 8px; padding: 3px 2px; cursor: pointer; border: 1px solid transparent; }
   .fc-day:hover, .fc-day.on { border-color: rgba(127,127,127,.5); }
   .fc-day .ic { font-size: 18px; line-height: 1.2; }
@@ -2184,7 +2185,13 @@ ${pts}
     cols.forEach((i, k) => {
       span++;
       const last = k === cols.length - 1 || H.time[cols[k + 1]].slice(0, 10) !== H.time[i].slice(0, 10);
-      if (last) { dayRow += `<td colspan="${span}" data-day="${H.time[i].slice(0, 10)}">${new Date(H.time[i]).toLocaleDateString("es-ES", { weekday: "long", day: "numeric" })}</td>`; span = 0; }
+      // Cabecera del dia con su resumen (maxima/minima y nieve o lluvia del dia): sustituye a la fila de dias de arriba, que repetia lo mismo
+      if (last) {
+        const day = H.time[i].slice(0, 10), di = D.time.indexOf(day);
+        const sum = di < 0 ? "" : ` <span style="font-weight:400;color:var(--muted)">${fmtN(D.temperature_2m_max[di])}° / ${fmtN(D.temperature_2m_min[di])}°</span>`
+          + (D.snowfall_sum[di] >= 0.5 ? ` <span class="sn" style="color:#2b6cb0">❄ ${fmtN(D.snowfall_sum[di])} cm</span>` : D.precipitation_sum[di] >= 0.5 ? ` <span style="color:#2b6cb0">💧 ${fmtN(D.precipitation_sum[di], 1)} mm</span>` : "");
+        dayRow += `<td colspan="${span}" data-day="${day}">${new Date(H.time[i]).toLocaleDateString("es-ES", { weekday: "long", day: "numeric" })}${span >= 6 ? sum : ""}</td>`; span = 0;
+      }
     });
     document.getElementById("fc-tab").innerHTML = dayRow + "</tr>" +
       row("Hora", i => H.time[i].slice(11, 13)) +
