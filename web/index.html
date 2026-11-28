@@ -263,8 +263,9 @@
   /* Las dos filas del mismo ancho: la de arriba también como un solo bloque de 3 (Jorge 2026-11-28) */
   .maplibregl-ctrl-bottom-right { column-gap: 0; row-gap: 6px; width: 102px; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(1) { border-radius: 4px 0 0 4px; }
-  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(2) { border-radius: 0; border-left: 1px solid #ddd; }
-  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(3) { border-radius: 0 4px 4px 0; border-left: 1px solid #ddd; }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(2) { border-radius: 0; }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(2) button, .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(3) button { box-shadow: inset 1px 0 0 #ddd; }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(3) { border-radius: 0 4px 4px 0; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { border-radius: inherit; }
   /* Con el mapa del tiempo, por encima de su barra (en el móvil la barra ocupa todo el ancho) */
   /* Si la barra del tiempo llega hasta el bloque (pantallas de menos de ~1550 px), el bloque sube por encima de ella */
