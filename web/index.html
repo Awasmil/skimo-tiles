@@ -370,7 +370,12 @@
     .maplibregl-ctrl-top-right { top: calc(env(safe-area-inset-top) + 24px); }
     .wxbar.windy #wxbar-src:not(.warn) { display: none; }   /* «mapa: … consultado» ocupaba una línea entera */
   }
-  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-bottom-right { bottom: var(--wxbar-h, 240px); } }
+  /* Móvil (Jorge 2026-11-28): la barra del tiempo termina donde empieza el bloque de la esquina; el bloque queda abajo, a su lado,
+     y la columna baja hasta el bloque (así caben todos los botones). Con la previsión abierta la barra vuelve a todo el ancho. */
+  @media (max-width: 600px) {
+    body .wxbar.windy:not(.wide) { right: 136px; }
+    body.wx-on .maplibregl-ctrl-bottom-right { bottom: max(34px, calc(env(safe-area-inset-bottom) + 24px)); }
+  }
   /* Punto naranja en el icono: ese apartado tiene algo encendido sobre el mapa */
   .maplibregl-ctrl-group button.lit::after { content: ""; position: absolute; top: 3px; right: 3px; width: 8px; height: 8px;
     border-radius: 50%; background: #e8a33d; box-shadow: 0 0 0 1.5px #fff; }
@@ -382,7 +387,7 @@
   .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
   .maplibregl-ctrl-group button.btn-var:disabled { opacity: .35; }
   .wx-vars-ctl[hidden] { display: none !important; }
-  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-top-right { max-height: calc(100% - var(--wxbar-h, 240px) - 84px - env(safe-area-inset-top)); } }
+  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-top-right, .maplibregl-ctrl-top-right { max-height: calc(100% - 116px - env(safe-area-inset-top) - max(0px, env(safe-area-inset-bottom) - 10px)); } }
   .wx-vars-old { position: absolute; right: 56px; bottom: 210px; z-index: 3; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
   .wx-vars[hidden] { display: none; }
   .wx-vars button { display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; cursor: pointer; font: 600 14px system-ui, sans-serif;
