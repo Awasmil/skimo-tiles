@@ -105,6 +105,8 @@
   @media (max-width: 600px) { .stcard { left: 10px; right: 56px; max-width: none; } }
   /* Pantalla ancha: la tarjeta de la estacion a la altura del buscador (pedido por Jorge 2026-11-27) */
   @media (min-width: 960px) { .stcard, .stchip { top: max(10px, env(safe-area-inset-top)); max-width: min(430px, calc(100% - 520px)); } }
+  /* La tarjeta de la estación termina donde empiezan los nombres de los botones (no los tapa) */
+  @media (min-width: 601px) { .stcard, .stchip { right: 210px; } .stcard { max-width: min(430px, calc(100% - 760px)); } }
   .roads { position: absolute; right: 56px; background: var(--bg); border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.25);
     z-index: 4; width: min(360px, calc(100% - 76px)); font: 12px/1.35 system-ui, -apple-system, sans-serif; }
   .roads[hidden] { display: none; }
@@ -260,6 +262,7 @@
   .maplibregl-ctrl-group button.btn-slope.on { background: #fff1d6; }
   .maplibregl-ctrl-group button.btn-emoji.on, .maplibregl-ctrl-group button.btn-measure.on { box-shadow: inset 0 0 0 2px #e8a33d; }
   body.panel-open .ctl-label { opacity: 0; }
+  .ctl-label.ctl-link { pointer-events: auto; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
   .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
   .maplibregl-ctrl-group button.btn-var:disabled { opacity: .35; }
   .wx-vars-ctl[hidden] { display: none !important; }
@@ -596,6 +599,7 @@
       <option value="cloud_cover">Nubosidad</option>
       <option value="freezing_level_height">Isoterma 0 °C</option>
       <option value="sun">Sol sobre la nieve (estimación)</option>
+      <option value="snow_state">Estado de la nieve (estimación)</option>
     </select>
     <select id="wxmodel" aria-label="Modelo del mapa del tiempo" style="width:100%;min-height:30px;margin:0 0 4px;border-radius:8px;border:1px solid rgba(127,127,127,.4);background:transparent;color:var(--fg)">
       <option value="grid.json">Modelo: mejor combinación (16 días)</option>
@@ -1353,7 +1357,9 @@ ${pts}
       const b = document.createElement("button"); b.type = "button"; b.className = "btn-emoji btn-sec"; b.title = name;
       b.setAttribute("aria-label", name); b.setAttribute("aria-expanded", "false");
       b.innerHTML = `<span aria-hidden="true">${ico}</span>`;
-      b.onclick = () => setSec(openSec === id ? null : id);
+      b.onclick = id === "aludes"   // un toque enciende/apaga el rayado del boletín; el parte se abre tocando su nombre (Jorge 2026-11-28)
+        ? () => { const cb = document.getElementById("danger"); cb.checked = !cb.checked; cb.dispatchEvent(new Event("change")); }
+        : () => setSec(openSec === id ? null : id);
       secBtns[id] = b; d.appendChild(b);
       if (id === "capas") {   // botón directo: pendiente de aludes (≥25°) encendida/apagada (Jorge 2026-11-28)
         const sb = document.createElement("button"); sb.type = "button"; sb.className = "btn-emoji btn-slope"; sb.title = "Pendiente ≥25°";
@@ -1465,6 +1471,8 @@ ${pts}
     const p = hasLater ? bulPeriod : "all_day";
     let html = "";
     if (!isToday) html += `<div class="warn">Boletín del ${new Date(day).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}: no es el de hoy.</div>`;
+    { const mx = Math.max(0, ...bs.flatMap(b => b.dangerRatings.filter(r => inPeriod(r, p)).map(r => DANGER_LVL[r.mainValue] || 0)));
+      window.__aludesText = `Aludes · ${DANGER_NAME[mx] || "–"}${isToday ? "" : " (otro día)"} ›`; window.__setAludesLabel?.(window.__aludesText); }
     for (const b of bs) {
       const lvls = b.dangerRatings.filter(r => inPeriod(r, p));
       const max = Math.max(0, ...lvls.map(r => DANGER_LVL[r.mainValue] || 0));
@@ -1736,6 +1744,10 @@ ${pts}
     { id: "sun", unit: "", custom: true, ticks: ["sombra", "sol rasante", "", "pleno sol"], opacity: 0.85,
       note: "Estimación: sol directo según la pendiente y orientación de cada ladera y la altura del sol a esa hora, con las sombras de las montañas de alrededor (hasta ~8 km) y las nubes previstas. Azul = sombra o de noche. Solo en Aran.",
       stops: [[0, [40, 60, 110]], [0.05, [255, 242, 160]], [0.5, [255, 190, 60]], [1, [225, 85, 20]]] },
+    { id: "snow_state", unit: "", custom: true, ticks: ["dura / fría", "transformándose", "húmeda", "sin rehielo"], opacity: 0.85,
+      bar: "rgb(120,170,225) 0 25%,rgb(70,175,80) 25% 50%,rgb(240,140,40) 50% 75%,rgb(205,40,35) 75% 100%", centerTicks: true,
+      note: "Estimación del estado de la nieve en superficie: sol acumulado desde el amanecer en cada ladera + temperatura del aire a su cota + si heló la noche anterior. Umbrales iniciales, a calibrar. Por encima de 1500 m, suponiendo que hay nieve. No indica el peligro de aludes: manda el boletín.",
+      stops: [[0, [120, 170, 225]], [1, [205, 40, 35]]] },
     { id: "freezing_level_height", unit: "m", iso: 200, ticks: ["1000", "1500", "2000", "2500", "3000+ m"], note: "Altura de la isoterma 0 °C según el modelo.",
       stops: [[1000, [33, 102, 172]], [1500, [103, 169, 207]], [2000, [209, 229, 240]], [2500, [253, 219, 199]], [3000, [239, 138, 98]], [3500, [178, 24, 43]]] }];
   const rampRGB = (stops, t) => {
@@ -1832,48 +1844,92 @@ ${pts}
     const X = Math.floor(fx), Y = Math.floor(fy), t = tiles.get(X + "/" + Y); if (!t) return -1e9;
     return sample(t.H, t.W, (fx - X) * t.W, (fy - Y) * t.W);
   };
-  const sunTile = async (z, x, y, g0, hIdx, F) => {
-    const dz = Math.max(0, z - TZMAX), px = x >> dz, py = y >> dz, f = 2 ** dz;
-    const t = await terrainGrad(Math.min(z, TZMAX), px, py);
-    if (!t) return { data: await emptyTile };
-    const n = 2 ** z, lon0 = x / n * 360 - 180, lon1 = (x + 1) / n * 360 - 180;
-    const lat0 = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) * 180 / Math.PI, lat1 = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + 1) / n))) * 180 / Math.PI;
-    const latC = (lat0 + lat1) / 2, lonC = (lon0 + lon1) / 2;
-    const when = new Date(g0.time[hIdx]);   // hora local de Madrid (la del navegador en España)
-    const { alt, az } = sunPos(when.getTime(), latC, lonC);
-    const OUT = 128, c = new OffscreenCanvas(OUT, OUT), g = c.getContext("2d"), out = g.createImageData(OUT, OUT), o = out.data;
-    const shadeRGB = [40, 60, 110];
-    if (alt <= 0) {   // de noche: todo en sombra
-      for (let k = 0; k < OUT * OUT; k++) { o[4 * k] = shadeRGB[0]; o[4 * k + 1] = shadeRGB[1]; o[4 * k + 2] = shadeRGB[2]; o[4 * k + 3] = 110; }
-      g.putImageData(out, 0, 0); return { data: await (await c.convertToBlob({ type: "image/png" })).arrayBuffer() };
-    }
-    const sa = Math.sin(az), ca = Math.cos(az), sAlt = Math.sin(alt), cAlt = Math.cos(alt), tanAlt = Math.tan(alt);
-    // Teselas de relieve para las sombras: la de la tesela ampliada 8 km hacia el sol
-    const D = 8000, kLat = 1 / 111320, kLon = 1 / (111320 * Math.cos(latC * Math.PI / 180));
-    const dLon = D * sa * kLon, dLat = D * ca * kLat;
-    const tiles = await shadeTiles(Math.min(lon0, lon0 + dLon), Math.min(lat1, lat1 + dLat), Math.max(lon1, lon1 + dLon), Math.max(lat0, lat0 + dLat));
-    const cc = g0.v?.cloud_cover?.map(a => a[hIdx]);
-    const W = t.W, offX = (x - px * f) * W / f, offY = (y - py * f) * W / f, sc = W / f / OUT;
-    for (let j = 0; j < OUT; j++) {
-      const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + (j + 0.5) / OUT) / n))) * 180 / Math.PI;
-      for (let i = 0; i < OUT; i++) {
-        const k = j * OUT + i, lon = (x + (i + 0.5) / OUT) / n * 360 - 180;
-        const fx = offX + (i + 0.5) * sc, fy = offY + (j + 0.5) * sc;
-        const gx = sample(t.GX, W, fx, fy), gy = sample(t.GY, W, fx, fy), h = sample(t.H, W, fx, fy);
-        // Ángulo entre el sol y la ladera (normal = (-dH/dEste, -dH/dNorte, 1); la fila de píxel crece hacia el sur)
-        let v = (-gx * sa * cAlt + gy * ca * cAlt + sAlt) / Math.hypot(gx, gy, 1);
-        if (v > 0) {   // ¿la tapa alguna montaña en la dirección del sol?
-          for (let dist = 60; dist <= D; dist += dist < 1000 ? 60 : 150) {
-            if (hAt(tiles, lon + dist * sa * kLon, lat + dist * ca * kLat) > h + 15 + dist * tanAlt) { v = 0; break; }
+  // Geometría de una tesela para el sol: posición, pendiente y cota de cada píxel (OUT×OUT) y relieve de alrededor
+  // (8 km a cada lado, para las sombras). Se guarda: al cambiar de hora solo cambia el sol.
+  const geoCache = new Map();
+  const tileGeo = (z, x, y, OUT) => {
+    const key = `${z}/${x}/${y}/${OUT}`;
+    if (!geoCache.has(key)) {
+      if (geoCache.size > 40) geoCache.delete(geoCache.keys().next().value);
+      geoCache.set(key, (async () => {
+        const dz = Math.max(0, z - TZMAX), px = x >> dz, py = y >> dz, f = 2 ** dz;
+        const t = await terrainGrad(Math.min(z, TZMAX), px, py);
+        if (!t) return null;
+        const n = 2 ** z, lon0 = x / n * 360 - 180, lon1 = (x + 1) / n * 360 - 180;
+        const lat0 = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) * 180 / Math.PI, lat1 = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + 1) / n))) * 180 / Math.PI;
+        const latC = (lat0 + lat1) / 2, lonC = (lon0 + lon1) / 2, D = 8000, kLat = 1 / 111320, kLon = 1 / (111320 * Math.cos(latC * Math.PI / 180));
+        const tiles = await shadeTiles(lon0 - D * kLon, lat1 - D * kLat, lon1 + D * kLon, lat0 + D * kLat);
+        const N = OUT * OUT, LON = new Float64Array(N), LAT = new Float64Array(N), GX = new Float32Array(N), GY = new Float32Array(N), HH = new Float32Array(N);
+        const W = t.W, offX = (x - px * f) * W / f, offY = (y - py * f) * W / f, sc = W / f / OUT;
+        for (let j = 0; j < OUT; j++) {
+          const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + (j + 0.5) / OUT) / n))) * 180 / Math.PI;
+          for (let i = 0; i < OUT; i++) {
+            const k = j * OUT + i, fx = offX + (i + 0.5) * sc, fy = offY + (j + 0.5) * sc;
+            LON[k] = (x + (i + 0.5) / OUT) / n * 360 - 180; LAT[k] = lat;
+            GX[k] = sample(t.GX, W, fx, fy); GY[k] = sample(t.GY, W, fx, fy); HH[k] = sample(t.H, W, fx, fy);
           }
         }
-        if (v > 0 && cc) { const cv = bilinear(TG, lon, lat, q => cc[q]); if (cv != null) v *= 1 - 0.75 * cv / 100; }
-        const rgb = v <= 0.02 ? shadeRGB : rampRGB(F.stops, v);
-        o[4 * k] = rgb[0]; o[4 * k + 1] = rgb[1]; o[4 * k + 2] = rgb[2]; o[4 * k + 3] = v <= 0.02 ? 110 : 150;
-      }
+        return { OUT, N, LON, LAT, GX, GY, HH, tiles, D, kLat, kLon, latC, lonC };
+      })());
     }
-    g.putImageData(out, 0, 0);
+    return geoCache.get(key);
+  };
+  // Sol directo en cada píxel a una hora (0 = sombra o noche, 1 = sol de frente): incidencia, sombras del relieve y nubes
+  const sunFactor = (G, ms, cc) => {
+    const V = new Float32Array(G.N), { alt, az } = sunPos(ms, G.latC, G.lonC);
+    if (alt <= 0) return V;
+    const sa = Math.sin(az), ca = Math.cos(az), sAlt = Math.sin(alt), cAlt = Math.cos(alt), tanAlt = Math.tan(alt);
+    for (let k = 0; k < G.N; k++) {
+      const gx = G.GX[k], gy = G.GY[k], h = G.HH[k], lon = G.LON[k], lat = G.LAT[k];
+      // normal de la ladera = (-dH/dEste, -dH/dNorte, 1); la fila de píxel crece hacia el sur
+      let v = (-gx * sa * cAlt + gy * ca * cAlt + sAlt) / Math.hypot(gx, gy, 1);
+      if (v <= 0) continue;
+      for (let dist = 60; dist <= G.D; dist += dist < 1000 ? 60 : 150)
+        if (hAt(G.tiles, lon + dist * sa * G.kLon, lat + dist * ca * G.kLat) > h + 15 + dist * tanAlt) { v = 0; break; }
+      if (v > 0 && cc) { const cv = bilinear(TG, lon, lat, q => cc[q]); if (cv != null) v *= 1 - 0.75 * cv / 100; }
+      V[k] = v;
+    }
+    return V;
+  };
+  const tilePng = async (G, fill) => {
+    const c = new OffscreenCanvas(G.OUT, G.OUT), g = c.getContext("2d"), out = g.createImageData(G.OUT, G.OUT);
+    fill(out.data); g.putImageData(out, 0, 0);
     return { data: await (await c.convertToBlob({ type: "image/png" })).arrayBuffer() };
+  };
+  const sunTile = async (z, x, y, g0, hIdx, F) => {
+    const G = await tileGeo(z, x, y, 128); if (!G) return { data: await emptyTile };
+    const V = sunFactor(G, new Date(g0.time[hIdx]).getTime(), g0.v?.cloud_cover?.map(a => a[hIdx]));
+    return tilePng(G, o => { for (let k = 0; k < G.N; k++) {
+      const v = V[k], rgb = v <= 0.02 ? [40, 60, 110] : rampRGB(F.stops, v);
+      o[4 * k] = rgb[0]; o[4 * k + 1] = rgb[1]; o[4 * k + 2] = rgb[2]; o[4 * k + 3] = v <= 0.02 ? 110 : 150;
+    } });
+  };
+  // ---------- Estado de la nieve (paso 2, estimación) ----------
+  // Sol acumulado desde el amanecer (horas de sol "de frente") + temperatura del aire a la cota del píxel + ¿rehieló anoche?
+  // Umbrales iniciales, a calibrar con los partes de nieve. No mira el peligro de aludes: eso lo dice el boletín.
+  const SNOW_CLS = [[120, 170, 225], [70, 175, 80], [240, 140, 40], [205, 40, 35]];   // dura/fría, transformándose, húmeda, sin rehielo
+  const snowTile = async (z, x, y, g0, hIdx) => {
+    const T = g0.time, temp = g0.v?.temperature_2m; if (!temp) return { data: await emptyTile };
+    const G = await tileGeo(z, x, y, 64); if (!G) return { data: await emptyTile };
+    const day = T[hIdx].slice(0, 10), E = new Float32Array(G.N), cc = g0.v?.cloud_cover;
+    for (let k = 0; k <= hIdx; k++) {
+      if (T[k].slice(0, 10) !== day) continue;
+      const w = k < hIdx ? Math.min(3, (new Date(T[k + 1]) - new Date(T[k])) / 36e5) : 0.5;   // horas que representa ese paso
+      const V = sunFactor(G, new Date(T[k]).getTime(), cc?.map(a => a[k]));
+      for (let q = 0; q < G.N; q++) E[q] += V[q] * w;
+    }
+    // Noche anterior: de las 20 h de la víspera a las 8 h del día (solo si la previsión la incluye)
+    const prev = new Date(new Date(day + "T12:00") - 864e5).toISOString().slice(0, 10);
+    const night = T.map((t, k) => (t.slice(0, 10) === day && +t.slice(11, 13) <= 8) || (t.slice(0, 10) === prev && +t.slice(11, 13) >= 20) ? k : -1).filter(k => k >= 0);
+    const tAt = (k, q) => bilinear(TG, G.LON[q], G.LAT[q], p => temp[p][k] == null ? null : temp[p][k] + LAPSE * (g0.elev[p] - G.HH[q]));
+    return tilePng(G, o => { for (let q = 0; q < G.N; q++) {
+      if (G.HH[q] < 1500) continue;   // por debajo, normalmente sin nieve
+      const ta = tAt(hIdx, q); if (ta == null) continue;
+      let tmin = null; for (const k of night) { const v = tAt(k, q); if (v != null) tmin = tmin == null ? v : Math.min(tmin, v); }
+      const noRefreeze = tmin != null && tmin > 0.5, e = E[q];
+      const c = noRefreeze && ta > 0 ? 3 : (ta >= 4 || (e >= 3 && ta > 0)) ? 2 : (e >= 1 && ta > -4) ? 1 : 0;
+      const rgb = SNOW_CLS[c]; o[4 * q] = rgb[0]; o[4 * q + 1] = rgb[1]; o[4 * q + 2] = rgb[2]; o[4 * q + 3] = 150;
+    } });
   };
   // Altitud por tesela guardada en memoria: al mover la hora o el mapa no se vuelve a bajar ni a decodificar (iba muy lento)
   const elevCache = new Map();
@@ -1891,6 +1947,7 @@ ${pts}
     if (!g0) return { data: await emptyTile };
     const n = 2 ** z, F = WXF.find(f => f.id === wxVarEl.value) || WXF[0], arr = g0.v?.[F.id];
     if (F.id === "sun") return sunTile(z, x, y, g0, hIdx, F);
+    if (F.id === "snow_state") return snowTile(z, x, y, g0, hIdx);
     // Caja de la tesela: ¿toca Aran (malla fina) o hace falta la regional?
     const lonW = x / n * 360 - 180, lonE = (x + 1) / n * 360 - 180;
     const latN = Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) * 180 / Math.PI, latS = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + 1) / n))) * 180 / Math.PI;
@@ -1989,7 +2046,7 @@ ${pts}
     const windMsg = windOn && windHour < 0 ? " · viento AROME solo cubre ~2 días" : "";
     const mapModel = (windOn && !tGrid) ? "viento: AROME 1,3 km"
       : `mapa: ${WX_MODEL_NAME[wxModelEl.value] || "Open-Meteo"}${arrowsWanted() ? " · flechas: AROME 1,3 km" : ""}`;
-    const noVar = tGrid && document.getElementById("wxtemp").checked && wxVarEl.value !== "sun" && !tGrid.v?.[wxVarEl.value] ? " · ⚠ este modelo no da esta variable: elige otro" : "";
+    const noVar = tGrid && document.getElementById("wxtemp").checked && !WXF.find(f => f.id === wxVarEl.value)?.custom && !tGrid.v?.[wxVarEl.value] ? " · ⚠ este modelo no da esta variable: elige otro" : "";
     document.getElementById("wxbar-src").textContent = `${mapModel}${noVar} · consultado ${new Date(g0.at).toLocaleString("es-ES", { hour: "2-digit", minute: "2-digit" })}${windMsg}`;
     document.getElementById("wxbar-src").classList.toggle("warn", !!(noVar || windMsg));   // los avisos se ven siempre
     tVersion++;
@@ -2392,7 +2449,7 @@ ${pts}
   // ---------- Mapa del tiempo con disposición tipo Windy ----------
   const WXV = [["temperature_2m", "🌡️", "Temperatura"], ["wind_speed_10m", "💨", "Viento"], ["wind_gusts_10m", "🌬️", "Rachas"],
     ["snow_acc", "❄️", "Nieve nueva"], ["snowfall", "🌨️", "Nieve por hora"], ["precipitation", "🌧️", "Lluvia"],
-    ["cloud_cover", "☁️", "Nubes"], ["freezing_level_height", "🧊", "Isoterma 0 °C"], ["sun", "☀️", "Sol sobre la nieve"]];
+    ["cloud_cover", "☁️", "Nubes"], ["freezing_level_height", "🧊", "Isoterma 0 °C"], ["sun", "☀️", "Sol sobre la nieve"], ["snow_state", "🎿", "Estado de la nieve"]];
   // Variables: botones iguales que los demas, al final de la columna de la derecha (Jorge 2026-11-28: "una sola columna")
   const varsEl = document.createElement("div"); varsEl.id = "wx-vars"; varsEl.className = "maplibregl-ctrl maplibregl-ctrl-group wx-vars-ctl"; varsEl.hidden = true;
   const varsControl = { onAdd() { return varsEl; }, onRemove() {} };
@@ -2431,7 +2488,7 @@ ${pts}
     varsEl.hidden = false; cardEl.hidden = !on; document.body.classList.toggle("wx-on", on);   // variables siempre visibles
     varsEl.querySelectorAll("button").forEach(b => {
       b.classList.toggle("on", on && b.dataset.v === wxVarEl.value);
-      b.disabled = on && !!tGrid && !tGrid.v?.[b.dataset.v] && b.dataset.v !== "sun";   // este modelo no da esa variable
+      b.disabled = on && !!tGrid && !tGrid.v?.[b.dataset.v] && !WXF.find(f => f.id === b.dataset.v)?.custom;   // este modelo no da esa variable
     });
     if (!on) return;
     modelsEl.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.f === wxModelEl.value));
@@ -2637,10 +2694,10 @@ ${pts}
     capas: () => ["hillshade", "slopeaval", "slope", "aspect", "avalanche", "contours", "labels"].some(i => document.getElementById(i)?.checked),
     tracks: () => ["routes", "paths", "water", "acts"].some(i => document.getElementById(i)?.checked),
     tiempo: () => ["wxtemp", "wxwind"].some(i => document.getElementById(i)?.checked),
-    aludes: () => document.getElementById("danger")?.checked,
   };
   const updBadges = () => { for (const [k, f] of Object.entries(ACTIVE)) secBtns[k]?.classList.toggle("lit", !!f());
-    document.querySelector(".btn-slope")?.classList.toggle("on", document.getElementById("slopeaval").checked); };
+    document.querySelector(".btn-slope")?.classList.toggle("on", document.getElementById("slopeaval").checked);
+    secBtns.aludes?.classList.toggle("on", document.getElementById("danger").checked); };
   panel.addEventListener("change", () => setTimeout(updBadges), true);   // en captura: también los cambios hechos por código   // variables del tiempo: al final, solo con el mapa del tiempo
 
   // Nombre flotante a la izquierda de cada botón de la columna derecha (Jorge 2026-11-28, como Windy)
@@ -2651,7 +2708,11 @@ ${pts}
     const t = b.title || b.getAttribute("aria-label"); if (!t || b.querySelector(".ctl-label")) return;
     const s = document.createElement("span"); s.className = "ctl-label"; s.setAttribute("aria-hidden", "true");
     s.textContent = SHORT[t] || t; b.appendChild(s); b.removeAttribute("title");   // sin el globo del navegador encima
-  });   // iconos de capas: debajo de todo en la columna derecha
+  });
+  // El nombre del botón de aludes lleva el nivel del día y, al tocarlo, abre el parte completo
+  { const al = secBtns.aludes?.querySelector(".ctl-label");
+    if (al) { al.classList.add("ctl-link"); al.onclick = e => { e.stopPropagation(); setSec(openSec === "aludes" ? null : "aludes"); };
+      window.__setAludesLabel = t => { al.textContent = t; }; if (window.__aludesText) al.textContent = window.__aludesText; } }   // iconos de capas: debajo de todo en la columna derecha
   const placeRoads = () => {
     if (!roadsBtn) return;
     const b = roadsBtn.getBoundingClientRect(), m = map.getContainer().getBoundingClientRect();
