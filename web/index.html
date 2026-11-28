@@ -186,6 +186,17 @@
   /* Cursor del mapa: esquís cruzados (Jorge 2026-11-28); punto activo en el centro */
   .maplibregl-canvas-container.maplibregl-interactive { cursor: url("cursor-skis.svg") 16 16, grab; }
   .maplibregl-canvas-container.maplibregl-interactive:active { cursor: url("cursor-skis.svg") 16 16, grabbing; }
+  /* Miniresumen de todos los días: símbolo, máx/mín con curva de temperatura y nieve del día */
+  .fc-mini { margin: 4px 0 2px; }
+  .fc-mini .mrow { display: grid; grid-template-columns: repeat(var(--nd), minmax(0, 1fr)); text-align: center; font-size: 11px; line-height: 1.25; }
+  .fc-mini .md { cursor: pointer; border-radius: 6px; padding: 1px 0; }
+  .fc-mini .md:hover { background: rgba(127,127,127,.12); }
+  .fc-mini .dn { color: var(--muted); white-space: nowrap; overflow: hidden; }
+  .fc-mini .ic { font-size: 16px; line-height: 1.3; }
+  .fc-mini svg { display: block; width: 100%; height: 30px; }
+  .fc-mini .tt b { font-weight: 700; }
+  .fc-mini .tt span { color: var(--muted); }
+  .fc-mini .sn { color: #2b6cb0; font-weight: 600; min-height: 14px; white-space: nowrap; }
   .fc-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; }
   .fc-inline #fc-place { font-weight: 600; }
   .fc-inline #fc-meta { color: var(--muted); font-size: 11px; }
@@ -214,8 +225,17 @@
     .wxbar.windy.wide .wx-legend { width: 220px; flex: none; min-width: 0; }
     .wxbar.windy.wide .acc { grid-column: 1 / -1; grid-row: 3; margin: 0; }
     .wxbar.windy.wide .fc { display: contents; }
-    .wxbar.windy.wide .fc > .fc-scroll { grid-column: 1 / -1; grid-row: 4; border-top: 1px solid rgba(127,127,127,.3); padding-top: 2px; }
-    .wxbar.windy.wide .fc > .fc-note { grid-column: 1 / -1; grid-row: 5; }
+    .wxbar.windy.wide .fc > .fc-mini { grid-column: 1 / -1; grid-row: 4; }
+    .wxbar.windy.wide .fc > .fc-scroll { grid-column: 1 / -1; grid-row: 5; border-top: 1px solid rgba(127,127,127,.3); padding-top: 2px; }
+    .wxbar.windy.wide .fc > .fc-note { grid-column: 1 / -1; grid-row: 6; }
+    /* fila de horas, modelos y leyenda más pequeña con la previsión abierta (Jorge 2026-11-28: «no aporta y es demasiado») */
+    .wxbar.windy.wide .wx-days { display: none; }
+    .wxbar.windy.wide .wx-play { width: 22px; height: 22px; font-size: 10px; }
+    .wxbar.windy.wide .wx-models button { padding: 1px 7px; font-size: 11px; }
+    .wxbar.windy.wide .wx-legend .ramp { height: 7px; }
+    .wxbar.windy.wide .wx-legend .ramp-ticks { font-size: 9px; }
+    .wxbar.windy.wide .wx-legend { width: 170px; }
+    .wxbar.windy.wide .wx-ext { font-size: 11px; gap: 6px; }
   }
   .wx-tl { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
   .wx-play { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #e8a33d; color: #000; font-size: 15px; cursor: pointer; }
@@ -483,6 +503,7 @@
         <option value="gfs_seamless">GFS (NOAA, 16 días)</option>
       </select></div>
     <div class="fc-days" id="fc-days"></div>
+    <div class="fc-mini" id="fc-mini"></div>
     <div class="fc-scroll" id="fc-scroll"><table class="fc-tab" id="fc-tab"></table></div>
     <div class="fc-note" id="fc-note">Previsión de modelo a la cota del punto. Estimación. Toca el mapa para cambiar de punto.</div>
   </div>
@@ -2433,6 +2454,21 @@ ${pts}
       row("Isoterma 0", i => H.freezing_level_height[i] == null ? "" : fmtN(Math.round(H.freezing_level_height[i] / 50) * 50));
     markFc();
     window.__wxCard?.();
+    // Miniresumen (Jorge 2026-11-28)
+    { const mini = document.getElementById("fc-mini"), n = D.time.length, T0 = new Date(D.time[0] + "T00:00").getTime();
+      const pts = H.time.map((t, i) => [(new Date(t).getTime() - T0) / 864e5, H.temperature_2m[i]]).filter(p => p[1] != null);
+      const lo = Math.min(...pts.map(p => p[1])), hi = Math.max(...pts.map(p => p[1])), sp = Math.max(1, hi - lo);
+      const X = d => (d / n * 1000).toFixed(1), Y = v => (28 - (v - lo) / sp * 24).toFixed(1);
+      const line = pts.map(p => `${X(p[0])},${Y(p[1])}`).join(" ");
+      const zero = lo < 0 && hi > 0 ? `<line x1="0" x2="1000" y1="${Y(0)}" y2="${Y(0)}" stroke="#2166ac" stroke-dasharray="6 5" stroke-opacity=".5" vector-effect="non-scaling-stroke"/>` : "";
+      const seps = D.time.slice(1).map((_, i) => `<line x1="${X(i + 1)}" x2="${X(i + 1)}" y1="0" y2="30" stroke="currentColor" stroke-opacity=".12" vector-effect="non-scaling-stroke"/>`).join("");
+      const cells = f => `<div class="mrow" style="--nd:${n}">${D.time.map((d, i) => `<div class="md" data-day="${d}">${f(d, i)}</div>`).join("")}</div>`;
+      mini.innerHTML = cells(d => `<div class="dn">${new Date(d + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric" })}</div>`)
+        + cells((d, i) => `<div class="ic">${wmoIcon(D.weather_code[i])}</div>`)
+        + `<svg viewBox="0 0 1000 30" preserveAspectRatio="none" aria-hidden="true">${seps}${zero}<polygon points="0,30 ${line} ${X(pts.at(-1)[0])},30" fill="rgba(110,190,110,.28)"/><polyline points="${line}" fill="none" stroke="#4f9e4f" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`
+        + cells((d, i) => `<div class="tt"><b>${fmtN(D.temperature_2m_max[i])}°</b> <span>${fmtN(D.temperature_2m_min[i])}°</span></div><div class="sn">${D.snowfall_sum[i] >= 0.5 ? `❄ ${fmtN(D.snowfall_sum[i])} cm` : D.precipitation_sum[i] >= 0.5 ? `<span style="color:#5b7fa6">💧${fmtN(D.precipitation_sum[i])}</span>` : ""}</div>`);
+      mini.onclick = e => { const c = e.target.closest("[data-day]"); if (c) goTime(c.dataset.day + "T12:00"); };
+    }
   };
   // Marca en la tabla la hora elegida en la barra
   const markFc = () => {
