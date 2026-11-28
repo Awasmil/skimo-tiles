@@ -190,9 +190,45 @@
   .offbar { display: none; height: 6px; border-radius: 3px; background: rgba(127,127,127,.25); margin-top: 6px; overflow: hidden; }
   .offbar.on { display: block; }
   .offbar div { height: 100%; width: 0; background: #2ea043; transition: width .3s; }
+  .gate { position: fixed; inset: 0; z-index: 100; background: #1e3a5f; display: flex; align-items: center; justify-content: center; }
+  .gate form { background: #fff; color: #111; border-radius: 14px; padding: 20px; width: min(320px, calc(100% - 40px)); box-shadow: 0 4px 20px rgba(0,0,0,.4); }
+  .gate input { box-sizing: border-box; width: 100%; height: 44px; font-size: 16px; border: 1px solid #bbb; border-radius: 10px; padding: 0 12px; margin: 10px 0; }
+  .gate button { width: 100%; height: 44px; border: 0; border-radius: 10px; background: #1e3a5f; color: #fff; font: 600 16px system-ui, sans-serif; }
+  .gate[hidden] { display: none; }
+  .gate .err { color: #c0392b; font-size: 13px; min-height: 18px; }
 </style>
 </head>
 <body>
+<!-- Contraseña de entrada (pedido por Jorge 2026-11-28). La huella la pone deploy-web.yml desde el secreto
+     SKIMO_WEB_PASSWORD; si no hay secreto, no se pide nada. Se pide una vez por dispositivo.
+     Es una barrera para curiosos: los datos siguen en un repositorio publico. -->
+<div class="gate" id="gate" hidden>
+  <form id="gate-form" autocomplete="on">
+    <b style="font-size:18px">Skimo Pirineo</b>
+    <input type="text" name="username" value="skimo" autocomplete="username" hidden>
+    <input type="password" id="gate-pw" placeholder="Contraseña" autocomplete="current-password" aria-label="Contraseña">
+    <div class="err" id="gate-err"></div>
+    <button type="submit">Entrar</button>
+  </form>
+</div>
+<script>
+(() => {
+  const H = "__PW_HASH__";
+  if (H.startsWith("__")) return;   // sin contraseña configurada
+  let ok = false; try { ok = localStorage.getItem("skimo-gate") === H; } catch {}
+  if (ok) return;
+  const gate = document.getElementById("gate"); gate.hidden = false;
+  document.getElementById("gate-pw").focus();
+  document.getElementById("gate-form").onsubmit = async e => {
+    e.preventDefault();
+    const pw = document.getElementById("gate-pw").value;
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("skimo:" + pw));
+    const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+    if (hex === H) { try { localStorage.setItem("skimo-gate", H); } catch {} gate.hidden = true; }
+    else document.getElementById("gate-err").textContent = "Contraseña incorrecta";
+  };
+})();
+</script>
 <div id="map"></div>
 <div class="stcard" id="stcard" hidden>
   <button class="st-main" id="stcard-open" type="button" title="Ver el panel completo de la estación">
@@ -2260,6 +2296,17 @@ ${pts}
     location.reload();
   };
   refreshOffline();
+
+  // ---------- Vista al entrar (pedido por Jorge 2026-11-28): SIEMPRE solo sombreado + rayado y parte del Lauegi
+  // + mapa de temperatura. Todo lo demas apagado (se puede encender con los iconos, pero no se recuerda).
+  const START_ON = new Set(["hillshade", "danger", "wxtemp"]);
+  for (const id of ["hillshade", "slopeaval", "slope", "aspect", "avalanche", "contours", "labels", "routes", "paths", "water", "acts", "wxwind", "danger"]) {
+    const el = document.getElementById(id); if (!el) continue;
+    el.checked = START_ON.has(id); el.dispatchEvent(new Event("change"));
+  }
+  wxVarEl.value = "temperature_2m"; lsSet("skimo-wxvar", "temperature_2m"); wxLegend();
+  const wxEl = document.getElementById("wxtemp"); wxEl.checked = true; wxEl.dispatchEvent(new Event("change"));
+  setSec("aludes");   // el parte del Lauegi abierto (en el movil se cierra tocando el mapa)
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 })();
