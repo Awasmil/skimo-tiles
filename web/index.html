@@ -383,6 +383,8 @@
   .maplibregl-ctrl-group button.btn-slope.on { background: #fff1d6; }
   .maplibregl-ctrl-group button.btn-emoji.on, .maplibregl-ctrl-group button.btn-measure.on { box-shadow: inset 0 0 0 2px #e8a33d; }
   body.panel-open .ctl-label { opacity: 0; }
+  /* La pendiente de aludes ya tiene su botón en la columna: fuera del panel de Terreno (Jorge 2026-11-28); la casilla sigue existiendo, oculta */
+  .panel label:has(#slopeaval), #legend-slopeaval { display: none !important; }
   .ctl-label.ctl-link { pointer-events: auto; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
   .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
   .maplibregl-ctrl-group button.btn-var:disabled { opacity: .35; }
