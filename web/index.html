@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Skimo">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"></script>
@@ -2525,7 +2526,7 @@ ${pts}
   const MB = b => `${Math.round(b / 2 ** 20)} MB`;
   const fmtDate = s => new Date(s).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   const EXTRA = [  // lo minimo para que la pagina arranque sin red
-    "./", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png", "data/aran-regions.geojson",
+    "./", "manifest.webmanifest", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png", "data/aran-regions.geojson",
     "sprites/light.json", "sprites/light.png", "sprites/light@2x.json", "sprites/light@2x.png",
     ...["Noto Sans Regular", "Noto Sans Medium", "Noto Sans Italic"].flatMap(f => ["0-255", "256-511", "8192-8447"].map(r => `fonts/${f}/${r}.pbf`)),
     "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css", "https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js",

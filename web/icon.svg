@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Logo de Skimo: una cumbre alpina afilada con nieve, sobre el azul de la app -->
+  <clipPath id="r"><rect width="64" height="64" rx="14"/></clipPath>
+  <g clip-path="url(#r)">
+    <rect width="64" height="64" fill="#1e3a5f"/>
+    <!-- cordal del fondo -->
+    <path d="M0 54 L14 38 L22 45 L33 33 L46 44 L54 37 L64 46 L64 64 L0 64 Z" fill="#3f6a9c"/>
+    <!-- cumbre principal: cara al sol y cara en sombra -->
+    <path d="M9 64 L31 12 L36 19 L39 15 L60 64 Z" fill="#cfdcea"/>
+    <path d="M39 15 L60 64 L43 64 L35 31 Z" fill="#8eabca"/>
+    <!-- nieve de la cima, con el borde irregular -->
+    <path d="M31 12 L36 19 L39 15 L43 24.5 L39.5 22 L36.5 28 L33 23 L29 28.5 L25.6 24.5 Z" fill="#ffffff"/>
+  </g>
+</svg>
