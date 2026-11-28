@@ -57,10 +57,9 @@ jobs:
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.pmtiles" --dir dl
           # Satelite de invierno (opcional, release aparte que se regenera con otra fecha)
           gh release download sat-winter --repo "$GITHUB_REPOSITORY" --dir dl || echo "Sin satelite de invierno"
-          sudo apt-get install -y -qq imagemagick > /dev/null
-          for s in 180 192 512; do
-            convert -size ${s}x${s} xc:'#1e3a5f' -fill white               -draw "polygon $((s*18/100)),$((s*76/100)) $((s*42/100)),$((s*34/100)) $((s*82/100)),$((s*76/100))"               -fill '#8fb6e8' -draw "polygon $((s*42/100)),$((s*34/100)) $((s*50/100)),$((s*48/100)) $((s*35/100)),$((s*47/100))"               site/icon-$s.png
-          done
+          # Iconos de la app a partir del logo (web/icon.svg, cumbre alpina); esquinas rellenas: el iPhone las redondea solo
+          sudo apt-get install -y -qq librsvg2-bin > /dev/null
+          for s in 180 192 512; do rsvg-convert -w $s -h $s --background-color "#1e3a5f" site/icon.svg -o site/icon-$s.png; done
 
       - name: Mapa base vectorial (recorte de Protomaps/OSM para Aran)
         if: steps.extra.outputs.build == 'true'
