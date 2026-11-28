@@ -246,7 +246,18 @@
     .maplibregl-ctrl-bottom-right { width: 120px !important; }
     .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { width: 30px; height: 30px; }
   }
-  /* Ordenador: la tarjeta del tiempo arriba, a la derecha del buscador (Jorge 2026-11-28) */
+  /* Fila de arriba: en el ordenador buscador + tiempo + estación, centrados y alineados (Jorge 2026-11-28); en el móvil cada uno en su sitio */
+  .topbar { display: contents; }
+  @media (min-width: 1200px) {
+    .topbar { display: flex; position: absolute; top: max(10px, env(safe-area-inset-top)); left: 10px; right: 64px; z-index: 3;
+      justify-content: center; align-items: flex-start; gap: 10px; pointer-events: none; }
+    .topbar > * { pointer-events: auto; position: relative !important; top: auto !important; left: auto !important; right: auto !important; margin: 0 !important; }
+    .topbar > .search { width: 400px; max-width: none; flex: none; }
+    .topbar > .wx-card { flex: none; }
+    .topbar > .stcard { max-width: 430px !important; flex: 0 1 auto; }
+    .topbar > [hidden] { display: none !important; }
+  }
+  /* (antiguo) Ordenador: la tarjeta del tiempo arriba, a la derecha del buscador */
   @media (min-width: 1200px) { body .wx-card { top: max(10px, env(safe-area-inset-top)); left: 442px; max-width: 400px; } body .stcard { max-width: min(430px, calc(100% - 1070px)); } }
   .fc-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; }
   .fc-inline #fc-place { font-weight: 600; }
@@ -1472,7 +1483,7 @@ ${pts}
         ? () => { const cb = document.getElementById("danger"); cb.checked = !cb.checked; cb.dispatchEvent(new Event("change")); }
         : () => setSec(openSec === id ? null : id);
       secBtns[id] = b; d.appendChild(b);
-      if (id === "capas") {   // botón directo: pendiente de aludes (≥25°) encendida/apagada (Jorge 2026-11-28)
+      if (id === "aludes") {   // botón directo (debajo de Aludes, Jorge 2026-11-28): pendiente de aludes (≥25°) encendida/apagada (Jorge 2026-11-28)
         const sb = document.createElement("button"); sb.type = "button"; sb.className = "btn-emoji btn-slope"; sb.title = "Pendiente ≥25°";
         sb.setAttribute("aria-label", "Pendiente de aludes (≥25°)");
         sb.innerHTML = `<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" style="display:block;margin:auto"><path d="M3 20 L21 20 L21 5 Z" fill="#ff8c28" stroke="#b41446" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 20 A7 7 0 0 0 13 15.5" fill="none" stroke="#fff" stroke-width="1.6"/></svg>`;
@@ -2711,6 +2722,9 @@ ${pts}
   }
 
   // ---------- Botones de acumulación de nieve (desde ahora) ----------
+  { const tb = document.createElement("div"); tb.className = "topbar";
+    document.querySelector(".search").before(tb);
+    tb.append(document.querySelector(".search"), document.getElementById("wx-card"), document.getElementById("stcard"), document.getElementById("stchip")); }
   const ACC = [["12 h", 12], ["24 h", 24], ["2 días", 48], ["4 días", 96], ["8 días", 192], ["16 días", 384]];
   const accBtns = document.getElementById("acc-btns");
   accBtns.innerHTML = ACC.map(([n, h]) => `<button type="button" data-h="${h}">${n}</button>`).join("");
