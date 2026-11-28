@@ -882,7 +882,7 @@
         map.addLayer(L, before);
       }
     } catch (e) { console.warn("Sin mapa base de fuera de Aran (¿sin conexión?)", e); }
-    map.addSource("w-dem", { type: "raster-dem", encoding: "terrarium", tileSize: 256, maxzoom: 14,
+    map.addSource("w-dem", { type: "raster-dem", encoding: "terrarium", tileSize: 256, maxzoom: 12,   // 12: bastante para sombrear y menos descargas
       tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
       attribution: "Relieve fuera de Aran: <a href='https://registry.opendata.aws/terrain-tiles/'>Terrain Tiles (AWS Open Data)</a>" });
     map.addLayer({ id: "hillshade-world", type: "hillshade", source: "w-dem",
@@ -1724,7 +1724,7 @@ ${pts}
   })();
   const inLat = (L, lon, lat) => lon >= L.lo0 && lon <= L.lo0 + (L.nc - 1) * L.dlo && lat >= L.la0 && lat <= L.la0 + (L.nr - 1) * L.dla;
   // Altitud de cada pixel: nuestro relieve de Aran (2 m) si existe esa tesela; si no, el mundial (Terrain Tiles, terrarium)
-  const tileElev = async (z, x, y) => {
+  const tileElevRaw = async (z, x, y) => {
     let r = z <= 13 ? await terrainFile.getZxy(z, x, y) : null, enc = "mapbox", blob;
     if (r) blob = new Blob([r.data]);
     else {
@@ -1738,6 +1738,16 @@ ${pts}
     for (let k = 0; k < W * W; k++) H[k] = enc === "mapbox" ? -10000 + (d[4 * k] * 65536 + d[4 * k + 1] * 256 + d[4 * k + 2]) * 0.1
                                                          : d[4 * k] * 256 + d[4 * k + 1] + d[4 * k + 2] / 256 - 32768;
     return { W, H };
+  };
+  // Altitud por tesela guardada en memoria: al mover la hora o el mapa no se vuelve a bajar ni a decodificar (iba muy lento)
+  const elevCache = new Map();
+  const tileElev = (z, x, y) => {
+    const key = z + "/" + x + "/" + y;
+    if (!elevCache.has(key)) {
+      if (elevCache.size > 64) elevCache.delete(elevCache.keys().next().value);
+      elevCache.set(key, tileElevRaw(z, x, y).catch(() => null));
+    } else { const v = elevCache.get(key); elevCache.delete(key); elevCache.set(key, v); }   // la mas usada, al final
+    return elevCache.get(key);
   };
   maplibregl.addProtocol("wxtemp", async params => {
     const [z, x, y] = params.url.match(/wxtemp:\/\/(\d+)\/(\d+)\/(\d+)/).slice(1).map(Number);
@@ -1760,14 +1770,15 @@ ${pts}
     if (!aranTouch && !boxes.length) return { data: await emptyTile };
     const el = await tileElev(z, x, y);
     if (!el) return { data: await emptyTile };
-    const W = el.W, c = new OffscreenCanvas(W, W), g = c.getContext("2d");
+    // De lejos (z<=8) se calcula a media resolucion: la malla regional es de ~25 km y va 4 veces mas rapido
+    const S = z <= 8 ? 2 : 1, W = el.W / S, c = new OffscreenCanvas(W, W), g = c.getContext("2d");
     const out = g.createImageData(W, W), o = out.data;
     const tAt = arr ? arr.map(a => a[hIdx]) : null, VAL = new Float32Array(W * W).fill(NaN);
     const bAt = boxes.map(b => ({ L: b.lattice, elev: b.elev, v: b.v[F.id].map(a => a[rIdx]) }));
     for (let j = 0; j < W; j++) {
       const lat = Math.atan(Math.sinh(Math.PI * (1 - 2 * (y + (j + 0.5) / W) / n))) * 180 / Math.PI;
       for (let i = 0; i < W; i++) {
-        const k = j * W + i, hPix = el.H[k];
+        const k = j * W + i, hPix = el.H[(j * S) * el.W + i * S];
         const lon = (x + (i + 0.5) / W) / n * 360 - 180;
         let L = null, vv = null, ee = null;
         if (tAt && inLat(TG, lon, lat)) { L = TG; vv = tAt; ee = g0.elev; }
