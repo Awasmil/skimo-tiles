@@ -166,6 +166,9 @@
   .wx-track { padding-top: 0; }
   .wx-play { width: 28px; height: 28px; font-size: 12px; }
   #wxbar-at { font-weight: 600; white-space: nowrap; }
+  .wx-ext { display: inline-flex; gap: 10px; align-items: center; font-size: 12px; white-space: nowrap; }
+  .wx-ext label { display: inline-flex; gap: 4px; align-items: center; padding: 0; cursor: pointer; }
+  .wx-ext input { width: 15px; height: 15px; margin: 0; accent-color: #e8a33d; }
   .fc-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; }
   .fc-inline #fc-place { font-weight: 600; }
   .fc-inline #fc-meta { color: var(--muted); font-size: 11px; }
@@ -1344,7 +1347,7 @@ ${pts}
   const secControl = { onAdd() {
     const d = document.createElement("div"); d.className = "maplibregl-ctrl maplibregl-ctrl-group";
     for (const [id, ico, name] of SECS) {
-      if (id === "offline") continue;
+      if (id === "offline" || id === "tiempo") continue;   // tiempo: ya está en los botones de variables y en su barra (Jorge 2026-11-28)
       const b = document.createElement("button"); b.type = "button"; b.className = "btn-emoji btn-sec"; b.title = name;
       b.setAttribute("aria-label", name); b.setAttribute("aria-expanded", "false");
       b.innerHTML = `<span aria-hidden="true">${ico}</span>`;
@@ -2538,7 +2541,13 @@ ${pts}
   map.addControl(radarControl, "top-right");
   map.addControl(secControl, "top-right");
   map.addControl(varsControl, "top-right");
-  map.addControl(offlineControl, "bottom-right");   // fila de arriba del bloque de la esquina: [Sin conexión][ubicación][3D]
+  map.addControl(offlineControl, "bottom-right");
+  // Lo único propio del apartado del tiempo (isolíneas y partículas de viento) pasa a la barra del tiempo
+  { const ext = document.createElement("span"); ext.className = "wx-ext";
+    for (const [id, txt] of [["wxiso", "Isolíneas"], ["wxwind", "Partículas de viento"]]) {
+      const lab = document.getElementById(id).closest("label"); lab.lastChild.textContent = " " + txt; ext.appendChild(lab);
+    }
+    document.querySelector(".wx-foot").appendChild(ext); }   // fila de arriba del bloque de la esquina: [Sin conexión][ubicación][3D]
 
   // Marca en el icono de cada apartado si tiene algo encendido sobre el mapa (Jorge 2026-11-28)
   const ACTIVE = {
