@@ -167,7 +167,21 @@
   .wx-legend { flex: 1; min-width: 200px; }
   .wx-legend .ramp { height: 14px; border-radius: 7px; margin: 0; }
   .wx-legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
-  .wx-vars { position: absolute; right: 56px; bottom: 210px; z-index: 3; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+  /* Columna derecha armonizada (Jorge 2026-11-28): una sola columna, todos los botones iguales (34 px),
+     separación pequeña y constante; si no cabe, se desliza */
+  .maplibregl-ctrl-top-right { max-height: calc(100% - 4px); overflow-y: auto; overflow-x: hidden; scrollbar-width: none;
+    padding: 0 0 8px 8px; overscroll-behavior: contain; }
+  .maplibregl-ctrl-top-right::-webkit-scrollbar { display: none; }
+  .maplibregl-ctrl-top-right .maplibregl-ctrl { margin: 6px 10px 0 0; }
+  .maplibregl-ctrl-top-right .maplibregl-ctrl:first-child { margin-top: 10px; }
+  .maplibregl-ctrl-top-right .maplibregl-ctrl-group button { width: 34px; height: 34px; }
+  .maplibregl-ctrl-top-right .maplibregl-ctrl-group button.btn-emoji { font-size: 17px; line-height: 1; }
+  .maplibregl-ctrl-top-right .maplibregl-ctrl-group button svg { width: 18px; height: 18px; }
+  .maplibregl-ctrl-group button.btn-var.on { background: #fff1d6; box-shadow: inset 0 0 0 2px #e8a33d; }
+  .maplibregl-ctrl-group button.btn-var:disabled { opacity: .35; }
+  .wx-vars-ctl[hidden] { display: none !important; }
+  @media (max-width: 600px) { body.wx-on .maplibregl-ctrl-top-right { max-height: calc(100% - var(--wxbar-h, 240px)); } }
+  .wx-vars-old { position: absolute; right: 56px; bottom: 210px; z-index: 3; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
   .wx-vars[hidden] { display: none; }
   .wx-vars button { display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; cursor: pointer; font: 600 14px system-ui, sans-serif;
     color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 2px rgba(0,0,0,.8); }
@@ -378,7 +392,6 @@
     <div class="wx-legend"><div class="ramp" id="wxbar-ramp"></div><div class="ramp-ticks" id="wxbar-ticks"></div></div>
   </div>
 </div>
-<div class="wx-vars" id="wx-vars" hidden></div>
 <button type="button" class="wx-card" id="wx-card" hidden aria-label="Previsión del punto"></button>
 <div class="measure" id="measure" aria-live="polite">
   <div class="m-mode" role="radiogroup" aria-label="Modo de trazado">
@@ -2153,9 +2166,12 @@ ${pts}
   const WXV = [["temperature_2m", "🌡️", "Temperatura"], ["wind_speed_10m", "💨", "Viento"], ["wind_gusts_10m", "🌬️", "Rachas"],
     ["snow_acc", "❄️", "Nieve nueva"], ["snowfall", "🌨️", "Nieve por hora"], ["precipitation", "🌧️", "Lluvia"],
     ["cloud_cover", "☁️", "Nubes"], ["freezing_level_height", "🧊", "Isoterma 0 °C"]];
-  const varsEl = document.getElementById("wx-vars"), modelsEl = document.getElementById("wx-models");
+  // Variables: botones iguales que los demas, al final de la columna de la derecha (Jorge 2026-11-28: "una sola columna")
+  const varsEl = document.createElement("div"); varsEl.id = "wx-vars"; varsEl.className = "maplibregl-ctrl maplibregl-ctrl-group wx-vars-ctl"; varsEl.hidden = true;
+  const varsControl = { onAdd() { return varsEl; }, onRemove() {} };
+  const modelsEl = document.getElementById("wx-models");
   const daysEl = document.getElementById("wx-days"), bubble = document.getElementById("wx-bubble"), cardEl = document.getElementById("wx-card");
-  varsEl.innerHTML = WXV.map(([v, ic, n]) => `<button type="button" data-v="${v}" title="${n}" aria-label="${n}"><span>${n}</span><i>${ic}</i></button>`).join("");
+  varsEl.innerHTML = WXV.map(([v, ic, n]) => `<button type="button" class="btn-emoji btn-var" data-v="${v}" title="${n}" aria-label="${n}"><span aria-hidden="true">${ic}</span></button>`).join("");
   varsEl.onclick = e => {
     const b = e.target.closest("[data-v]"); if (!b || b.disabled) return;
     wxVarEl.value = b.dataset.v; wxVarEl.dispatchEvent(new Event("change"));
@@ -2166,17 +2182,8 @@ ${pts}
     const b = e.target.closest("[data-f]"); if (!b) return;
     wxModelEl.value = b.dataset.f; wxModelEl.dispatchEvent(new Event("change"));
   };
-  // Los botones de variables suben o bajan según la altura de la barra; si no caben, solo iconos; si tampoco, se ocultan
-  const placeVars = () => {
-    if (varsEl.hidden) return;
-    const r = wxBar.getBoundingClientRect(), bottom = innerHeight - r.top + 12;
-    varsEl.style.bottom = bottom + "px"; varsEl.style.visibility = "";
-    const room = r.top - 70;
-    varsEl.classList.toggle("compact", varsEl.scrollHeight > room);
-    if (varsEl.scrollHeight > room) varsEl.style.visibility = "hidden";
-  };
-  new ResizeObserver(placeVars).observe(wxBar);
-  window.addEventListener("resize", placeVars);
+  // En el movil la barra del tiempo ocupa todo el ancho: la columna de botones termina encima de ella (y se desliza)
+  new ResizeObserver(() => document.body.style.setProperty("--wxbar-h", (wxBar.offsetHeight + 50) + "px")).observe(wxBar);
   const wxUi = () => {
     const on = document.getElementById("wxtemp").checked;
     varsEl.hidden = !on; cardEl.hidden = !on; document.body.classList.toggle("wx-on", on);
@@ -2186,7 +2193,6 @@ ${pts}
       b.disabled = !!tGrid && !tGrid.v?.[b.dataset.v];   // este modelo no da esa variable
     });
     modelsEl.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.f === wxModelEl.value));
-    placeVars();
     if (!fcData || Date.now() - new Date(fcData.at) > 30 * 60e3) loadFc(); else if (!cardEl.innerHTML) renderCard();
     const T = (tGrid || wField)?.time; if (!T) return;
     const i = Math.min(+wxBarHour.value, T.length - 1), pct = T.length > 1 ? i / (T.length - 1) * 100 : 0;
@@ -2372,7 +2378,8 @@ ${pts}
     }, onRemove() {}
   }, "top-right");
   map.addControl(radarControl, "top-right");
-  map.addControl(secControl, "top-right");   // iconos de capas: debajo de todo en la columna derecha
+  map.addControl(secControl, "top-right");
+  map.addControl(varsControl, "top-right");   // variables del tiempo: al final, solo con el mapa del tiempo   // iconos de capas: debajo de todo en la columna derecha
   const placeRoads = () => {
     if (!roadsBtn) return;
     const b = roadsBtn.getBoundingClientRect(), m = map.getContainer().getBoundingClientRect();
