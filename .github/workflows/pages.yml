@@ -9,9 +9,14 @@ on:
     branches: [main]
     paths: ["web/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
+    inputs:
+      rebuild_extra:
+        description: "Regenerar nombres, caminos, buscador y mapa base desde OpenStreetMap (tarda ~25 min)"
+        type: boolean
+        default: false
 
 permissions:
-  contents: read
+  contents: write   # para guardar los datos extra en el release aran-extra
   pages: write
   id-token: write
 
@@ -29,33 +34,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Datos extra ya generados (release aran-extra)
+        id: extra
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p extra
+          if [ "${{ inputs.rebuild_extra }}" != "true" ] && gh release download aran-extra --repo "$GITHUB_REPOSITORY" --dir extra 2>/dev/null              && test -s extra/aran-osm.pmtiles; then
+            echo "Reutilizo los datos extra guardados"; echo "build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Hay que generarlos"; rm -rf extra; mkdir -p extra; echo "build=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Montar el sitio
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="$(tr -d '[:space:]' < web/tiles-tag.txt)"
           echo "Teselas: $TAG"
-          # Carpeta unica por despliegue: si se reutiliza el nombre, el movil mezcla la cache
-          # (cabecera vieja + bytes nuevos) y el mapa sale con cuadros y paredes.
-          DIR="tiles/${TAG}-r${GITHUB_RUN_NUMBER}"
-          echo "TILES_DIR=$DIR" >> "$GITHUB_ENV"
-          mkdir -p "site/$DIR"
-          cp -r web/. site/
-          rm -f site/tiles-tag.txt
-          sed -i "s#__TILES_DIR__#$DIR/#" site/index.html
-          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.pmtiles" --dir "site/$DIR"
+          mkdir -p site; cp -r web/. site/; rm -f site/tiles-tag.txt
+          mkdir -p dl
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.pmtiles" --dir dl
           # Satelite de invierno (opcional, release aparte que se regenera con otra fecha)
-          gh release download sat-winter --repo "$GITHUB_REPOSITORY" --dir "site/$DIR" || echo "Sin satelite de invierno"
+          gh release download sat-winter --repo "$GITHUB_REPOSITORY" --dir dl || echo "Sin satelite de invierno"
           sudo apt-get install -y -qq imagemagick > /dev/null
           for s in 180 192 512; do
-            convert -size ${s}x${s} xc:'#1e3a5f' -fill white \
-              -draw "polygon $((s*18/100)),$((s*76/100)) $((s*42/100)),$((s*34/100)) $((s*82/100)),$((s*76/100))" \
-              -fill '#8fb6e8' -draw "polygon $((s*42/100)),$((s*34/100)) $((s*50/100)),$((s*48/100)) $((s*35/100)),$((s*47/100))" \
-              site/icon-$s.png
+            convert -size ${s}x${s} xc:'#1e3a5f' -fill white               -draw "polygon $((s*18/100)),$((s*76/100)) $((s*42/100)),$((s*34/100)) $((s*82/100)),$((s*76/100))"               -fill '#8fb6e8' -draw "polygon $((s*42/100)),$((s*34/100)) $((s*50/100)),$((s*48/100)) $((s*35/100)),$((s*47/100))"               site/icon-$s.png
           done
-          du -sh site; ls -lh "site/$DIR"
 
       - name: Mapa base vectorial (recorte de Protomaps/OSM para Aran)
+        if: steps.extra.outputs.build == 'true'
         run: |
           if curl -fsSL --retry 3 --retry-all-errors -o pmtiles.tar.gz               https://github.com/protomaps/go-pmtiles/releases/download/v1.28.0/go-pmtiles_1.28.0_Linux_x86_64.tar.gz; then
             tar -xzf pmtiles.tar.gz pmtiles
@@ -64,14 +72,15 @@ jobs:
           fi
           BUILD=$(curl -fsS --retry 3 https://build-metadata.protomaps.dev/builds.json | python3 -c "import json,sys; print(json.load(sys.stdin)[-1]['key'])")
           echo "Protomaps: $BUILD"
-          ./pmtiles extract "https://build.protomaps.com/$BUILD" "site/$TILES_DIR/aran-base.pmtiles"             --bbox=0.40,42.50,1.40,42.92 --maxzoom=15
-          ls -lh "site/$TILES_DIR/aran-base.pmtiles"
-          mkdir -p site/sprites
+          ./pmtiles extract "https://build.protomaps.com/$BUILD" "extra/aran-base.pmtiles"             --bbox=0.40,42.50,1.40,42.92 --maxzoom=15
+          ls -lh "extra/aran-base.pmtiles"
+          mkdir -p extra/static/sprites
           for f in light.json light.png light@2x.json light@2x.png; do
-            curl -fsS --retry 3 -o "site/sprites/$f" "https://protomaps.github.io/basemaps-assets/sprites/v4/$f"
+            curl -fsS --retry 3 -o "extra/static/sprites/$f" "https://protomaps.github.io/basemaps-assets/sprites/v4/$f"
           done
 
       - name: Zonas de aludes ICGC a teselas vectoriales
+        if: steps.extra.outputs.build == 'true'
         continue-on-error: true
         run: |
           # Poligonos del Mapa de Zones d'Allaus (WFS ICGC) para la caja de Aran en EPSG:25831.
@@ -79,10 +88,11 @@ jobs:
           curl -fsS --retry 3 -o aludes.geojson             "https://geoserveis.icgc.cat/geoserver/nivoallaus/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=nivoallaus:zonesallaus&outputFormat=application/json&srsName=EPSG:4326&propertyName=the_geom,tipufoto&BBOX=285000,4710000,370000,4752000,urn:ogc:def:crs:EPSG::25831"
           sudo apt-get install -y -qq gdal-bin > /dev/null
           gdalinfo --version
-          ogr2ogr -f PMTiles -nln aludes -dsco MINZOOM=9 -dsco MAXZOOM=15             "site/$TILES_DIR/aran-aludes.pmtiles" aludes.geojson
-          ls -lh "site/$TILES_DIR/aran-aludes.pmtiles"
+          ogr2ogr -f PMTiles -nln aludes -dsco MINZOOM=9 -dsco MAXZOOM=15             "extra/aran-aludes.pmtiles" aludes.geojson
+          ls -lh "extra/aran-aludes.pmtiles"
 
       - name: Zona de trabajo del mapa (donde hay relieve MDT02 propio)
+        if: steps.extra.outputs.build == 'true'
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
@@ -99,46 +109,71 @@ jobs:
           gdal_calc.py --quiet -A cov.vrt --calc "(A>-100)*1" --NoDataValue=0 --type=Byte --outfile cov_mask.tif
           gdal_polygonize.py -q cov_mask.tif -f GeoJSON cov_raw.geojson cov DN
           ogr2ogr -f GeoJSON -where "DN=1" -simplify 0.0004 coverage.geojson cov_raw.geojson
-          cp coverage.geojson "site/$TILES_DIR/coverage.json"
+          cp coverage.geojson "extra/coverage.json"
           python3 -c "import json;f=json.load(open('coverage.geojson'))['features'];print(len(f),'poligonos de cobertura')"
 
       - name: Nombres de OpenStreetMap (picos, collados, fuentes, refugios, lagos, rios)
+        if: steps.extra.outputs.build == 'true'
         continue-on-error: true
         run: |
           COV=""; test -s coverage.geojson && COV=coverage.geojson
           python3 scripts/osm_labels.py "42.50,0.40,42.92,1.40" osm.geojson $COV
-          ogr2ogr -f PMTiles -nln osm -dsco MINZOOM=9 -dsco MAXZOOM=15             "site/$TILES_DIR/aran-osm.pmtiles" osm.geojson
-          ls -lh "site/$TILES_DIR/aran-osm.pmtiles"
+          ogr2ogr -f PMTiles -nln osm -dsco MINZOOM=9 -dsco MAXZOOM=15             "extra/aran-osm.pmtiles" osm.geojson
+          ls -lh "extra/aran-osm.pmtiles"
           # Buscador: todo lo que tiene nombre en OSM (si Overpass falla, el indice reducido de las etiquetas)
-          python3 scripts/search_all.py "42.50,0.40,42.92,1.40" "site/$TILES_DIR/search.json" \n            || python3 scripts/search_index.py osm.geojson "site/$TILES_DIR/search.json"
-          python3 scripts/paths_graph.py "42.50,0.40,42.92,1.40" "site/$TILES_DIR/paths.json"
+          python3 scripts/search_all.py "42.50,0.40,42.92,1.40" "extra/search.json" \n            || python3 scripts/search_index.py osm.geojson "extra/search.json"
+          python3 scripts/paths_graph.py "42.50,0.40,42.92,1.40" "extra/paths.json"
 
       - name: Senderos senalizados de OpenStreetMap (GR, PR, SL...)
+        if: steps.extra.outputs.build == 'true'
         continue-on-error: true
         run: |
           COV=""; test -s coverage.geojson && COV=coverage.geojson
           python3 scripts/osm_routes.py "42.50,0.40,42.92,1.40" routes.geojson $COV
-          ogr2ogr -f PMTiles -nln routes -dsco MINZOOM=9 -dsco MAXZOOM=15 "site/$TILES_DIR/aran-routes.pmtiles" routes.geojson
-          ls -lh "site/$TILES_DIR/aran-routes.pmtiles"
+          ogr2ogr -f PMTiles -nln routes -dsco MINZOOM=9 -dsco MAXZOOM=15 "extra/aran-routes.pmtiles" routes.geojson
+          ls -lh "extra/aran-routes.pmtiles"
 
       - name: Tipografias para las etiquetas (alojadas aqui para que funcionen sin depender de terceros)
+        if: steps.extra.outputs.build == 'true'
         run: |
           for f in "Noto Sans Regular" "Noto Sans Medium" "Noto Sans Italic"; do
-            mkdir -p "site/fonts/$f"
+            mkdir -p "extra/static/fonts/$f"
             for r in 0-255 256-511 8192-8447; do
-              curl -fsS --retry 3 -o "site/fonts/$f/$r.pbf"                 "https://protomaps.github.io/basemaps-assets/fonts/${f// /%20}/$r.pbf" || echo "sin $f $r"
+              curl -fsS --retry 3 -o "extra/static/fonts/$f/$r.pbf"                 "https://protomaps.github.io/basemaps-assets/fonts/${f// /%20}/$r.pbf" || echo "sin $f $r"
             done
           done
 
-      - name: Lista de ficheros para guardar sin conexion
+      - name: Guardar los datos extra en el release aran-extra
+        if: steps.extra.outputs.build == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          cd "site/$TILES_DIR"
+          tar -czf extra/static.tar.gz -C extra/static .
+          rm -rf extra/static
+          gh release view aran-extra --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||             gh release create aran-extra --repo "$GITHUB_REPOSITORY" --title "Datos extra del mapa (OSM, ICGC, Protomaps)"               --notes "Generados por pages.yml. Se regeneran lanzando Pages a mano con rebuild_extra."
+          gh release upload aran-extra --repo "$GITHUB_REPOSITORY" --clobber extra/*
+          ls -lh extra
+
+      - name: Carpeta de mapas y lista para guardar sin conexion
+        run: |
+          tar -xzf extra/static.tar.gz -C site && rm extra/static.tar.gz
+          cp extra/* dl/
+          # Carpeta que solo cambia si cambian los mapas: publicar cambios de la web no obliga
+          # al movil a volver a bajar los ~350 MB (antes cambiaba en cada publicacion).
+          ID=$(cd dl && sha1sum * | sha1sum | cut -c1-10)
+          TAG="$(tr -d '[:space:]' < web/tiles-tag.txt)"
+          DIR="tiles/${TAG}-${ID}"
+          echo "Carpeta de mapas: $DIR"
+          mkdir -p "site/$DIR" && mv dl/* "site/$DIR/"
+          sed -i "s#__TILES_DIR__#$DIR/#" site/index.html
+          cd "site/$DIR"
           python3 - <<'PY2'
           import json, os
           files = sorted(f for f in os.listdir(".") if f.endswith((".pmtiles", ".json")) and f != "offline.json")
           json.dump([{"name": f, "size": os.path.getsize(f)} for f in files], open("offline.json", "w"))
           print(sum(os.path.getsize(f) for f in files) // 2**20, "MB para guardar sin conexion")
           PY2
+          cd - >/dev/null; du -sh site
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
