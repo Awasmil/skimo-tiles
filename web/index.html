@@ -151,6 +151,10 @@
   /* ---- Mapa del tiempo con disposición tipo Windy (pedido por Jorge 2026-11-28): barra ancha abajo con días,
      ▶, modelos y leyenda; botones redondos de variables a la derecha; tarjeta del punto arriba a la izquierda ---- */
   .wxbar.windy, .wxbar.windy.wide { left: 50%; right: auto; transform: translateX(-50%); width: min(1200px, calc(100% - 210px)); }
+  /* Orden tipo Windy: arriba el botón y la hora, luego la barra de horas, modelos/leyenda y, al final, la tabla de previsión */
+  .wxbar.windy.on { display: flex; flex-direction: column; }
+  .wxbar.windy .wx-top { order: 1; } .wxbar.windy .acc { order: 2; } .wxbar.windy .wx-tl { order: 3; }
+  .wxbar.windy .wx-foot { order: 4; } .wxbar.windy .fc { order: 5; margin: 8px 0 0; border-top: 1px solid rgba(127,127,127,.3); padding-top: 6px; }
   .wx-tl { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
   .wx-play { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #e8a33d; color: #000; font-size: 15px; cursor: pointer; }
   .wx-track { flex: 1; position: relative; padding-top: 22px; }
@@ -383,7 +387,7 @@
     <div class="fc-note" id="fc-note">Previsión de modelo a la cota del punto. Estimación. Toca el mapa para cambiar de punto.</div>
   </div>
   <div class="acc" id="acc" hidden>Acumular: <span id="acc-btns"></span></div>
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px">
+  <div class="wx-top" style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px">
     <button type="button" id="fc-toggle" class="fc-toggle" aria-expanded="false">▴ Previsión</button>
     <b id="wxbar-at" style="flex:1">–</b><span style="color:var(--muted)" id="wxbar-src">Previsión de modelo</span></div>
   <div class="wx-tl">
