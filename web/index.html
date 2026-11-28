@@ -154,7 +154,7 @@
   /* ---- Mapa del tiempo con disposición tipo Windy (pedido por Jorge 2026-11-28): barra ancha abajo con días,
      ▶, modelos y leyenda; botones redondos de variables a la derecha; tarjeta del punto arriba a la izquierda ---- */
   /* Centrada en el hueco que deja libre el bloque de zoom/3D de la esquina derecha */
-  .wxbar.windy, .wxbar.windy.wide { left: 10px; right: 136px; width: auto; max-width: 1200px; margin: 0 auto; transform: none; }
+  .wxbar.windy, .wxbar.windy.wide { left: 10px; right: 158px; width: auto; max-width: 1200px; margin: 0 auto; transform: none; }
   /* Orden tipo Windy: arriba el botón y la hora, luego la barra de horas, modelos/leyenda y, al final, la tabla de previsión */
   .wxbar.windy.on { display: flex; flex-direction: column; }
   .wxbar.windy .wx-top { order: 1; } .wxbar.windy .acc { order: 2; } .wxbar.windy .wx-tl { order: 3; }
@@ -280,7 +280,18 @@
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group { display: flex; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { width: 34px; height: 34px; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button + button { border-top: 0; border-left: 1px solid #ddd; }
-  /* Las dos filas del mismo ancho: la de arriba también como un solo bloque de 3 (Jorge 2026-11-28) */
+  /* Bloque de la esquina 4 × 2 (Jorge 2026-11-28): [Medir][Carreteras][Sin conexión][Ubicación] / [3D][Orientación][+][−] */
+  .maplibregl-ctrl-bottom-right { width: 136px !important; gap: 0 !important; border-radius: 6px; box-shadow: 0 0 0 2px rgba(0,0,0,.1); overflow: hidden; }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group { border-radius: 0 !important; box-shadow: none !important; }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { box-shadow: inset 1px 0 0 #ddd, inset 0 1px 0 #ddd !important; border: 0 !important; }
+  .maplibregl-ctrl-bottom-right > :has(.btn-measure) { order: 1; }
+  .maplibregl-ctrl-bottom-right > :has(.btn-roads) { order: 2; }
+  .maplibregl-ctrl-bottom-right > :has(.btn-sec) { order: 3; }
+  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-geolocate) { order: 4; }
+  .maplibregl-ctrl-bottom-right > :has(.btn-3d) { order: 5; }
+  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-compass) { order: 6; }
+  .maplibregl-ctrl-bottom-right > :has(.maplibregl-ctrl-zoom-in) { order: 7; }
+  /* (antiguo) */
   .maplibregl-ctrl-bottom-right { column-gap: 0; row-gap: 6px; width: 102px; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(1) { border-radius: 4px 0 0 4px; }
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group:nth-child(2) { border-radius: 0; }
@@ -900,7 +911,8 @@
   });
 
   window.skimoMap = map;  // para depurar desde la consola
-  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+  map.addControl(new maplibregl.NavigationControl({ showZoom: false, visualizePitch: true }), "bottom-right");
   map.addControl({
     onAdd(m) {
       const div = document.createElement("div");
@@ -1368,7 +1380,7 @@ ${pts}
       div.appendChild(b); return div;
     },
     onRemove() {}
-  }, "top-right");
+  }, "bottom-right");
 
   // Panel de capas: un icono por apartado en la columna de la derecha (pedido por Jorge 2026-11-27).
   // Se abre un apartado cada vez; el mismo icono o la ✕ lo cierran.
@@ -2740,7 +2752,7 @@ ${pts}
       roadsBtn.onclick = () => { roadsBox.hidden = !roadsBox.hidden; roadsBtn.classList.toggle("on", !roadsBox.hidden); placeRoads(); };
       div.appendChild(roadsBtn); return div;
     }, onRemove() {}
-  }, "top-right");
+  }, "bottom-right");
   map.addControl(radarControl, "top-right");
   map.addControl(secControl, "top-right");
   map.addControl(varsControl, "top-right");
@@ -2780,7 +2792,8 @@ ${pts}
   const placeRoads = () => {
     if (!roadsBtn) return;
     const b = roadsBtn.getBoundingClientRect(), m = map.getContainer().getBoundingClientRect();
-    roadsBox.style.top = `${b.top - m.top}px`;
+    // el botón está abajo: el panel se abre a su izquierda, con la base alineada con el botón
+    roadsBox.style.top = "auto"; roadsBox.style.bottom = `${m.bottom - b.bottom}px`; roadsBox.style.right = `${m.right - b.left + 8}px`;
   };
   const renderRoads = (d, cached) => {
     const worst = d.roads.reduce((w, r) => (ROAD_RANK[r.color] ?? 0) > (ROAD_RANK[w] ?? 0) ? r.color : w, "green");
