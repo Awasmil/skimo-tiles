@@ -834,7 +834,8 @@
       },
       layers: [
         // Mapa base vectorial (OSM via Protomaps), sin sus puntos de interes: ya tenemos los nuestros
-        ...basemaps.layers("base", basemaps.namedFlavor("light"), { lang: "es" }).filter(l => !l.id.startsWith("pois")),
+        ...basemaps.layers("base", basemaps.namedFlavor("light"), { lang: "es" }).filter(l => !l.id.startsWith("pois"))
+          .map(l => l.id === "background" ? l : { ...l, minzoom: Math.max(l.minzoom || 0, 9) }),
         { id: "satwinter", type: "raster", source: "satwinter", layout: { visibility: "none" } },
         { id: "pnoa", type: "raster", source: "pnoa", layout: { visibility: "none" } },
         { id: "hillshade", type: "hillshade", source: "terrain",
@@ -1025,9 +1026,10 @@
   const ARAN_BOX = [0.40, 42.50, 1.40, 42.92];
   onStyle(async () => {
     try {
-      const st = await (await fetch("https://tiles.openfreemap.org/styles/positron")).json();
-      for (const [id, src] of Object.entries(st.sources)) map.addSource("w-" + id, { ...src,
-        attribution: id === "openmaptiles" ? "Fuera de Aran: <a href='https://openfreemap.org'>OpenFreeMap</a> © <a href='https://www.openmaptiles.org'>OpenMapTiles</a> © OpenStreetMap" : undefined });
+      const st = await (await fetch("https://tiles.openfreemap.org/styles/liberty")).json();
+      // "liberty": colores de mapa normal ("positron" era tan pálido que de lejos parecía vacío)
+      for (const [id, src] of Object.entries(st.sources)) map.addSource("w-" + id, id === "openmaptiles"
+        ? { ...src, attribution: "Fuera de Aran: <a href='https://openfreemap.org'>OpenFreeMap</a> © <a href='https://www.openmaptiles.org'>OpenMapTiles</a> © OpenStreetMap" } : src);
       // Debajo de todo lo nuestro (despues del fondo): dentro de Aran lo tapa nuestro mapa base
       const ours = map.getStyle().layers, before = ours[1]?.id;
       for (const l of st.layers) {
