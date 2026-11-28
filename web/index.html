@@ -148,6 +148,57 @@
     box-shadow: 0 2px 12px rgba(0,0,0,.3); padding: 6px 12px; z-index: 3; display: none; }
   .wxbar.on { display: block; }
   .wxbar.wide { width: min(980px, calc(100% - 20px)); }
+  /* ---- Mapa del tiempo con disposición tipo Windy (pedido por Jorge 2026-11-28): barra ancha abajo con días,
+     ▶, modelos y leyenda; botones redondos de variables a la derecha; tarjeta del punto arriba a la izquierda ---- */
+  .wxbar.windy { left: max(10px, env(safe-area-inset-left)); right: 56px; width: auto; transform: none; max-width: 1200px; }
+  .wx-tl { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+  .wx-play { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #e8a33d; color: #000; font-size: 15px; cursor: pointer; }
+  .wx-track { flex: 1; position: relative; padding-top: 22px; }
+  .wx-track input { width: 100%; margin: 0; accent-color: #e8a33d; }
+  .wx-bubble { position: absolute; top: 0; transform: translateX(-50%); background: #e8a33d; color: #000; font: 700 12px system-ui, sans-serif;
+    padding: 2px 7px; border-radius: 6px; white-space: nowrap; pointer-events: none; }
+  .wx-days { position: relative; height: 16px; font-size: 11px; color: var(--muted); }
+  .wx-days span { position: absolute; top: 0; border-left: 1px solid rgba(127,127,127,.5); padding-left: 3px; white-space: nowrap; }
+  .wx-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  .wx-models { display: flex; gap: 4px; }
+  .wx-models button { border: 1px solid rgba(127,127,127,.45); background: transparent; color: var(--fg); border-radius: 14px; padding: 3px 10px;
+    font: 600 12px system-ui, sans-serif; cursor: pointer; }
+  .wx-models button.on { background: #e8a33d; border-color: #e8a33d; color: #000; }
+  .wx-legend { flex: 1; min-width: 200px; }
+  .wx-legend .ramp { height: 14px; border-radius: 7px; margin: 0; }
+  .wx-legend .ramp-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+  .wx-vars { position: absolute; right: 56px; bottom: 210px; z-index: 3; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+  .wx-vars[hidden] { display: none; }
+  .wx-vars button { display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; cursor: pointer; font: 600 14px system-ui, sans-serif;
+    color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 2px rgba(0,0,0,.8); }
+  .wx-vars button i { font-style: normal; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 19px;
+    background: var(--bg); box-shadow: 0 1px 5px rgba(0,0,0,.4); border: 2px solid transparent; text-shadow: none; }
+  .wx-vars button.on i { border-color: #e8a33d; background: #fff4e0; }
+  .wx-vars button:disabled { opacity: .4; cursor: default; }
+  .wx-vars.compact span { display: none; }
+  .wx-vars.compact { gap: 3px; }
+  .wx-vars.compact button i { width: 30px; height: 30px; font-size: 15px; }
+  .wx-card { position: absolute; left: max(10px, env(safe-area-inset-left)); top: calc(max(10px, env(safe-area-inset-top)) + 54px); z-index: 3;
+    background: rgba(40,44,52,.88); color: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.35); padding: 8px 12px;
+    display: flex; gap: 14px; align-items: center; cursor: pointer; max-width: calc(100% - 90px); border: 0; text-align: left; font: inherit; }
+  .wx-card[hidden] { display: none; }
+  .wx-card .now { font: 300 46px/1 system-ui, sans-serif; }
+  .wx-card .now sup { font-size: 22px; }
+  .wx-card .pl { font-size: 11px; opacity: .8; max-width: 120px; }
+  .wx-card .d { text-align: center; font-size: 11px; min-width: 46px; }
+  .wx-card .d .ic { font-size: 22px; line-height: 1.2; }
+  .wx-card .d b { font-size: 12px; }
+  @media (max-width: 600px) {
+    .wxbar.windy { right: 10px; }
+    .wx-vars { right: 54px; bottom: 250px; gap: 4px; }
+    .wx-vars button span { display: none; }
+    .wx-vars button i { width: 34px; height: 34px; font-size: 17px; }
+    .wx-card { gap: 8px; padding: 6px 8px; }
+    .wx-card .now { font-size: 34px; }
+    .wx-card .d { min-width: 38px; }
+    .wx-card .d:nth-child(n+5) { display: none; }
+    body.wx-on .stcard, body.wx-on .stchip { display: none; }
+  }
   .fc-toggle { border: 1px solid rgba(127,127,127,.4); background: transparent; color: var(--fg); border-radius: 8px; padding: 3px 8px; font: 600 12px system-ui, sans-serif; cursor: pointer; white-space: nowrap; }
   .fc { font: 12px/1.3 system-ui, -apple-system, sans-serif; margin-bottom: 6px; }
   .fc[hidden], .acc[hidden] { display: none; }
@@ -289,7 +340,7 @@
   <div class="m-sub" id="wx-agree" style="margin-top:4px"></div>
   <div class="m-sub" id="wx-src"></div>
 </div>
-<div class="wxbar" id="wxbar">
+<div class="wxbar windy" id="wxbar">
   <div class="fc" id="fc" hidden>
     <div class="fc-head"><b id="fc-place">–</b><span id="fc-meta"></span></div>
     <div class="fc-head" style="justify-content:flex-start;gap:6px;margin:2px 0">Modelo:
@@ -313,8 +364,21 @@
   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px">
     <button type="button" id="fc-toggle" class="fc-toggle" aria-expanded="false">▴ Previsión</button>
     <b id="wxbar-at" style="flex:1">–</b><span style="color:var(--muted)" id="wxbar-src">Previsión de modelo</span></div>
-  <input type="range" id="wxbar-hour" min="0" max="71" value="0" style="width:100%" aria-label="Hora de la previsión">
+  <div class="wx-tl">
+    <button type="button" class="wx-play" id="wx-play" aria-label="Animar las horas">▶</button>
+    <div class="wx-track">
+      <div class="wx-bubble" id="wx-bubble">–</div>
+      <input type="range" id="wxbar-hour" min="0" max="71" value="0" aria-label="Hora de la previsión">
+      <div class="wx-days" id="wx-days"></div>
+    </div>
+  </div>
+  <div class="wx-foot">
+    <div class="wx-models" id="wx-models" role="radiogroup" aria-label="Modelo del mapa"></div>
+    <div class="wx-legend"><div class="ramp" id="wxbar-ramp"></div><div class="ramp-ticks" id="wxbar-ticks"></div></div>
+  </div>
 </div>
+<div class="wx-vars" id="wx-vars" hidden></div>
+<button type="button" class="wx-card" id="wx-card" hidden aria-label="Previsión del punto"></button>
 <div class="measure" id="measure" aria-live="polite">
   <div class="m-mode" role="radiogroup" aria-label="Modo de trazado">
     <input type="checkbox" id="m-follow" checked hidden>
@@ -1529,6 +1593,10 @@ ${pts}
     document.getElementById("wxticks").innerHTML = F.ticks.map(x => F.centerTicks
       ? `<span style="flex:1;text-align:center">${x}</span>` : `<span>${x}</span>`).join("");
     if (map.getLayer("wxtemp")) map.setPaintProperty("wxtemp", "raster-opacity", F.opacity ?? 0.75);
+    // La misma leyenda en la barra de abajo (tipo Windy)
+    document.getElementById("wxbar-ramp").style.background = document.getElementById("wxramp").style.background;
+    document.getElementById("wxbar-ticks").innerHTML = document.getElementById("wxticks").innerHTML;
+    window.__wxUi?.();
     document.getElementById("wxnote").textContent = `${F.note} Isolíneas cada ${String(F.iso).replace(".", ",")} ${F.unit}${F.isoBold != null ? " (0 °C en blanco grueso)" : ""}.`;
   };
   wxLegend();
@@ -1641,6 +1709,7 @@ ${pts}
     if (document.getElementById("wxtemp").checked) map.getSource("wxtemp")?.setTiles([`wxtemp://{z}/{x}/{y}?v=${tVersion}`]);
     drawArrows();
     window.__markFc?.();
+    window.__wxUi?.();
   };
   // Flechas de direccion del viento (AROME 1,3 km, malla ~1,6 km) cuando el mapa del tiempo muestra viento o rachas
   const arrowsWanted = () => document.getElementById("wxtemp").checked && /^wind_/.test(wxVarEl.value);
@@ -1685,6 +1754,7 @@ ${pts}
       paint: { "icon-opacity": 0.85 } });
   });
   const wxLayersToggle = async () => {
+    window.__wxUi?.();
     const t = document.getElementById("wxtemp").checked, w = document.getElementById("wxwind").checked;
     setVis("wxtemp", t); setVis("wxwind", w);
     document.getElementById("legend-wxtemp").classList.toggle("on", t);
@@ -1950,6 +2020,7 @@ ${pts}
       row("Dirección", i => H.wind_direction_10m[i] == null ? "" : `<span title="${DIR16[Math.round(H.wind_direction_10m[i] / 22.5) % 16]}" style="display:inline-block;transform:rotate(${(H.wind_direction_10m[i] + 180) % 360}deg)">↑</span>`) +
       row("Isoterma 0", i => H.freezing_level_height[i] == null ? "" : fmtN(Math.round(H.freezing_level_height[i] / 50) * 50));
     markFc();
+    window.__wxCard?.();
   };
   // Marca en la tabla la hora elegida en la barra
   const markFc = () => {
@@ -1984,6 +2055,89 @@ ${pts}
   fcToggle.onclick = () => { if (wxMode) setWxMode(false); setFcOpen(fcEl.hidden); };
   if ((lsGet("skimo-fc-open") ?? (window.innerWidth >= 700 ? "1" : "0")) === "1") setFcOpen(true);
   window.__markFc = markFc;
+
+  // ---------- Mapa del tiempo con disposición tipo Windy ----------
+  const WXV = [["temperature_2m", "🌡️", "Temperatura"], ["wind_speed_10m", "💨", "Viento"], ["wind_gusts_10m", "🌬️", "Rachas"],
+    ["snow_acc", "❄️", "Nieve nueva"], ["snowfall", "🌨️", "Nieve por hora"], ["precipitation", "🌧️", "Lluvia"],
+    ["cloud_cover", "☁️", "Nubes"], ["freezing_level_height", "🧊", "Isoterma 0 °C"]];
+  const varsEl = document.getElementById("wx-vars"), modelsEl = document.getElementById("wx-models");
+  const daysEl = document.getElementById("wx-days"), bubble = document.getElementById("wx-bubble"), cardEl = document.getElementById("wx-card");
+  varsEl.innerHTML = WXV.map(([v, ic, n]) => `<button type="button" data-v="${v}" title="${n}" aria-label="${n}"><span>${n}</span><i>${ic}</i></button>`).join("");
+  varsEl.onclick = e => {
+    const b = e.target.closest("[data-v]"); if (!b || b.disabled) return;
+    wxVarEl.value = b.dataset.v; wxVarEl.dispatchEvent(new Event("change"));
+  };
+  modelsEl.innerHTML = [["grid.json", "Mejor"], ["grid-arome.json", "AROME"], ["grid-ecmwf.json", "ECMWF"]]
+    .map(([f, n]) => `<button type="button" data-f="${f}">${n}</button>`).join("");
+  modelsEl.onclick = e => {
+    const b = e.target.closest("[data-f]"); if (!b) return;
+    wxModelEl.value = b.dataset.f; wxModelEl.dispatchEvent(new Event("change"));
+  };
+  // Los botones de variables suben o bajan según la altura de la barra; si no caben, solo iconos; si tampoco, se ocultan
+  const placeVars = () => {
+    if (varsEl.hidden) return;
+    const r = wxBar.getBoundingClientRect(), bottom = innerHeight - r.top + 12;
+    varsEl.style.bottom = bottom + "px"; varsEl.style.visibility = "";
+    const room = r.top - 70;
+    varsEl.classList.toggle("compact", varsEl.scrollHeight > room);
+    if (varsEl.scrollHeight > room) varsEl.style.visibility = "hidden";
+  };
+  new ResizeObserver(placeVars).observe(wxBar);
+  window.addEventListener("resize", placeVars);
+  const wxUi = () => {
+    const on = document.getElementById("wxtemp").checked;
+    varsEl.hidden = !on; cardEl.hidden = !on; document.body.classList.toggle("wx-on", on);
+    if (!on) return;
+    varsEl.querySelectorAll("button").forEach(b => {
+      b.classList.toggle("on", b.dataset.v === wxVarEl.value);
+      b.disabled = !!tGrid && !tGrid.v?.[b.dataset.v];   // este modelo no da esa variable
+    });
+    modelsEl.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.f === wxModelEl.value));
+    placeVars();
+    if (!fcData || Date.now() - new Date(fcData.at) > 30 * 60e3) loadFc(); else if (!cardEl.innerHTML) renderCard();
+    const T = (tGrid || wField)?.time; if (!T) return;
+    const i = Math.min(+wxBarHour.value, T.length - 1), pct = T.length > 1 ? i / (T.length - 1) * 100 : 0;
+    bubble.style.left = `calc(${pct}% + ${(8 - pct * 0.16).toFixed(1)}px)`;
+    bubble.textContent = new Date(T[i]).toLocaleDateString("es-ES", { weekday: "short", day: "numeric" }) + " " + T[i].slice(11, 16);
+    const key = T[0] + T.length + innerWidth;
+    if (daysEl.dataset.k !== key) {
+      daysEl.dataset.k = key;
+      const minGap = 100 * 58 / Math.max(200, daysEl.clientWidth || 300);   // ~58 px entre etiquetas
+      let h = "", lastP = -100;
+      T.forEach((t, k) => {
+        if (k && t.slice(0, 10) === T[k - 1].slice(0, 10)) return;
+        const p = k / (T.length - 1) * 100; if (p > 98) return;
+        const txt = p - lastP >= minGap ? new Date(t.slice(0, 10) + "T12:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric" }) : "";
+        if (txt) lastP = p;
+        h += `<span style="left:${p.toFixed(2)}%">${txt}</span>`;
+      });
+      daysEl.innerHTML = h;
+    }
+  };
+  window.__wxUi = wxUi;
+  // Tarjeta del punto: temperatura ahora y 4 días (de la previsión del punto; tocarla abre la tabla completa)
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const renderCard = () => {
+    if (!fcData?.hourly) { cardEl.innerHTML = `<div class="pl">Cargando previsión…</div>`; return; }
+    const H = fcData.hourly, D = fcData.daily, k = nowIndex(H.time);
+    const days = D.time.slice(0, 4).map((d, i) => `<div class="d"><div>${new Date(d + "T12:00").toLocaleDateString("es-ES", { weekday: "short" }).toUpperCase()}</div>
+      <div class="ic">${wmoIcon(D.weather_code[i])}</div><b>${fmtN(D.temperature_2m_min[i])}° / ${fmtN(D.temperature_2m_max[i])}°</b></div>`).join("");
+    cardEl.innerHTML = `<div><div class="now">${fmtN(H.temperature_2m[k])}<sup>°</sup></div><div class="pl">${esc(fcData.loc.name)} · ${fcData.elev} m</div></div>${days}`;
+  };
+  window.__wxCard = renderCard;
+  cardEl.onclick = () => { if (wxMode) setWxMode(false); setFcOpen(fcEl.hidden); };
+  // ▶ Animar las horas
+  let playT = null; const playBtn = document.getElementById("wx-play");
+  const stopPlay = () => { clearInterval(playT); playT = null; playBtn.textContent = "▶"; playBtn.setAttribute("aria-label", "Animar las horas"); };
+  playBtn.onclick = () => {
+    if (playT) return stopPlay();
+    playBtn.textContent = "⏸"; playBtn.setAttribute("aria-label", "Parar");
+    playT = setInterval(() => {
+      const T = (tGrid || wField)?.time; if (!T) return;
+      wxBarHour.value = (+wxBarHour.value + 1) % T.length; drawWx();
+    }, 900);
+  };
+  wxBarHour.addEventListener("pointerdown", stopPlay);
   // Tocar el mapa con el tiempo activo cambia el punto de la previsión
   map.on("click", async e => {
     if (!wxActive() || measuring || wxMode) return;
