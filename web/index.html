@@ -246,6 +246,8 @@
     .maplibregl-ctrl-bottom-right { width: 120px !important; }
     .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group button { width: 30px; height: 30px; }
   }
+  /* Ordenador: la tarjeta del tiempo arriba, a la derecha del buscador (Jorge 2026-11-28) */
+  @media (min-width: 1200px) { .wx-card { top: max(10px, env(safe-area-inset-top)); left: 556px; max-width: 520px; } }
   .fc-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12px; }
   .fc-inline #fc-place { font-weight: 600; }
   .fc-inline #fc-meta { color: var(--muted); font-size: 11px; }
@@ -3106,7 +3108,7 @@ ${pts}
   wxBarHour.addEventListener("input", () => { if (openSec === "recom") recomRender(); });
   // ---------- Vista al entrar (pedido por Jorge 2026-11-28): SIEMPRE solo sombreado + rayado y parte del Lauegi
   // + mapa de temperatura. Todo lo demas apagado (se puede encender con los iconos, pero no se recuerda).
-  const START_ON = new Set(["hillshade", "danger", "wxtemp"]);
+  const START_ON = new Set(["hillshade", "wxtemp"]);   // sin el rayado del Lauegi al entrar (Jorge 2026-11-28); se enciende con ⚠️
   for (const id of ["hillshade", "slopeaval", "slope", "aspect", "avalanche", "contours", "labels", "routes", "paths", "water", "acts", "wxwind", "danger"]) {
     const el = document.getElementById(id); if (!el) continue;
     el.checked = START_ON.has(id); el.dispatchEvent(new Event("change"));
