@@ -18,12 +18,10 @@
     <g transform="translate(32 33) rotate(-27)">
       <path d="M-4 -24 Q0 -32 4 -24 L4 26 Q4 28.5 1.5 28.5 L-1.5 28.5 Q-4 28.5 -4 26 Z" fill="#ffffff"/>
       <path d="M-2.6 -15 L0 -18 L2.6 -15 M-2.6 -11 L0 -14 L2.6 -11" stroke="#e8a33d" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <rect x="-4.6" y="9" width="9.2" height="6" rx="1.2" fill="#e8a33d"/>
     </g>
     <g transform="translate(32 33) rotate(27)">
       <path d="M-4 -24 Q0 -32 4 -24 L4 26 Q4 28.5 1.5 28.5 L-1.5 28.5 Q-4 28.5 -4 26 Z" fill="#ffffff"/>
       <path d="M-2.6 -15 L0 -18 L2.6 -15 M-2.6 -11 L0 -14 L2.6 -11" stroke="#e8a33d" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <rect x="-4.6" y="9" width="9.2" height="6" rx="1.2" fill="#e8a33d"/>
     </g>
   </g>
 </svg>
