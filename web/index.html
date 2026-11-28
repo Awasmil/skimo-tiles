@@ -150,7 +150,7 @@
   .wxbar.wide { width: min(980px, calc(100% - 20px)); }
   /* ---- Mapa del tiempo con disposición tipo Windy (pedido por Jorge 2026-11-28): barra ancha abajo con días,
      ▶, modelos y leyenda; botones redondos de variables a la derecha; tarjeta del punto arriba a la izquierda ---- */
-  .wxbar.windy { left: max(10px, env(safe-area-inset-left)); right: 56px; width: auto; transform: none; max-width: 1200px; }
+  .wxbar.windy, .wxbar.windy.wide { left: 50%; right: auto; transform: translateX(-50%); width: min(1200px, calc(100% - 140px)); }
   .wx-tl { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
   .wx-play { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #e8a33d; color: #000; font-size: 15px; cursor: pointer; }
   .wx-track { flex: 1; position: relative; padding-top: 22px; }
@@ -189,7 +189,7 @@
   .wx-card .d .ic { font-size: 22px; line-height: 1.2; }
   .wx-card .d b { font-size: 12px; }
   @media (max-width: 600px) {
-    .wxbar.windy { right: 10px; }
+    .wxbar.windy, .wxbar.windy.wide { left: 10px; right: 10px; width: auto; transform: none; }
     .wx-vars { right: 54px; bottom: 250px; gap: 4px; }
     .wx-vars button span { display: none; }
     .wx-vars button i { width: 34px; height: 34px; font-size: 17px; }
@@ -342,7 +342,8 @@
 </div>
 <div class="wxbar windy" id="wxbar">
   <div class="fc" id="fc" hidden>
-    <div class="fc-head"><b id="fc-place">–</b><span id="fc-meta"></span></div>
+    <div class="fc-head"><b id="fc-place">–</b><span id="fc-meta"></span>
+      <button type="button" class="fc-toggle" id="fc-compare" title="Comparar los 9 modelos en un punto del mapa">Comparar modelos</button></div>
     <div class="fc-head" style="justify-content:flex-start;gap:6px;margin:2px 0">Modelo:
       <select id="fc-model" aria-label="Modelo de la previsión del punto" style="font:inherit;max-width:60%">
         <option value="best_match">Mejor combinación (Open-Meteo, 16 días)</option>
@@ -799,6 +800,40 @@
       "osm-label-detail", "osm-label-lake", "osm-label-peak", "osm-label-hut"],
     routes: ["routes-casing", "routes-line", "routes-label"], paths: ["paths-line", "paths-label"], water: ["osm-spring", "osm-label-water"]
   };
+  // ---------- Resto de Europa (fuera de Aran), solo con conexión (pedido por Jorge 2026-11-28) ----------
+  // Mapa base OpenFreeMap (OSM, gratis y sin cuenta, estilo "positron") por debajo del nuestro, y relieve sombreado
+  // mundial (teselas de elevación de AWS Open Data). Dentro de Aran manda lo nuestro (2 m); fuera, esto.
+  const ARAN_BOX = [0.40, 42.50, 1.40, 42.92];
+  onStyle(async () => {
+    try {
+      const st = await (await fetch("https://tiles.openfreemap.org/styles/positron")).json();
+      for (const [id, src] of Object.entries(st.sources)) map.addSource("w-" + id, { ...src,
+        attribution: id === "openmaptiles" ? "Fuera de Aran: <a href='https://openfreemap.org'>OpenFreeMap</a> © <a href='https://www.openmaptiles.org'>OpenMapTiles</a> © OpenStreetMap" : undefined });
+      // Debajo de todo lo nuestro (despues del fondo): dentro de Aran lo tapa nuestro mapa base
+      const ours = map.getStyle().layers, before = ours[1]?.id;
+      for (const l of st.layers) {
+        if (l.type === "background" || l.layout?.["icon-image"]) continue;   // sin fondo propio ni escudos (otro juego de iconos)
+        const L = { ...l, id: "w-" + l.id, source: "w-" + l.source };
+        if (L.layout?.["text-font"]) L.layout = { ...L.layout, "text-font": L.layout["text-font"].map(f => f === "Noto Sans Bold" ? "Noto Sans Medium" : f) };
+        map.addLayer(L, before);
+      }
+    } catch (e) { console.warn("Sin mapa base de fuera de Aran (¿sin conexión?)", e); }
+    map.addSource("w-dem", { type: "raster-dem", encoding: "terrarium", tileSize: 256, maxzoom: 14,
+      tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
+      attribution: "Relieve fuera de Aran: <a href='https://registry.opendata.aws/terrain-tiles/'>Terrain Tiles (AWS Open Data)</a>" });
+    map.addLayer({ id: "hillshade-world", type: "hillshade", source: "w-dem",
+      paint: { "hillshade-exaggeration": 0.45, "hillshade-shadow-color": "#2b2b2b" } }, "hillshade");
+    updWorldHs();
+  });
+  // El relieve mundial se apaga cuando se mira Aran de cerca (si no, se suma al nuestro y oscurece)
+  const updWorldHs = () => {
+    if (!map.getLayer("hillshade-world")) return;
+    const c = map.getCenter(), inAran = c.lng > ARAN_BOX[0] && c.lng < ARAN_BOX[2] && c.lat > ARAN_BOX[1] && c.lat < ARAN_BOX[3];
+    const on = document.getElementById("hillshade").checked && (map.getZoom() < 9 || !inAran);
+    map.setLayoutProperty("hillshade-world", "visibility", on ? "visible" : "none");
+  };
+  map.on("moveend", updWorldHs);
+  document.getElementById("hillshade").addEventListener("change", updWorldHs);
   for (const [id, layers] of Object.entries(groups)) {
     document.getElementById(id).addEventListener("change", e => {
       layers.forEach(l => setVis(l, e.target.checked));
@@ -1181,7 +1216,7 @@ ${pts}
   // Se abre un apartado cada vez; el mismo icono o la ✕ lo cierran.
   const panel = document.getElementById("panel"), panelTitle = document.getElementById("panel-title");
   const SECS = [["base", "🗺️", "Mapa base"], ["capas", "⛰️", "Capas del terreno"], ["tracks", "🥾", "Tracks"],
-    ["tiempo", "🌡️", "Mapa del tiempo"], ["aludes", "⚠️", "Aludes · Lauegi"], ["offline", "📥", "Sin conexión"]];
+    ["tiempo", "🌦️", "Mapa del tiempo"], ["aludes", "⚠️", "Aludes · Lauegi"], ["offline", "📥", "Sin conexión"]];
   const secBtns = {};
   let openSec = null;
   const setSec = id => {
@@ -1487,15 +1522,8 @@ ${pts}
   };
   document.getElementById("wx-close").onclick = () => setWxMode(false);
   map.on("click", e => { if (wxMode) wxAt([e.lngLat.lng, e.lngLat.lat]); });
-  map.addControl({
-    onAdd() {
-      const div = document.createElement("div"); div.className = "maplibregl-ctrl maplibregl-ctrl-group";
-      const b = document.createElement("button"); b.className = "btn-wx"; b.type = "button"; b.title = "Tiempo en un punto (comparar modelos)";
-      b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"/></svg>';
-      b.onclick = () => setWxMode(!wxMode);
-      div.appendChild(b); return div;
-    }, onRemove() {}
-  }, "top-right");
+  // El boton ☁️ de la columna derecha se quita (2026-11-28, demasiados iconos): "Comparar modelos" esta ahora
+  // dentro de la previsión del punto (tarjeta arriba a la izquierda → tabla → «Comparar modelos»)
 
   // ---------- Temperatura continua y viento 3D (previsiones, no medidas) ----------
   const wxBar = document.getElementById("wxbar"), wxBarHour = document.getElementById("wxbar-hour");
@@ -2126,6 +2154,7 @@ ${pts}
   };
   window.__wxCard = renderCard;
   cardEl.onclick = () => { if (wxMode) setWxMode(false); setFcOpen(fcEl.hidden); };
+  document.getElementById("fc-compare").onclick = () => { setFcOpen(false); setWxMode(true); };
   // ▶ Animar las horas
   let playT = null; const playBtn = document.getElementById("wx-play");
   const stopPlay = () => { clearInterval(playT); playT = null; playBtn.textContent = "▶"; playBtn.setAttribute("aria-label", "Animar las horas"); };
@@ -2218,11 +2247,11 @@ ${pts}
 
   // ---------- Webcams y prevision de Meteoaran (paginas externas incrustadas, con su autoria) ----------
   const SIDE = {
-    webcams: { icon: "📷", title: "Webcams", tabs: [
-      ["Baqueira", "https://www.baqueira.es/webcams", "Webcams oficiales de Baqueira Beret · baqueira.es"],
-      ["Meteoaran", "https://meteoaran.com/es/webcams", "Webcams de Aran y del Pirineo · meteoaran.com"]] },
-    forecast: { icon: "⛅", title: "Previsión Meteoaran", tabs: [
-      ["Previsión", "https://meteoaran.com/es/forecast", "Previsión de Meteoaran para la Val d'Aran (meteorólogos locales) · meteoaran.com"]] }
+    // Un solo boton para webcams y la prevision de Meteoaran (antes eran dos: 📷 y ⛅; Jorge 2026-11-28 "demasiados iconos")
+    webcams: { icon: "📷", title: "Webcams y previsión de Meteoaran", tabs: [
+      ["Webcams Baqueira", "https://www.baqueira.es/webcams", "Webcams oficiales de Baqueira Beret · baqueira.es"],
+      ["Webcams Meteoaran", "https://meteoaran.com/es/webcams", "Webcams de Aran y del Pirineo · meteoaran.com"],
+      ["Previsión Meteoaran", "https://meteoaran.com/es/forecast", "Previsión de Meteoaran para la Val d'Aran (meteorólogos locales) · meteoaran.com"]] }
   };
   const sidePanel = document.getElementById("sidepanel"), spFrame = document.getElementById("sp-frame"), sideBtns = {};
   let sideOpen = null;
